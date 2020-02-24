@@ -4,39 +4,35 @@ import { WelcomeButton, WelcomeText, Container } from './welcome.style';
 import { Landing } from '../landing/landing_component';
 import { fetchAccounts } from '../../actions/accounts';
 import { Routes } from '../../routes/apiRoutes';
-import { Link } from 'react-router-dom';
 
 export const WelcomePage: React.FC<WelcomePageProps> = (props: WelcomePageProps) => {
     const renderExistingUserWelcome = (): JSX.Element => {
         return (
             <>
-                <WelcomeText>Hello {props.username.toUpperCase()}</WelcomeText>
-                <Link to={Routes.ACCOUNTS}>
-                    <WelcomeButton
-                        onClick={() => {
-                            fetchAccounts().then(accounts => console.log(accounts));
-                        }}
-                    >
-                        Access my accounts
-                    </WelcomeButton>
-                </Link>
-            </>
-        );
-    };
-
-    const renderNewUserWelcome = (): JSX.Element => {
-        return (
-            <>
-                <Landing />
+                <WelcomeText>Hello {'Oliver'.toUpperCase()}</WelcomeText>
+                <WelcomeButton
+                    onClick={() => {
+                        fetchAccounts().then(accounts => {
+                            props.history.push({
+                                pathname: Routes.ACCOUNTS,
+                                state: {
+                                    owner: accounts.owner,
+                                    currency: accounts.currency,
+                                    balance: accounts.balance,
+                                },
+                            });
+                        });
+                    }}
+                >
+                    Access my accounts
+                </WelcomeButton>
             </>
         );
     };
 
     return (
         <>
-            <Container>
-                {!!props.hasAccount ? renderExistingUserWelcome() : renderNewUserWelcome()}
-            </Container>
+            <Container>{!props.hasAccount ? renderExistingUserWelcome() : <Landing />}</Container>
         </>
     );
 };

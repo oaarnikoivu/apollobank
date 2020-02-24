@@ -9,11 +9,7 @@ const App: React.FC = () => {
     return (
         <BrowserRouter>
             <Switch>
-                <Route
-                    path="/"
-                    exact
-                    render={() => <WelcomePage username={'Oliver'} hasAccount={true} />}
-                />
+                <Route path="/" exact component={WelcomePage} />} />
                 <Route path={Routes.ACCOUNTS} exact component={Accounts} />
                 <Route path="/" render={() => <div>404</div>} />
             </Switch>
