@@ -3,6 +3,7 @@ import { WelcomePageProps } from './welcome_interfaces';
 import { WelcomeButton, WelcomeText, Container } from './welcome.style';
 import { Landing } from '../landing/landing_component';
 import { fetchAccounts } from '../../actions/accounts';
+import { Routes } from '../../routes/apiRoutes';
 import { Link } from 'react-router-dom';
 
 export const WelcomePage: React.FC<WelcomePageProps> = (props: WelcomePageProps) => {
@@ -10,7 +11,7 @@ export const WelcomePage: React.FC<WelcomePageProps> = (props: WelcomePageProps)
         return (
             <>
                 <WelcomeText>Hello {props.username.toUpperCase()}</WelcomeText>
-                <Link to="/accounts">
+                <Link to={Routes.ACCOUNTS}>
                     <WelcomeButton
                         onClick={() => {
                             fetchAccounts().then(accounts => console.log(accounts));
