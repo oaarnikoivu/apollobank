@@ -1,12 +1,35 @@
 import { Router, Response, Request } from 'express';
+import { Account, User } from './dummyData';
 
 export const router: Router = Router();
 
-interface Account {
-  owner: string;
-  currency: string;
-  balance: number;
-}
+const dummyUser: User = {
+  id: '1',
+  email: 'oliver.aarnikoivu@outlook.com',
+  password: 'password',
+  firstName: 'Oliver',
+  lastName: 'Aarnikoivu',
+  dateOfBirth: new Date(1996, 9, 29),
+  phone: '+44 (0) 7599 469798',
+  streetAddress: '45 An Der Merzel',
+  postCode: '8350',
+  city: 'Garnich',
+  country: 'Luxembourg',
+};
+
+const dummyAccount01: Account = {
+  owner: dummyUser,
+  currency: 'EUR',
+  balance: 7000,
+};
+
+const dummyAccount02: Account = {
+  owner: dummyUser,
+  currency: 'GBP',
+  balance: 60,
+};
+
+const accounts: Account[] = [dummyAccount01, dummyAccount02];
 
 router.get('/', (_req: Request, res: Response) => {
   res.json({
@@ -15,12 +38,7 @@ router.get('/', (_req: Request, res: Response) => {
 });
 
 router.get('/accounts', (_req: Request, res: Response) => {
-  const myDummyAccount: Account = {
-    owner: 'Oliver',
-    currency: 'EUR',
-    balance: 7000,
-  };
-  res.send(myDummyAccount);
+  res.send(accounts);
 });
 
 router.get('/analytics', (_req: Request, res: Response) => {
