@@ -2,6 +2,12 @@ import { Router, Response, Request } from 'express';
 
 export const router: Router = Router();
 
+interface Account {
+  owner: string;
+  currency: string;
+  balance: number;
+}
+
 router.get('/', (_req: Request, res: Response) => {
   res.json({
     message: 'Hello World!',
@@ -9,9 +15,12 @@ router.get('/', (_req: Request, res: Response) => {
 });
 
 router.get('/accounts', (_req: Request, res: Response) => {
-  res.json({
-    message: 'Accounts Page',
-  });
+  const myDummyAccount: Account = {
+    owner: 'Oliver',
+    currency: 'EUR',
+    balance: 7000,
+  };
+  res.send(myDummyAccount);
 });
 
 router.get('/analytics', (_req: Request, res: Response) => {
