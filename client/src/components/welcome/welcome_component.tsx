@@ -3,19 +3,22 @@ import { WelcomePageProps } from './welcome_interfaces';
 import { WelcomeButton, WelcomeText, Container } from './welcome.style';
 import { Landing } from '../landing/landing_component';
 import { fetchAccounts } from '../../actions/accounts';
+import { Link } from 'react-router-dom';
 
 export const WelcomePage: React.FC<WelcomePageProps> = (props: WelcomePageProps) => {
     const renderExistingUserWelcome = (): JSX.Element => {
         return (
             <>
-                <WelcomeText>Welcome back {props.username.toUpperCase()}</WelcomeText>
-                <WelcomeButton
-                    onClick={_ => {
-                        fetchAccounts().then(accounts => console.log(accounts));
-                    }}
-                >
-                    Access my accounts
-                </WelcomeButton>
+                <WelcomeText>Hello {props.username.toUpperCase()}</WelcomeText>
+                <Link to="/accounts">
+                    <WelcomeButton
+                        onClick={() => {
+                            fetchAccounts().then(accounts => console.log(accounts));
+                        }}
+                    >
+                        Access my accounts
+                    </WelcomeButton>
+                </Link>
             </>
         );
     };
@@ -24,7 +27,6 @@ export const WelcomePage: React.FC<WelcomePageProps> = (props: WelcomePageProps)
         return (
             <>
                 <Landing />
-                {/* <div className={''}>Welcome to Express!</div> */}
             </>
         );
     };
