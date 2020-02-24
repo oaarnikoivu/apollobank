@@ -7,7 +7,7 @@ interface Props extends RouteComponentProps {}
 
 export const Accounts: React.FC<Props> = ({ history }) => {
     let accounts = history.location.state as Account[];
-    console.log(accounts);
+
     return (
         <>
             <Container>
