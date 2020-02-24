@@ -2,6 +2,7 @@ import express, { Express, Response, Request } from 'express';
 import morgan from 'morgan';
 import helmet from 'helmet';
 import cors from 'cors';
+import { notFound, errorHandler } from './middleware';
 
 require('dotenv').config();
 
@@ -23,5 +24,9 @@ app.get('/', (_req: Request, res: Response) => {
     message: 'Hello World!',
   });
 });
+
+// middleware
+app.use(notFound);
+app.use(errorHandler);
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
