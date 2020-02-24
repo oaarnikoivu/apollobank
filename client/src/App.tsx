@@ -1,10 +1,10 @@
 import React from 'react';
-import { WelcomePage } from './components/landing/welcome_component';
+import { WelcomePage } from './components/welcome/welcome_component';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 const App: React.FC = () => {
     return (
-        <div className={''}>
+        <div>
             <WelcomePage username={'Oliver'} hasAccount={true} />
         </div>
     );
