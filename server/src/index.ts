@@ -1,8 +1,9 @@
-import express, { Express, Response, Request } from 'express';
+import express, { Express } from 'express';
 import morgan from 'morgan';
 import helmet from 'helmet';
 import cors from 'cors';
 import { notFound, errorHandler } from './middleware';
+import { router } from './api/routes';
 
 require('dotenv').config();
 
@@ -19,11 +20,8 @@ app.use(
 );
 app.use(express.json());
 
-app.get('/', (_req: Request, res: Response) => {
-  res.json({
-    message: 'Hello World!',
-  });
-});
+// routes
+app.use('/', router);
 
 // middleware
 app.use(notFound);
