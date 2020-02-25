@@ -17,8 +17,6 @@ mongoose
   .then(() => console.log('Connected to DB'))
   .catch((err: Error) => console.log(err));
 
-const PORT = process.env.PORT;
-
 app.use(morgan('common'));
 app.use(helmet());
 app.use(
@@ -34,5 +32,7 @@ app.use('/', router);
 // middleware
 app.use(notFound);
 app.use(errorHandler);
+
+const PORT = process.env.PORT;
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
