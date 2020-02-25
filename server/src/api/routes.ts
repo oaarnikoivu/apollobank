@@ -1,5 +1,5 @@
 import { Router, Response, Request } from 'express';
-import { accounts } from './dummyData';
+import { authRouter } from './auth/authRoutes';
 
 export const router: Router = Router();
 
@@ -9,30 +9,5 @@ router.get('/', (_req: Request, res: Response) => {
   });
 });
 
-router.get('/accounts', (_req: Request, res: Response) => {
-  res.send(accounts);
-});
-
-router.get('/analytics', (_req: Request, res: Response) => {
-  res.json({
-    message: 'Analytics Page',
-  });
-});
-
-router.get('/payments', (_req: Request, res: Response) => {
-  res.json({
-    message: 'Payments Page',
-  });
-});
-
-router.get('/cards', (_req: Request, res: Response) => {
-  res.json({
-    message: 'Cards Page',
-  });
-});
-
-router.get('/dashboard', (_req: Request, res: Response) => {
-  res.json({
-    message: 'Dashboard Page',
-  });
-});
+// routes which require authentication
+router.use('/api', authRouter);

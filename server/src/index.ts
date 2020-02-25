@@ -21,7 +21,7 @@ app.use(
 app.use(express.json());
 
 // routes
-app.use('/api', router);
+app.use('/', router);
 
 // middleware
 app.use(notFound);
