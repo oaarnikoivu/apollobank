@@ -1,13 +1,21 @@
 import express, { Express } from 'express';
+import mongoose from 'mongoose';
 import morgan from 'morgan';
 import helmet from 'helmet';
 import cors from 'cors';
 import { notFound, errorHandler } from './middleware';
 import { router } from './api/routes';
-
-require('dotenv').config();
+import './lib/env';
 
 const app: Express = express();
+
+mongoose
+  .connect(process.env.DATABASE_URL as string, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(() => console.log('Connected to DB'))
+  .catch((err: Error) => console.log(err));
 
 const PORT = process.env.PORT;
 

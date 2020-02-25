@@ -2,3 +2,5 @@
 ./node_modules
 .prettierrc
 .eslintrc.js
+src/lib/env.ts
+src/@types/environment.d.ts
