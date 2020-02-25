@@ -1,5 +1,5 @@
-import { User } from '../User/user_interfaces';
 import { Document } from 'mongoose';
+import { User } from './User';
 
 export interface Account extends Document {
   owner: User;

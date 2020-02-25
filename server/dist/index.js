@@ -18,7 +18,7 @@ app.use(cors_1.default({
     origin: process.env.CORS_ORIGIN,
 }));
 app.use(express_1.default.json());
-app.use('/api', routes_1.router);
+app.use('/', routes_1.router);
 app.use(middleware_1.notFound);
 app.use(middleware_1.errorHandler);
 app.listen(PORT, () => console.log(`Listening on port ${PORT}`));
