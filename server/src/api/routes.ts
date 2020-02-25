@@ -9,5 +9,11 @@ router.get('/', (_req: Request, res: Response) => {
   });
 });
 
+router.post('/signup', (_req: Request, res: Response) => {
+  res.json({
+    message: 'Signup route',
+  });
+});
+
 // routes which require authentication
 router.use('/api', authRouter);
