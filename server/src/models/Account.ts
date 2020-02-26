@@ -1,8 +1,8 @@
 import { Document } from 'mongoose';
-import { User } from './User';
+import { IUser } from './User';
 
 export interface Account extends Document {
-  owner: User;
+  owner: IUser;
   currency: string;
   balance: number;
 }

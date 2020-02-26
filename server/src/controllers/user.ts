@@ -1,26 +1,15 @@
-import { ErrorTypes } from './errorTypes';
-import { userSchema } from './validationSchemas';
-import { Router, Response, Request, NextFunction } from 'express';
-import { authRouter } from './auth/authRoutes';
+import { ErrorTypes } from '../errorTypes';
+import { userSchema } from '../schemas/validation/user';
+import { Response, Request, NextFunction } from 'express';
 import { User, IUser } from '../models/User';
 import bcrypt from 'bcryptjs';
 import Joi from 'joi';
 
-export const router: Router = Router();
-
-router.get('/', (_req: Request, res: Response) => {
-  res.json({
-    message: 'Hello World!',
-  });
-});
-
-// routes which require authentication
-router.post('/signup', (req: Request, res: Response, next: NextFunction) => {
+export const postSignup = (req: Request, res: Response, next: NextFunction) => {
   let newUser: IUser = req.body;
   const result: Joi.ValidationResult<any> = Joi.validate(newUser, userSchema);
 
   if (result.error === null) {
-    // make sure email is unique
     User.findOne({
       email: newUser.email,
     }).then((user: IUser | null) => {
@@ -28,10 +17,7 @@ router.post('/signup', (req: Request, res: Response, next: NextFunction) => {
         const error: Error = new Error(ErrorTypes.EMAIL_EXISTS);
         next(error);
       } else {
-        // hash the command
-        // insert the user with the hashed password
         bcrypt.hash(newUser.password, 12).then((hash: string) => {
-          // insert the user into the db
           new User({
             email: newUser.email,
             password: hash,
@@ -52,6 +38,4 @@ router.post('/signup', (req: Request, res: Response, next: NextFunction) => {
   } else {
     next(result.error);
   }
-});
-
-router.use('/api', authRouter);
+};
