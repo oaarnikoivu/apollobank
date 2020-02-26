@@ -17,7 +17,7 @@ export const postSignup = (req: Request, res: Response, next: NextFunction) => {
         const error: Error = new Error(ErrorTypes.EMAIL_EXISTS);
         next(error);
       } else {
-        bcrypt.hash(newUser.password, 12).then((hash: string) => {
+        bcrypt.hash(newUser.password.trim(), 12).then((hash: string) => {
           new User({
             email: newUser.email,
             password: hash,
