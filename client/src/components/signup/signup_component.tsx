@@ -11,12 +11,15 @@ import {
 import { User } from '../../models/user';
 import { useStyles } from './signup.style';
 import { useHistory } from 'react-router-dom';
+import Joi from 'joi';
+import { userSchema } from '../../schemas/user';
 
-const API_ENDPOINT = 'http://localhost:8080/auth/signup/';
+const API_ENDPOINT: string = 'http://localhost:8080/auth/signup/';
 
 export const SignUp: React.FC = () => {
     const classes = useStyles();
     const history = useHistory();
+
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
@@ -27,6 +30,16 @@ export const SignUp: React.FC = () => {
     const [postCode, setPostCode] = useState('');
     const [city, setCity] = useState('');
     const [country, setCountry] = useState('');
+
+    const validUser = (user: User) => {
+        const result = Joi.validate(user, userSchema);
+
+        if (result.error === null) {
+            return true;
+        }
+        console.log(result.error.message);
+        return false;
+    };
 
     const registerUser = useCallback(async (): Promise<void> => {
         const newUser: User = {
@@ -42,18 +55,18 @@ export const SignUp: React.FC = () => {
             country: country,
         };
 
-        let response = await fetch(API_ENDPOINT, {
-            method: 'POST',
-            body: JSON.stringify(newUser),
-            headers: {
-                'content-type': 'application/json',
-            },
-        });
+        if (validUser(newUser)) {
+            let response = await fetch(API_ENDPOINT, {
+                method: 'POST',
+                body: JSON.stringify(newUser),
+                headers: {
+                    'content-type': 'application/json',
+                },
+            });
 
-        if (response.ok) {
-            history.push('/');
-        } else {
-            response.json().then(r => console.log(r));
+            if (response.ok) {
+                history.push('/');
+            }
         }
     }, [
         email,
