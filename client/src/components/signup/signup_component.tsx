@@ -136,7 +136,30 @@ export const SignUp: React.FC = () => {
         history,
     ]);
 
-    const renderForm = (): JSX.Element => {
+    const renderAlert = (): JSX.Element => {
+        return (
+            <Alert className={classes.alert} severity="error">
+                {errorMessage}
+            </Alert>
+        );
+    };
+
+    const renderLoadingIcon = (): JSX.Element => {
+        return (
+            <div
+                style={{
+                    position: 'fixed',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%',
+                }}
+            >
+                <img src="loading.svg" alt="Singing Up..." style={{ height: '124px' }}></img>
+            </div>
+        );
+    };
+
+    if (!isLoading) {
         return (
             <>
                 <Container component="main" maxWidth="xs">
@@ -340,33 +363,7 @@ export const SignUp: React.FC = () => {
                 </Container>
             </>
         );
-    };
-
-    const renderAlert = (): JSX.Element => {
-        return (
-            <Alert className={classes.alert} severity="error">
-                {errorMessage}
-            </Alert>
-        );
-    };
-
-    const renderLoadingIcon = (): JSX.Element => {
-        return (
-            <div
-                style={{
-                    position: 'fixed',
-                    top: '50%',
-                    left: '50%',
-                    transform: 'translate(-50%, -50%',
-                }}
-            >
-                <img src="loading.svg" alt="Singing Up..." style={{ height: '124px' }}></img>
-            </div>
-        );
-    };
-
-    if (isLoading) {
+    } else {
         return renderLoadingIcon();
     }
-    return renderForm();
 };
