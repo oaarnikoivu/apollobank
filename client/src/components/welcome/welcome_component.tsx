@@ -1,7 +1,7 @@
 import React from 'react';
 import { WelcomePageProps } from './welcome_interfaces';
 import { Landing } from '../landing/landing_component';
-import { Container } from './welcome.style';
+
 //import { WelcomeButton, WelcomeText } from './welcome.style';
 // import { Account } from '../../models/account';
 // import { fetchAccounts } from '../../actions/accounts';
@@ -30,9 +30,7 @@ export const WelcomePage: React.FC<WelcomePageProps> = (props: WelcomePageProps)
 
     return (
         <>
-            <Container>
-                <Landing />
-            </Container>
+            <Landing />
         </>
     );
 };
