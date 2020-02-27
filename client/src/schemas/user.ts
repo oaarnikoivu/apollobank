@@ -21,6 +21,7 @@ export const userSchema: Joi.ObjectSchema = Joi.object().keys({
         .required(),
     streetAddress: Joi.string()
         .trim()
+        // eslint-disable-next-line
         .regex(/^[a-z\d\s\-\.\,]*$/i)
         .max(100)
         .required(),
