@@ -15,6 +15,7 @@ export const postSignup = (req: Request, res: Response, next: NextFunction) => {
     }).then((user: IUser | null) => {
       if (user) {
         const error: Error = new Error(ErrorTypes.EMAIL_EXISTS);
+        res.status(409).json({ message: error.message });
         next(error);
       } else {
         bcrypt.hash(newUser.password.trim(), 12).then((hash: string) => {
@@ -31,11 +32,12 @@ export const postSignup = (req: Request, res: Response, next: NextFunction) => {
             country: newUser.country,
           })
             .save()
-            .then(savedUser => res.json({ savedUser }));
+            .then(savedUser => res.json(savedUser));
         });
       }
     });
   } else {
+    res.status(422);
     next(result.error);
   }
 };

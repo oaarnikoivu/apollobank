@@ -6,6 +6,7 @@ import { Routes } from './routes/routes';
 import { Helmet } from 'react-helmet';
 import 'typeface-roboto';
 import { SignUp } from './components/signup/signup_component';
+import { Login } from './components/login/login_component';
 
 const App: React.FC = () => {
     return (
@@ -17,6 +18,7 @@ const App: React.FC = () => {
                 <Switch>
                     <Route path="/" exact component={WelcomePage} />
                     <Route path="/signup" exact component={SignUp} />
+                    <Route path="/login" exact component={Login} />
                     <Route path={Routes.ACCOUNTS} exact component={Accounts} />
                     <Route path="/" render={() => <div>404</div>} />
                 </Switch>
