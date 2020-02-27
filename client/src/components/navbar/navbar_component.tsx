@@ -36,7 +36,7 @@ export const NavBar: React.FC = () => {
                         Login
                     </Button>
                     <Button onClick={() => history.push('/signup')} color="inherit">
-                        Register
+                        Sign Up
                     </Button>
                 </Toolbar>
             </AppBar>

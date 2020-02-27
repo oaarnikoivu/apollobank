@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, ChangeEvent, useCallback } from 'react';
 import {
     Container,
     CssBaseline,
@@ -9,6 +9,8 @@ import {
     Link,
 } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+
+const API_ENDPOINT = 'http://localhost:8080/auth/signup/';
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -34,6 +36,56 @@ const useStyles = makeStyles(theme => ({
 
 export const SignUp: React.FC = () => {
     const classes = useStyles();
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [phone, setPhone] = useState('');
+    const [birthDate, setBirthDate] = useState(new Date());
+    const [streetAddress, setStreetAddress] = useState('');
+    const [postCode, setPostCode] = useState('');
+    const [city, setCity] = useState('');
+    const [country, setCountry] = useState('');
+
+    const registerUser = useCallback(async () => {
+        const newUser = {
+            email: email,
+            password: password,
+            firstName: firstName,
+            lastName: lastName,
+            dateOfBirth: birthDate,
+            phone: phone,
+            streetAddress: streetAddress,
+            postCode: postCode,
+            city: city,
+            country: country,
+        };
+
+        let response = await fetch(API_ENDPOINT, {
+            method: 'POST',
+            body: JSON.stringify(newUser),
+            headers: {
+                'content-type': 'application/json',
+            },
+        });
+
+        if (response.ok) {
+            console.log('User successfully created!');
+        } else {
+            response.json().then(r => console.log(r));
+        }
+    }, [
+        email,
+        password,
+        firstName,
+        lastName,
+        birthDate,
+        phone,
+        streetAddress,
+        postCode,
+        city,
+        country,
+    ]);
 
     return (
         <Container component="main" maxWidth="xs">
@@ -54,6 +106,9 @@ export const SignUp: React.FC = () => {
                                 id="firstNmae"
                                 label="First Name"
                                 autoFocus
+                                onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
+                                    setFirstName(e.target.value)
+                                }
                             ></TextField>
                         </Grid>
                         <Grid item xs={12} sm={6}>
@@ -65,6 +120,9 @@ export const SignUp: React.FC = () => {
                                 fullWidth
                                 id="lastName"
                                 label="Last Name"
+                                onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
+                                    setLastName(e.target.value)
+                                }
                             ></TextField>
                         </Grid>
                         <Grid item xs={12}>
@@ -76,6 +134,9 @@ export const SignUp: React.FC = () => {
                                 label="Email Address"
                                 name="email"
                                 autoComplete="email"
+                                onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
+                                    setEmail(e.target.value)
+                                }
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -88,6 +149,9 @@ export const SignUp: React.FC = () => {
                                 type="password"
                                 id="password"
                                 autoComplete="current-password"
+                                onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
+                                    setPassword(e.target.value)
+                                }
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -98,6 +162,9 @@ export const SignUp: React.FC = () => {
                                 name="phone"
                                 label="Phone Number"
                                 id="phone"
+                                onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
+                                    setPhone(e.target.value)
+                                }
                             />
                         </Grid>
                         <Grid item xs={12}>
@@ -112,6 +179,9 @@ export const SignUp: React.FC = () => {
                                 InputLabelProps={{
                                     shrink: true,
                                 }}
+                                onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
+                                    setBirthDate(new Date(e.target.value))
+                                }
                             />
                         </Grid>
                         <Grid item xs={12} sm={6}>
@@ -122,6 +192,9 @@ export const SignUp: React.FC = () => {
                                 fullWidth
                                 id="streetAddress"
                                 label="Street Address"
+                                onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
+                                    setStreetAddress(e.target.value)
+                                }
                             ></TextField>
                         </Grid>
                         <Grid item xs={12} sm={6}>
@@ -132,6 +205,9 @@ export const SignUp: React.FC = () => {
                                 fullWidth
                                 id="postCode"
                                 label="Post Code"
+                                onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
+                                    setPostCode(e.target.value)
+                                }
                             ></TextField>
                         </Grid>
                         <Grid item xs={12} sm={6}>
@@ -142,6 +218,9 @@ export const SignUp: React.FC = () => {
                                 fullWidth
                                 id="city"
                                 label="City"
+                                onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
+                                    setCity(e.target.value)
+                                }
                             ></TextField>
                         </Grid>
                         <Grid item xs={12} sm={6}>
@@ -152,6 +231,9 @@ export const SignUp: React.FC = () => {
                                 fullWidth
                                 id="country"
                                 label="Country"
+                                onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
+                                    setCountry(e.target.value)
+                                }
                             ></TextField>
                         </Grid>
                     </Grid>
@@ -162,6 +244,10 @@ export const SignUp: React.FC = () => {
                         fullWidth
                         variant="outlined"
                         color="primary"
+                        onClick={e => {
+                            e.preventDefault();
+                            registerUser();
+                        }}
                     >
                         Sign Up
                     </Button>
