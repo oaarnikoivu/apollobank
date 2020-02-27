@@ -11,7 +11,6 @@ import {
 import { Alert } from '@material-ui/lab';
 import { User } from '../../models/user';
 import { useStyles } from './signup.style';
-import { useHistory } from 'react-router-dom';
 import Joi from 'joi';
 import { userSchema } from '../../schemas/user';
 
@@ -19,7 +18,7 @@ const API_ENDPOINT: string = 'http://localhost:8080/auth/signup/';
 
 export const SignUp: React.FC = () => {
     const classes = useStyles();
-    const history = useHistory();
+    // const history = useHistory();
 
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
@@ -27,7 +26,7 @@ export const SignUp: React.FC = () => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [phone, setPhone] = useState('');
-    const [birthDate, setBirthDate] = useState(new Date());
+    const [birthDate, setBirthDate] = useState('');
     const [streetAddress, setStreetAddress] = useState('');
     const [postCode, setPostCode] = useState('');
     const [city, setCity] = useState('');
@@ -73,7 +72,7 @@ export const SignUp: React.FC = () => {
         [confirmPassword],
     );
 
-    const registerUser = useCallback(async (): Promise<void> => {
+    const registerUser = useCallback(async () => {
         setErrorMessage('');
 
         const newUser: User = {
@@ -90,17 +89,27 @@ export const SignUp: React.FC = () => {
         };
 
         if (validUser(newUser)) {
-            let response = await fetch(API_ENDPOINT, {
+            await fetch(API_ENDPOINT, {
                 method: 'POST',
                 body: JSON.stringify(newUser),
                 headers: {
                     'content-type': 'application/json',
                 },
-            });
-
-            if (response.ok) {
-                history.push('/');
-            }
+            })
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    }
+                    return response.json().then((error: Error) => {
+                        throw new Error(error.message);
+                    });
+                })
+                .then(user => {
+                    console.log(user);
+                })
+                .catch(error => {
+                    console.log(error);
+                });
         }
     }, [
         email,
@@ -113,7 +122,6 @@ export const SignUp: React.FC = () => {
         postCode,
         city,
         country,
-        history,
         validUser,
     ]);
 
@@ -239,7 +247,7 @@ export const SignUp: React.FC = () => {
                                     shrink: true,
                                 }}
                                 onChange={(e: ChangeEvent<HTMLTextAreaElement>) => {
-                                    setBirthDate(new Date(e.target.value));
+                                    setBirthDate(e.target.value);
                                     setErrorMessage('');
                                 }}
                             />
