@@ -8,34 +8,15 @@ import {
     Button,
     Link,
 } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { User } from '../../models/user';
+import { useStyles } from './signup.style';
+import { useHistory } from 'react-router-dom';
 
 const API_ENDPOINT = 'http://localhost:8080/auth/signup/';
 
-const useStyles = makeStyles(theme => ({
-    container: {
-        fontFamily: theme.typography.fontFamily,
-    },
-    paper: {
-        marginTop: theme.spacing(8),
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-    },
-    datepicker: {
-        width: '100%',
-    },
-    form: {
-        width: '100%',
-        marginTop: theme.spacing(3),
-    },
-    submit: {
-        margin: theme.spacing(3, 0, 2),
-    },
-}));
-
 export const SignUp: React.FC = () => {
     const classes = useStyles();
+    const history = useHistory();
     const [firstName, setFirstName] = useState('');
     const [lastName, setLastName] = useState('');
     const [email, setEmail] = useState('');
@@ -47,8 +28,8 @@ export const SignUp: React.FC = () => {
     const [city, setCity] = useState('');
     const [country, setCountry] = useState('');
 
-    const registerUser = useCallback(async () => {
-        const newUser = {
+    const registerUser = useCallback(async (): Promise<void> => {
+        const newUser: User = {
             email: email,
             password: password,
             firstName: firstName,
@@ -70,7 +51,7 @@ export const SignUp: React.FC = () => {
         });
 
         if (response.ok) {
-            console.log('User successfully created!');
+            history.push('/');
         } else {
             response.json().then(r => console.log(r));
         }
@@ -85,6 +66,7 @@ export const SignUp: React.FC = () => {
         postCode,
         city,
         country,
+        history,
     ]);
 
     return (
