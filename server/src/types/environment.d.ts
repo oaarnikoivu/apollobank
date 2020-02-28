@@ -1,4 +1,4 @@
-import * as ts from 'typescript';
+import ts from 'typescript';
 
 declare global {
   namespace NodeJS {
@@ -7,6 +7,7 @@ declare global {
       PORT?: string;
       CORS_ORIGIN: string;
       DATABASE_URL?: string;
+      TOKEN_SECRET: string;
     }
   }
 }

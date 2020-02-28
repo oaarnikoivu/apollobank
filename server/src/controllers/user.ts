@@ -4,6 +4,7 @@ import { Response, Request, NextFunction } from 'express';
 import { User, IUser } from '../models/User';
 import bcrypt from 'bcryptjs';
 import Joi from 'joi';
+import jwt from 'jsonwebtoken';
 
 enum ValidationErrors {
   LOGIN = 'Unable to login.',
@@ -62,7 +63,24 @@ export const postLogin = (req: Request, res: Response, next: NextFunction) => {
       if (user) {
         bcrypt.compare(req.body.password, user.password).then((result: boolean) => {
           if (result) {
-            res.json({ result });
+            const payload = {
+              _id: user._id,
+              email: user.email,
+            };
+            jwt.sign(
+              payload,
+              process.env.TOKEN_SECRET as string,
+              {
+                expiresIn: '1d', // make sure to change this to 1h for deployment
+              },
+              (error: Error, token: string) => {
+                if (error) {
+                  displayValidationError(res, next, ValidationErrors.LOGIN, 422);
+                } else {
+                  res.json({ token });
+                }
+              },
+            );
           } else {
             displayValidationError(res, next, ValidationErrors.LOGIN, 422);
           }

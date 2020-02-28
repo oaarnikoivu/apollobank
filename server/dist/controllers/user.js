@@ -8,6 +8,7 @@ const user_1 = require("../schemas/validation/user");
 const User_1 = require("../models/User");
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const joi_1 = __importDefault(require("joi"));
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 var ValidationErrors;
 (function (ValidationErrors) {
     ValidationErrors["LOGIN"] = "Unable to login.";
@@ -63,7 +64,20 @@ exports.postLogin = (req, res, next) => {
             if (user) {
                 bcryptjs_1.default.compare(req.body.password, user.password).then((result) => {
                     if (result) {
-                        res.json({ result });
+                        const payload = {
+                            _id: user._id,
+                            email: user.email,
+                        };
+                        jsonwebtoken_1.default.sign(payload, process.env.TOKEN_SECRET, {
+                            expiresIn: '1d',
+                        }, (error, token) => {
+                            if (error) {
+                                displayValidationError(res, next, ValidationErrors.LOGIN, 422);
+                            }
+                            else {
+                                res.json({ token });
+                            }
+                        });
                     }
                     else {
                         displayValidationError(res, next, ValidationErrors.LOGIN, 422);
