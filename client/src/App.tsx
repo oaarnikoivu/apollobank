@@ -1,12 +1,8 @@
 import React from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import { WelcomePage } from './components/welcome/welcome_component';
-import { Accounts } from './components/accounts/accounts_component';
-import { Routes } from './routes/routes';
+import { BrowserRouter } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import 'typeface-roboto';
-import { SignUp } from './components/signup/signup_component';
-import { Login } from './components/login/login_component';
+import { Pages } from './components/pages/pages_component';
 
 const App: React.FC = () => {
     return (
@@ -15,13 +11,7 @@ const App: React.FC = () => {
                 <style>{'body { background-color: snow; }'}</style>
             </Helmet>
             <BrowserRouter>
-                <Switch>
-                    <Route path="/" exact component={WelcomePage} />
-                    <Route path="/signup" exact component={SignUp} />
-                    <Route path="/login" exact component={Login} />
-                    <Route path={Routes.ACCOUNTS} exact component={Accounts} />
-                    <Route path="/" render={() => <div>404</div>} />
-                </Switch>
+                <Pages />
             </BrowserRouter>
         </>
     );

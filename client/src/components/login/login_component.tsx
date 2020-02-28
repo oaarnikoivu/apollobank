@@ -76,10 +76,10 @@ export const Login: React.FC = () => {
                     throw new Error(error.message);
                 })
                 .then(result => {
-                    console.log(result);
+                    localStorage.token = result.token;
                     setTimeout(() => {
                         setIsLoading(false);
-                        //history.push('/accounts');
+                        history.push('/accounts');
                     }, 1000);
                 })
                 .catch((error: Error) => {
