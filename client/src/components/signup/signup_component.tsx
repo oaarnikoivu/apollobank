@@ -1,4 +1,4 @@
-import React, { useState, ChangeEvent, useCallback } from 'react';
+import React, { useState, ChangeEvent, useCallback, MouseEvent } from 'react';
 import {
     Container,
     CssBaseline,
@@ -43,7 +43,7 @@ export const SignUp: React.FC = () => {
                 return false;
             }
 
-            const result = Joi.validate(user, userSchema);
+            const result: Joi.ValidationResult<User> = Joi.validate(user, userSchema);
 
             if (result.error === null) {
                 return true;
@@ -75,7 +75,7 @@ export const SignUp: React.FC = () => {
         [confirmPassword],
     );
 
-    const registerUser = useCallback(async () => {
+    const registerUser = useCallback(async (): Promise<void> => {
         setErrorMessage('');
 
         const newUser: User = {
@@ -101,13 +101,12 @@ export const SignUp: React.FC = () => {
                     'content-type': 'application/json',
                 },
             })
-                .then(response => {
+                .then(async response => {
                     if (response.ok) {
                         return response.json();
                     }
-                    return response.json().then((error: Error) => {
-                        throw new Error(error.message);
-                    });
+                    const error: Error = await response.json();
+                    throw new Error(error.message);
                 })
                 .then(() => {
                     setTimeout(() => {
@@ -345,7 +344,7 @@ export const SignUp: React.FC = () => {
                                 fullWidth
                                 variant="outlined"
                                 color="primary"
-                                onClick={e => {
+                                onClick={(e: MouseEvent<HTMLButtonElement>) => {
                                     e.preventDefault();
                                     registerUser();
                                 }}
