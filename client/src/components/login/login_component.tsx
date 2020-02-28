@@ -89,7 +89,7 @@ export const Login: React.FC = () => {
                     }, 1000);
                 });
         }
-    }, [email, password, validUser]);
+    }, [email, password, validUser, history]);
 
     const renderAlert = (): JSX.Element => {
         return (
