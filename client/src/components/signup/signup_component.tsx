@@ -108,10 +108,11 @@ export const SignUp: React.FC = () => {
                     const error: Error = await response.json();
                     throw new Error(error.message);
                 })
-                .then(() => {
+                .then(result => {
+                    localStorage.token = result.token;
                     setTimeout(() => {
                         setIsLoading(false);
-                        history.push('/login');
+                        history.push('/accounts');
                     }, 1000);
                 })
                 .catch((error: Error) => {

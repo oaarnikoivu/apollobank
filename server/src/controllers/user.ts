@@ -16,6 +16,27 @@ const displayValidationError = (res: Response, next: NextFunction, errorMessage:
   next(error);
 };
 
+const signAndRespondWithToken = (user: IUser, res: Response, next: NextFunction) => {
+  const payload = {
+    _id: user._id,
+    email: user.email,
+  };
+  jwt.sign(
+    payload,
+    process.env.TOKEN_SECRET as string,
+    {
+      expiresIn: '1d', // make sure to change this to 1h for deployment
+    },
+    (error: Error, token: string) => {
+      if (error) {
+        displayValidationError(res, next, ValidationErrors.LOGIN, 422);
+      } else {
+        res.json({ token });
+      }
+    },
+  );
+};
+
 export const postSignup = (req: Request, res: Response, next: NextFunction) => {
   let newUser: IUser = req.body;
   const result: Joi.ValidationResult<any> = Joi.validate(newUser, userSchema);
@@ -43,7 +64,9 @@ export const postSignup = (req: Request, res: Response, next: NextFunction) => {
             country: newUser.country,
           })
             .save()
-            .then(savedUser => res.json(savedUser));
+            .then(savedUser => {
+              signAndRespondWithToken(savedUser, res, next);
+            });
         });
       }
     });
@@ -63,24 +86,7 @@ export const postLogin = (req: Request, res: Response, next: NextFunction) => {
       if (user) {
         bcrypt.compare(req.body.password, user.password).then((result: boolean) => {
           if (result) {
-            const payload = {
-              _id: user._id,
-              email: user.email,
-            };
-            jwt.sign(
-              payload,
-              process.env.TOKEN_SECRET as string,
-              {
-                expiresIn: '1d', // make sure to change this to 1h for deployment
-              },
-              (error: Error, token: string) => {
-                if (error) {
-                  displayValidationError(res, next, ValidationErrors.LOGIN, 422);
-                } else {
-                  res.json({ token });
-                }
-              },
-            );
+            signAndRespondWithToken(user, res, next);
           } else {
             displayValidationError(res, next, ValidationErrors.LOGIN, 422);
           }
