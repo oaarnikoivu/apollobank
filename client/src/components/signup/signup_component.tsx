@@ -14,6 +14,7 @@ import { useStyles } from './signup.style';
 import Joi from 'joi';
 import { userSchema } from '../../schemas/user';
 import { useHistory } from 'react-router-dom';
+import { InvalidSignupErrors } from './signup_interfaces';
 
 const API_ENDPOINT: string = 'http://localhost:8080/auth/signup/';
 
@@ -49,25 +50,25 @@ export const SignUp: React.FC = () => {
             }
 
             if (result.error.message.includes('firstName')) {
-                setErrorMessage('First name is invalid.');
+                setErrorMessage(InvalidSignupErrors.FIRST_NAME);
             } else if (result.error.message.includes('lastName')) {
-                setErrorMessage('Last name is invalid.');
+                setErrorMessage(InvalidSignupErrors.LAST_NAME);
             } else if (result.error.message.includes('email')) {
-                setErrorMessage('Email is invalid.');
+                setErrorMessage(InvalidSignupErrors.EMAIL);
             } else if (result.error.message.includes('password')) {
-                setErrorMessage('Password is invalid.');
+                setErrorMessage(InvalidSignupErrors.PASSWORD);
             } else if (result.error.message.includes('dateOfBirth')) {
-                setErrorMessage('Date of birth is invalid.');
+                setErrorMessage(InvalidSignupErrors.BIRTH_DATE);
             } else if (result.error.message.includes('phone')) {
-                setErrorMessage('Phone number is invalid.');
+                setErrorMessage(InvalidSignupErrors.PHONE);
             } else if (result.error.message.includes('streetAddress')) {
-                setErrorMessage('Street address is invalid.');
+                setErrorMessage(InvalidSignupErrors.STREET_ADDRESS);
             } else if (result.error.message.includes('postCode')) {
-                setErrorMessage('Post code is invalid.');
+                setErrorMessage(InvalidSignupErrors.POST_CODE);
             } else if (result.error.message.includes('city')) {
-                setErrorMessage('City is invalid.');
+                setErrorMessage(InvalidSignupErrors.CITY);
             } else if (result.error.message.includes('country')) {
-                setErrorMessage('Country is invalid.');
+                setErrorMessage(InvalidSignupErrors.COUNTRY);
             }
             return false;
         },
