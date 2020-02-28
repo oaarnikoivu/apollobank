@@ -28,3 +28,13 @@ export const userSchema: Joi.ObjectSchema = Joi.object().keys({
   city: Joi.string().required(),
   country: Joi.string().required(),
 });
+
+export const userLoginSchema: Joi.ObjectSchema = Joi.object().keys({
+  email: Joi.string()
+    .email()
+    .required(),
+  password: Joi.string()
+    .trim()
+    .min(6)
+    .required(),
+});

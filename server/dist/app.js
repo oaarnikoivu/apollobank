@@ -27,6 +27,7 @@ mongoose_1.default
     .connect(process.env.DATABASE_URL, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    useCreateIndex: true,
 })
     .then(() => console.log('Connected to DB'))
     .catch((err) => console.log(err));
@@ -41,6 +42,7 @@ app.get('/accounts', accountController.getAccounts);
 app.get('/cards', cardsController.getCards);
 app.get('/payments', paymentsController.getPayments);
 app.get('/dashboard', dashboardController.getDashboard);
-app.post('/signup', userController.postSignup);
+app.post('/auth/signup', userController.postSignup);
+app.post('/auth/login', userController.postLogin);
 exports.default = app;
 //# sourceMappingURL=app.js.map

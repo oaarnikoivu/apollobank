@@ -14,7 +14,7 @@ const userSchema = new Schema({
     password: requiredString,
     firstName: requiredString,
     lastName: requiredString,
-    dateOfBirth: { type: Date, required: true },
+    dateOfBirth: requiredString,
     phone: requiredString,
     streetAddress: requiredString,
     postCode: requiredString,

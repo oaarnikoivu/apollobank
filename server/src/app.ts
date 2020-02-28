@@ -38,5 +38,6 @@ app.get('/cards', cardsController.getCards);
 app.get('/payments', paymentsController.getPayments);
 app.get('/dashboard', dashboardController.getDashboard);
 app.post('/auth/signup', userController.postSignup);
+app.post('/auth/login', userController.postLogin);
 
 export default app;

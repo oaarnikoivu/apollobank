@@ -8,6 +8,15 @@ const user_1 = require("../schemas/validation/user");
 const User_1 = require("../models/User");
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
 const joi_1 = __importDefault(require("joi"));
+var ValidationErrors;
+(function (ValidationErrors) {
+    ValidationErrors["LOGIN"] = "Unable to login.";
+})(ValidationErrors || (ValidationErrors = {}));
+const displayValidationError = (res, next, errorMessage, statusCode) => {
+    const error = new Error(errorMessage);
+    res.status(statusCode).json({ message: error.message });
+    next(error);
+};
 exports.postSignup = (req, res, next) => {
     let newUser = req.body;
     const result = joi_1.default.validate(newUser, user_1.userSchema);
@@ -17,10 +26,11 @@ exports.postSignup = (req, res, next) => {
         }).then((user) => {
             if (user) {
                 const error = new Error(errorTypes_1.ErrorTypes.EMAIL_EXISTS);
+                res.status(409).json({ message: error.message });
                 next(error);
             }
             else {
-                bcryptjs_1.default.hash(newUser.password, 12).then((hash) => {
+                bcryptjs_1.default.hash(newUser.password.trim(), 12).then((hash) => {
                     new User_1.User({
                         email: newUser.email,
                         password: hash,
@@ -34,13 +44,39 @@ exports.postSignup = (req, res, next) => {
                         country: newUser.country,
                     })
                         .save()
-                        .then(savedUser => res.json({ savedUser }));
+                        .then(savedUser => res.json(savedUser));
                 });
             }
         });
     }
     else {
+        res.status(422);
         next(result.error);
+    }
+};
+exports.postLogin = (req, res, next) => {
+    const result = joi_1.default.validate(req.body, user_1.userLoginSchema);
+    if (result.error === null) {
+        User_1.User.findOne({
+            email: req.body.email,
+        }).then((user) => {
+            if (user) {
+                bcryptjs_1.default.compare(req.body.password, user.password).then((result) => {
+                    if (result) {
+                        res.json({ result });
+                    }
+                    else {
+                        displayValidationError(res, next, ValidationErrors.LOGIN, 422);
+                    }
+                });
+            }
+            else {
+                displayValidationError(res, next, ValidationErrors.LOGIN, 422);
+            }
+        });
+    }
+    else {
+        displayValidationError(res, next, ValidationErrors.LOGIN, 422);
     }
 };
 //# sourceMappingURL=user.js.map

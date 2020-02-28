@@ -9,6 +9,7 @@ exports.userSchema = joi_1.default.object().keys({
         .email()
         .required(),
     password: joi_1.default.string()
+        .trim()
         .min(6)
         .required(),
     firstName: joi_1.default.string()
@@ -30,5 +31,14 @@ exports.userSchema = joi_1.default.object().keys({
     postCode: joi_1.default.string().required(),
     city: joi_1.default.string().required(),
     country: joi_1.default.string().required(),
+});
+exports.userLoginSchema = joi_1.default.object().keys({
+    email: joi_1.default.string()
+        .email()
+        .required(),
+    password: joi_1.default.string()
+        .trim()
+        .min(6)
+        .required(),
 });
 //# sourceMappingURL=user.js.map
