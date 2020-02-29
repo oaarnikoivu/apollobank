@@ -1,5 +1,4 @@
 import React from 'react';
-import { WelcomePageProps } from './welcome_interfaces';
 import { Landing } from '../landing/landing_component';
 
 //import { WelcomeButton, WelcomeText } from './welcome.style';
@@ -7,7 +6,7 @@ import { Landing } from '../landing/landing_component';
 // import { fetchAccounts } from '../../actions/accounts';
 // import { Routes } from '../../routes/routes';
 
-export const WelcomePage: React.FC<WelcomePageProps> = (props: WelcomePageProps) => {
+export const WelcomePage: React.FC = () => {
     // const renderExistingUserWelcome = (): JSX.Element => {
     //     return (
     //         <>

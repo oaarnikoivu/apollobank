@@ -14,7 +14,19 @@ import { useStyles } from './signup.style';
 import Joi from 'joi';
 import { userSchema } from '../../schemas/user';
 import { useHistory } from 'react-router-dom';
-import { InvalidSignupErrors } from './signup_interfaces';
+
+export enum InvalidSignupErrors {
+    FIRST_NAME = 'First name is invalid.',
+    LAST_NAME = 'Last name is invalid.',
+    EMAIL = 'Email is invalid.',
+    PASSWORD = 'Password is invalid.',
+    PHONE = 'Phone number is invalid.',
+    BIRTH_DATE = 'Date of birth is invalid.',
+    STREET_ADDRESS = 'Street address is invalid.',
+    POST_CODE = 'Post code is invalid.',
+    CITY = 'City is invalid',
+    COUNTRY = 'Country is invalid.',
+}
 
 const API_ENDPOINT: string = 'http://localhost:8080/auth/signup/';
 
