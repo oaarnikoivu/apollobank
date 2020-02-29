@@ -61,7 +61,9 @@ exports.postSignup = (req, res, next) => {
                         country: newUser.country,
                     })
                         .save()
-                        .then((savedUser) => signAndRespondWithToken(savedUser, res, next));
+                        .then(savedUser => {
+                        signAndRespondWithToken(savedUser, res, next);
+                    });
                 });
             }
         });

@@ -10,6 +10,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const middleware_1 = require("./middleware");
 const express_1 = __importDefault(require("express"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const morgan_1 = __importDefault(require("morgan"));
@@ -37,6 +38,7 @@ app.use(cors_1.default({
     origin: process.env.CORS_ORIGIN,
 }));
 app.use(express_1.default.json());
+app.use(middleware_1.checkTokenSetUser);
 app.get('/', homeController.index);
 app.get('/accounts', accountController.getAccounts);
 app.get('/cards', cardsController.getCards);

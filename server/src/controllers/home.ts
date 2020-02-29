@@ -1,7 +1,9 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
+import { RequestCustom } from '../types/custom';
 
-export const index = (_req: Request, res: Response) => {
+export const index = (req: RequestCustom, res: Response) => {
   res.json({
     message: 'Hello World!',
+    user: req.user,
   });
 };

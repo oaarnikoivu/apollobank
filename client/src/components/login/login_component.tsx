@@ -11,7 +11,7 @@ import {
 import { Alert } from '@material-ui/lab';
 import { useStyles } from './login.style';
 import Joi from 'joi';
-import { userLoginSchema } from '../../schemas/user';
+import { userLoginSchema } from '../../schemas/validation/user';
 import { useHistory } from 'react-router-dom';
 
 const API_ENDPOINT: string = 'http://localhost:8080/auth/login/';

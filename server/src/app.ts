@@ -1,3 +1,4 @@
+import { checkTokenSetUser } from './middleware';
 import express, { Express } from 'express';
 import mongoose from 'mongoose';
 import morgan from 'morgan';
@@ -31,6 +32,7 @@ app.use(
   }),
 );
 app.use(express.json());
+app.use(checkTokenSetUser);
 
 app.get('/', homeController.index);
 app.get('/accounts', accountController.getAccounts);

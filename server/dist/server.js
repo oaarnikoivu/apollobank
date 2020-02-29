@@ -4,12 +4,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const app_1 = __importDefault(require("./app"));
-const middleware_1 = require("./middleware");
-require("./lib/env");
 const PORT = process.env.PORT;
 const NODE_ENV = process.env.NODE_ENV;
-app_1.default.use(middleware_1.notFound);
-app_1.default.use(middleware_1.errorHandler);
 app_1.default.listen(PORT, () => {
     console.log('App is running at http://localhost:%d in %s mode', PORT, NODE_ENV);
     console.log('  Press CTRL-C to stop\n');

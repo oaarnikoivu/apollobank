@@ -12,7 +12,7 @@ import { Alert } from '@material-ui/lab';
 import { User } from '../../models/user';
 import { useStyles } from './signup.style';
 import Joi from 'joi';
-import { userSchema } from '../../schemas/user';
+import { userSchema } from '../../schemas/validation/user';
 import { useHistory } from 'react-router-dom';
 
 export enum InvalidSignupErrors {
