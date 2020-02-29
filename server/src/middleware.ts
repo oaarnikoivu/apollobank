@@ -27,7 +27,7 @@ export const checkTokenSetUser = (req: RequestCustom, _res: Response, next: Next
           console.log(error);
         }
         req.user = user;
-        console.log(req.user);
+        next();
       });
     } else {
       next();

@@ -20,6 +20,8 @@ const signAndRespondWithToken = (user: IUser, res: Response, next: NextFunction)
   const payload = {
     _id: user._id,
     email: user.email,
+    firstName: user.firstName,
+    lastName: user.lastName,
   };
   jwt.sign(
     payload,
