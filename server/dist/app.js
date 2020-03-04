@@ -17,11 +17,8 @@ const morgan_1 = __importDefault(require("morgan"));
 const helmet_1 = __importDefault(require("helmet"));
 const cors_1 = __importDefault(require("cors"));
 require("./lib/env");
+const routes_1 = __importDefault(require("./api/routes"));
 const homeController = __importStar(require("./controllers/home"));
-const accountController = __importStar(require("./controllers/account"));
-const cardsController = __importStar(require("./controllers/cards"));
-const paymentsController = __importStar(require("./controllers/payments"));
-const dashboardController = __importStar(require("./controllers/dashboard"));
 const userController = __importStar(require("./controllers/user"));
 const app = express_1.default();
 mongoose_1.default
@@ -40,10 +37,7 @@ app.use(cors_1.default({
 app.use(express_1.default.json());
 app.use(middleware_1.checkTokenSetUser);
 app.get('/', homeController.index);
-app.get('/accounts', accountController.getAccounts);
-app.get('/cards', cardsController.getCards);
-app.get('/payments', paymentsController.getPayments);
-app.get('/dashboard', dashboardController.getDashboard);
+app.use('/api', middleware_1.isLoggedIn, routes_1.default);
 app.post('/auth/signup', userController.postSignup);
 app.post('/auth/login', userController.postLogin);
 exports.default = app;

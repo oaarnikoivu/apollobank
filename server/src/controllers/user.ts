@@ -6,6 +6,13 @@ import bcrypt from 'bcryptjs';
 import Joi from 'joi';
 import jwt from 'jsonwebtoken';
 
+export interface Payload extends Object {
+  _id: string;
+  email: string;
+  firstName: string;
+  lastName: string;
+}
+
 enum ValidationErrors {
   LOGIN = 'Unable to login.',
 }
@@ -17,7 +24,7 @@ const displayValidationError = (res: Response, next: NextFunction, errorMessage:
 };
 
 const signAndRespondWithToken = (user: IUser, res: Response, next: NextFunction) => {
-  const payload = {
+  const payload: Payload = {
     _id: user._id,
     email: user.email,
     firstName: user.firstName,

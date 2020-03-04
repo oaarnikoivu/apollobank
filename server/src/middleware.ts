@@ -1,3 +1,4 @@
+import { Payload } from './controllers/user';
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { RequestCustom } from './types/custom';
@@ -27,7 +28,7 @@ export const checkTokenSetUser = (req: RequestCustom, _res: Response, next: Next
         if (error) {
           console.log(error);
         }
-        req.user = user;
+        req.user = user as Payload;
         next();
       });
     } else {

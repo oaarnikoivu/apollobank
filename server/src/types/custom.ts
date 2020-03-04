@@ -1,5 +1,6 @@
 import { Request } from 'express';
+import { Payload } from '../controllers/user';
 
 export interface RequestCustom extends Request {
-  user?: string | object | undefined;
+  user?: Payload | undefined;
 }

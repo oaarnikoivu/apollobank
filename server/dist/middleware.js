@@ -4,9 +4,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const errorTypes_1 = require("./errorTypes");
 exports.notFound = (req, res, next) => {
-    const error = new Error(`Not Found - ${req.originalUrl}`);
     res.status(404);
+    const error = new Error(`Not Found - ${req.originalUrl}`);
     next(error);
 };
 exports.errorHandler = (error, _req, res) => {
@@ -27,7 +28,7 @@ exports.checkTokenSetUser = (req, _res, next) => {
                     console.log(error);
                 }
                 req.user = user;
-                console.log(req.user);
+                next();
             });
         }
         else {
@@ -36,6 +37,16 @@ exports.checkTokenSetUser = (req, _res, next) => {
     }
     else {
         next();
+    }
+};
+exports.isLoggedIn = (req, res, next) => {
+    if (req.user) {
+        next();
+    }
+    else {
+        const error = new Error(errorTypes_1.ErrorTypes.UNAUTHORIZED);
+        res.status(401);
+        next(error);
     }
 };
 //# sourceMappingURL=middleware.js.map

@@ -22,6 +22,8 @@ const signAndRespondWithToken = (user, res, next) => {
     const payload = {
         _id: user._id,
         email: user.email,
+        firstName: user.firstName,
+        lastName: user.lastName,
     };
     jsonwebtoken_1.default.sign(payload, process.env.TOKEN_SECRET, {
         expiresIn: '1d',

@@ -5,4 +5,7 @@ exports.getAccounts = (_req, res) => {
         message: 'accounts',
     });
 };
+exports.postAccounts = (req, _res, _next) => {
+    console.log(req.user);
+};
 //# sourceMappingURL=account.js.map
