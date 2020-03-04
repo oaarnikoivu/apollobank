@@ -1,4 +1,4 @@
-import { checkTokenSetUser } from './middleware';
+import { checkTokenSetUser, isLoggedIn } from './middleware';
 import express, { Express } from 'express';
 import mongoose from 'mongoose';
 import morgan from 'morgan';
@@ -34,7 +34,7 @@ app.use(checkTokenSetUser);
 app.get('/', homeController.index);
 
 // authenticated api routes
-app.use('/api', apiRouter);
+app.use('/api', isLoggedIn, apiRouter);
 
 // signup and login routes
 app.post('/auth/signup', userController.postSignup);
