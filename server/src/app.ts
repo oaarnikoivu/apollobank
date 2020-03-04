@@ -1,4 +1,4 @@
-import { checkTokenSetUser } from './middleware';
+import { checkTokenSetUser, isLoggedIn } from './middleware';
 import express, { Express } from 'express';
 import mongoose from 'mongoose';
 import morgan from 'morgan';
@@ -6,11 +6,8 @@ import helmet from 'helmet';
 import cors from 'cors';
 import './lib/env';
 
+import apiRouter from './api/routes';
 import * as homeController from './controllers/home';
-import * as accountController from './controllers/account';
-import * as cardsController from './controllers/cards';
-import * as paymentsController from './controllers/payments';
-import * as dashboardController from './controllers/dashboard';
 import * as userController from './controllers/user';
 
 const app: Express = express();
@@ -35,10 +32,11 @@ app.use(express.json());
 app.use(checkTokenSetUser);
 
 app.get('/', homeController.index);
-app.get('/accounts', accountController.getAccounts);
-app.get('/cards', cardsController.getCards);
-app.get('/payments', paymentsController.getPayments);
-app.get('/dashboard', dashboardController.getDashboard);
+
+// authenticated api routes
+app.use('/api', isLoggedIn, apiRouter);
+
+// signup and login routes
 app.post('/auth/signup', userController.postSignup);
 app.post('/auth/login', userController.postLogin);
 

@@ -29,6 +29,6 @@ export const useUserFromToken = () => {
                 }
             }),
         );
-    });
+    }, [history]);
     return user;
 };

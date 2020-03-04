@@ -1,10 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { RequestCustom } from './types/custom';
+import { ErrorTypes } from './errorTypes';
 
 export const notFound = (req: Request, res: Response, next: NextFunction) => {
-  const error: Error = new Error(`Not Found - ${req.originalUrl}`);
   res.status(404);
+  const error: Error = new Error(`Not Found - ${req.originalUrl}`);
   next(error);
 };
 
@@ -34,5 +35,15 @@ export const checkTokenSetUser = (req: RequestCustom, _res: Response, next: Next
     }
   } else {
     next();
+  }
+};
+
+export const isLoggedIn = (req: RequestCustom, res: Response, next: NextFunction) => {
+  if (req.user) {
+    next();
+  } else {
+    const error: Error = new Error(ErrorTypes.UNAUTHORIZED);
+    res.status(401);
+    next(error);
   }
 };
