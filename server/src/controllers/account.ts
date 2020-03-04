@@ -1,11 +1,13 @@
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
 import { RequestCustom } from '../types/custom';
 import { Account } from '../models/Account';
 
-export const getAccounts = (_req: Request, res: Response) => {
-  res.json({
-    message: 'accounts',
-  });
+export const getAccounts = (req: RequestCustom, _res: Response, _next: NextFunction) => {
+  if (req.user) {
+    let accounts = Account.find({ owner: req.user._id }).lean();
+    console.log(accounts.tree);
+  } else {
+  }
 };
 
 export const postAccounts = (req: RequestCustom, res: Response, next: NextFunction) => {

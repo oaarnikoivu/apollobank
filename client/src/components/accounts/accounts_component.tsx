@@ -1,4 +1,4 @@
-import React, { useCallback, MouseEvent } from 'react';
+import React, { useCallback, MouseEvent, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { NavBar } from '../navbar/navbar_component';
 import { useUserFromToken } from '../../hooks/useUserFromToken';
@@ -9,6 +9,23 @@ const API_ENDPOINT = 'http://localhost:8080/api/accounts';
 export const Accounts: React.FC = () => {
     const user = useUserFromToken();
     const history = useHistory();
+    const [accounts, setAccounts] = useState([]);
+
+    useEffect(() => {
+        async function getAccounts() {
+            let data = await fetch(API_ENDPOINT, {
+                method: 'GET',
+                headers: {
+                    authorization: `Bearer ${localStorage.getItem('token')}`,
+                },
+            }).then(res => {
+                return res.json();
+            });
+            console.log(data);
+            setAccounts(data);
+        }
+        getAccounts();
+    }, []);
 
     const createNewAccount = useCallback(async () => {
         let newAccount = {
