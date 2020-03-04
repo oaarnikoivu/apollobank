@@ -15,17 +15,28 @@ export const getAccount = (req: RequestCustom, res: Response, _next: NextFunctio
 };
 
 export const postAccounts = (req: RequestCustom, res: Response, next: NextFunction) => {
-  new Account({
+  Account.findOne({
     owner: req.user?._id,
     currency: req.body.currency,
-    balance: req.body.balance,
-  })
-    .save()
-    .then(savedAccount => {
-      res.json(savedAccount);
-    })
-    .catch(error => {
-      console.log(error);
+  }).then(account => {
+    if (account) {
+      const error: Error = new Error(`You already have a ${req.body.currency} account.`);
+      res.status(409).json({ message: error.message });
       next(error);
-    });
+    } else {
+      new Account({
+        owner: req.user?._id,
+        currency: req.body.currency,
+        balance: req.body.balance,
+      })
+        .save()
+        .then(savedAccount => {
+          res.json(savedAccount);
+        })
+        .catch(error => {
+          console.log(error);
+          next(error);
+        });
+    }
+  });
 };

@@ -47,15 +47,10 @@ export const Accounts: React.FC = () => {
         );
     }, [user]);
 
-    // when the component mounts immediately fetch the available accounts for the user
-    useEffect(() => {
-        getAccounts();
-    }, [getAccounts]);
-
     const createNewAccount = useCallback(async () => {
         let newAccount = {
             owner: user,
-            currency: 'EUR',
+            currency: 'USD',
             balance: 0,
         };
 
@@ -69,7 +64,7 @@ export const Accounts: React.FC = () => {
         })
             .then(async response => {
                 if (response.ok) {
-                    //getAccounts();
+                    getAccounts();
                 }
                 const error: Error = await response.json();
                 throw new Error(error.message);
@@ -80,9 +75,14 @@ export const Accounts: React.FC = () => {
             .catch(error => {
                 console.log(error);
             });
-    }, [user]);
+    }, [user, getAccounts]);
 
-    const determineCardHeader = (account: any) => {
+    // when the component mounts immediately fetch the available accounts for the user
+    useEffect(() => {
+        getAccounts();
+    }, [getAccounts]);
+
+    const determineCardLabels = (account: any) => {
         let header: string = '';
         let currency: string = '';
         switch (account.currency) {
@@ -143,10 +143,10 @@ export const Accounts: React.FC = () => {
                                         color="textSecondary"
                                         gutterBottom
                                     >
-                                        {determineCardHeader(account)[0]}
+                                        {determineCardLabels(account)[0]}
                                     </Typography>
                                     <Typography>
-                                        {determineCardHeader(account)[1]}
+                                        {determineCardLabels(account)[1]}
                                         {account.balance}
                                     </Typography>
                                 </CardContent>
