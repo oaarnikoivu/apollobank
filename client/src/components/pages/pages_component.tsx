@@ -4,6 +4,7 @@ import { WelcomePage } from '../welcome/welcome_component';
 import { SignUp } from '../signup/signup_component';
 import { Login } from '../login/login_component';
 import { Accounts } from '../accounts/accounts_component';
+import { Account } from '../accounts/account_component';
 
 interface AuthenticatedRouteProps {
     exact?: boolean;
@@ -44,6 +45,7 @@ export const Pages = (): JSX.Element => {
             <LoggedInRoute path="/login" exact component={Login} />
             <LoggedInRoute path="/signup" exact component={SignUp} />
             <AuthenticatedRoute path="/accounts" exact component={Accounts} />
+            <AuthenticatedRoute path="/accounts/:id" exact component={Account} />
             <Route path="/" render={() => <div>404</div>} />;
         </Switch>
     );

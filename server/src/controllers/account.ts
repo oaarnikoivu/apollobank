@@ -8,6 +8,12 @@ export const getAccounts = (req: RequestCustom, res: Response, _next: NextFuncti
   });
 };
 
+export const getAccount = (req: RequestCustom, res: Response, _next: NextFunction) => {
+  Account.findOne({ _id: req.params.id, owner: req.user?._id }).then(account => {
+    res.json(account);
+  });
+};
+
 export const postAccounts = (req: RequestCustom, res: Response, next: NextFunction) => {
   new Account({
     owner: req.user?._id,

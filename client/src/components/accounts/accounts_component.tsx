@@ -2,28 +2,10 @@ import React, { useCallback, MouseEvent, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { NavBar } from '../navbar/navbar_component';
 import { useUserFromToken } from '../../hooks/useUserFromToken';
-import { Button, Card, Typography, CardContent, makeStyles } from '@material-ui/core';
+import { Button, Card, Typography, CardContent } from '@material-ui/core';
+import { useStyles } from './accounts.style';
 
 const API_ENDPOINT = 'http://localhost:8080/api/accounts';
-
-const useStyles = makeStyles({
-    root: {
-        textAlign: 'center',
-        minWidth: 420,
-        marginTop: 12,
-    },
-    bullet: {
-        display: 'inline-block',
-        margin: '0 2px',
-        transform: 'scale(0.8)',
-    },
-    title: {
-        fontSize: 18,
-    },
-    pos: {
-        marginBottom: 12,
-    },
-});
 
 export const Accounts: React.FC = () => {
     const classes = useStyles();
@@ -31,23 +13,44 @@ export const Accounts: React.FC = () => {
     const history = useHistory();
     const [accounts, setAccounts] = useState([]);
 
-    useEffect(() => {
-        async function getAccounts() {
-            await fetch(API_ENDPOINT, {
+    const getAccount = useCallback(
+        async (id: string) => {
+            await fetch(API_ENDPOINT + `/${id}`, {
                 headers: {
                     authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
             }).then(res =>
-                res.json().then(accounts => {
-                    // make sure user is logged in, if so.. receive the accounts
+                res.json().then((account: any) => {
                     if (user) {
-                        setAccounts(accounts);
+                        history.push({
+                            pathname: `/accounts/${id}`,
+                            state: account,
+                        });
                     }
                 }),
             );
-        }
-        getAccounts();
+        },
+        [user, history],
+    );
+
+    const getAccounts = useCallback(async () => {
+        await fetch(API_ENDPOINT, {
+            headers: {
+                authorization: `Bearer ${localStorage.getItem('token')}`,
+            },
+        }).then(res =>
+            res.json().then(accounts => {
+                if (user) {
+                    setAccounts(accounts);
+                }
+            }),
+        );
     }, [user]);
+
+    // when the component mounts immediately fetch the available accounts for the user
+    useEffect(() => {
+        getAccounts();
+    }, [getAccounts]);
 
     const createNewAccount = useCallback(async () => {
         let newAccount = {
@@ -66,7 +69,7 @@ export const Accounts: React.FC = () => {
         })
             .then(async response => {
                 if (response.ok) {
-                    return response.json();
+                    //getAccounts();
                 }
                 const error: Error = await response.json();
                 throw new Error(error.message);
@@ -115,22 +118,25 @@ export const Accounts: React.FC = () => {
                     flexDirection: 'column',
                 }}
             >
-                <h1>
-                    {user?.firstName.toUpperCase()} {user?.lastName.toUpperCase()} ACCOUNTS
-                </h1>
+                <h1>Accounts</h1>
                 <Button
                     onClick={(e: MouseEvent<HTMLButtonElement>) => {
                         e.preventDefault();
                         createNewAccount();
                     }}
-                    color="inherit"
+                    variant="contained"
+                    color="primary"
                 >
-                    Create new account
+                    + New
                 </Button>
                 <div style={{ marginTop: 24 }}>
-                    {accounts.map((account: any, index: number) => {
+                    {accounts.map((account: any) => {
                         return (
-                            <Card key={index} className={classes.root}>
+                            <Card
+                                key={account._id}
+                                className={classes.root}
+                                onClick={() => getAccount(account._id)}
+                            >
                                 <CardContent>
                                     <Typography
                                         className={classes.title}

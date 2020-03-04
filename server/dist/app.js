@@ -37,7 +37,7 @@ app.use(cors_1.default({
 app.use(express_1.default.json());
 app.use(middleware_1.checkTokenSetUser);
 app.get('/', homeController.index);
-app.use('/api', routes_1.default);
+app.use('/api', middleware_1.isLoggedIn, routes_1.default);
 app.post('/auth/signup', userController.postSignup);
 app.post('/auth/login', userController.postLogin);
 exports.default = app;

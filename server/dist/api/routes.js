@@ -19,6 +19,7 @@ const dashboardController = __importStar(require("../controllers/dashboard"));
 const apiRouter = express_1.Router();
 apiRouter.use(cors_1.default());
 apiRouter.get('/accounts', accountController.getAccounts);
+apiRouter.get('/accounts/:id', accountController.getAccount);
 apiRouter.post('/accounts', accountController.postAccounts);
 apiRouter.get('/cards', cardsController.getCards);
 apiRouter.get('/payments', paymentsController.getPayments);
