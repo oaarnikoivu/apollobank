@@ -5,6 +5,7 @@ import { Home } from './pages/Home';
 import { Register } from './pages/Register';
 import { Login } from './pages/Login';
 import 'typeface-roboto';
+import { Bye } from './pages/Bye';
 
 export const Routes: React.FC = () => {
     return (
@@ -24,11 +25,15 @@ export const Routes: React.FC = () => {
                         <div>
                             <Link to="/login">Login</Link>
                         </div>
+                        <div>
+                            <Link to="/bye">Bye</Link>
+                        </div>
                     </header>
                     <Switch>
                         <Route exact path="/" component={Home} />
                         <Route exact path="/register" component={Register} />
                         <Route exact path="/login" component={Login} />
+                        <Route exact path="/bye" component={Bye} />
                     </Switch>
                 </div>
             </BrowserRouter>
