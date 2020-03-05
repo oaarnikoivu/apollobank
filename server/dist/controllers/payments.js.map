@@ -1,1 +1,0 @@
-{"version":3,"file":"payments.js","sourceRoot":"","sources":["../../src/controllers/payments.ts"],"names":[],"mappings":";;AAEa,QAAA,WAAW,GAAG,CAAC,IAAa,EAAE,GAAa,EAAE,EAAE;IAC1D,GAAG,CAAC,IAAI,CAAC;QACP,OAAO,EAAE,eAAe;KACzB,CAAC,CAAC;AACL,CAAC,CAAC"}

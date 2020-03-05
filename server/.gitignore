@@ -1,6 +1,7 @@
-.env 
-./node_modules
-.prettierrc
-.eslintrc.js
-src/lib/env.ts
-src/@types/environment.d.ts
+.idea/
+.vscode/
+node_modules/
+build/
+tmp/
+temp/
+.env
