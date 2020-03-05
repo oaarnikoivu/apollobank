@@ -36,6 +36,9 @@ export const Header: React.FC = () => {
                 <Link to="/bye">Bye</Link>
             </div>
             <div>
+                <Link to="/accounts">Accounts</Link>
+            </div>
+            <div>
                 {!loading && data && data.me ? (
                     <button
                         onClick={async () => {

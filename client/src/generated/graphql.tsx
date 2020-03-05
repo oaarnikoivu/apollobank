@@ -14,6 +14,8 @@ export type Scalars = {
 export type Account = {
    __typename?: 'Account',
   id: Scalars['Int'],
+  currency: Scalars['String'],
+  balance: Scalars['Float'],
 };
 
 export type LoginResponse = {
@@ -28,6 +30,7 @@ export type Mutation = {
   revokeRefreshTokensForUser: Scalars['Boolean'],
   login: LoginResponse,
   register: Scalars['Boolean'],
+  createAccount: Scalars['Boolean'],
 };
 
 
@@ -55,12 +58,19 @@ export type MutationRegisterArgs = {
   email: Scalars['String']
 };
 
+
+export type MutationCreateAccountArgs = {
+  balance: Scalars['Float'],
+  currency: Scalars['String']
+};
+
 export type Query = {
    __typename?: 'Query',
   hello: Scalars['String'],
   bye: Scalars['String'],
   users: Array<User>,
   me?: Maybe<User>,
+  accounts: Array<Account>,
 };
 
 export type User = {
@@ -70,6 +80,17 @@ export type User = {
   firstName: Scalars['String'],
   lastName: Scalars['String'],
 };
+
+export type AccountsQueryVariables = {};
+
+
+export type AccountsQuery = (
+  { __typename?: 'Query' }
+  & { accounts: Array<(
+    { __typename?: 'Account' }
+    & Pick<Account, 'id' | 'balance' | 'currency'>
+  )> }
+);
 
 export type ByeQueryVariables = {};
 
@@ -155,6 +176,40 @@ export type UsersQuery = (
 );
 
 
+export const AccountsDocument = gql`
+    query Accounts {
+  accounts {
+    id
+    balance
+    currency
+  }
+}
+    `;
+
+/**
+ * __useAccountsQuery__
+ *
+ * To run a query within a React component, call `useAccountsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAccountsQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAccountsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useAccountsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<AccountsQuery, AccountsQueryVariables>) {
+        return ApolloReactHooks.useQuery<AccountsQuery, AccountsQueryVariables>(AccountsDocument, baseOptions);
+      }
+export function useAccountsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<AccountsQuery, AccountsQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<AccountsQuery, AccountsQueryVariables>(AccountsDocument, baseOptions);
+        }
+export type AccountsQueryHookResult = ReturnType<typeof useAccountsQuery>;
+export type AccountsLazyQueryHookResult = ReturnType<typeof useAccountsLazyQuery>;
+export type AccountsQueryResult = ApolloReactCommon.QueryResult<AccountsQuery, AccountsQueryVariables>;
 export const ByeDocument = gql`
     query Bye {
   bye

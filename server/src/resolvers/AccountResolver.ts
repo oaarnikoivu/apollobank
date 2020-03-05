@@ -7,8 +7,19 @@ import { Account } from "../entity/Account";
 @Resolver()
 export class AccountResolver {
 	@Query(() => [Account])
-	accounts() {
-		return Account.find();
+	@UseMiddleware(isAuth)
+	async accounts(@Ctx() { payload }: MyContext) {
+		if (!payload) {
+			return null;
+		}
+
+		const owner = await User.findOne({ where: { id: payload.userId } });
+
+		if (owner) {
+			return Account.find({ where: { owner: owner } });
+		}
+
+		return null;
 	}
 
 	@Mutation(() => Boolean)
