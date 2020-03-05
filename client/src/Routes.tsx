@@ -6,6 +6,7 @@ import { Register } from './pages/Register';
 import { Login } from './pages/Login';
 import 'typeface-roboto';
 import { Bye } from './pages/Bye';
+import { Header } from './Header';
 
 export const Routes: React.FC = () => {
     return (
@@ -15,20 +16,7 @@ export const Routes: React.FC = () => {
             </Helmet>
             <BrowserRouter>
                 <div>
-                    <header>
-                        <div>
-                            <Link to="/">Home</Link>
-                        </div>
-                        <div>
-                            <Link to="/register">Register</Link>
-                        </div>
-                        <div>
-                            <Link to="/login">Login</Link>
-                        </div>
-                        <div>
-                            <Link to="/bye">Bye</Link>
-                        </div>
-                    </header>
+                    <Header />
                     <Switch>
                         <Route exact path="/" component={Home} />
                         <Route exact path="/register" component={Register} />

@@ -7,6 +7,7 @@ import { UserResolver } from "./UserResolver";
 import { createConnection } from "typeorm";
 import cookieParser from "cookie-parser";
 import { verify } from "jsonwebtoken";
+import cors from "cors";
 import { User } from "./entity/User";
 import { createAccessToken, createRefreshToken } from "./auth";
 import { sendRefreshToken } from "./sendRefreshToken";
@@ -15,6 +16,12 @@ import { sendRefreshToken } from "./sendRefreshToken";
 	const app = express();
 
 	app.use(cookieParser());
+	app.use(
+		cors({
+			origin: "http://localhost:3000",
+			credentials: true
+		})
+	);
 	app.get("/", (_req, res) => res.send("hello"));
 	app.post("/refresh_token", async (req, res) => {
 		const token = req.cookies.jid;
@@ -56,7 +63,7 @@ import { sendRefreshToken } from "./sendRefreshToken";
 		context: ({ req, res }) => ({ req, res })
 	});
 
-	appolloServer.applyMiddleware({ app });
+	appolloServer.applyMiddleware({ app, cors: false });
 
 	app.listen(4000, () => {
 		console.log("express server started");
