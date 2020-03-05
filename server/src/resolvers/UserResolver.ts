@@ -1,4 +1,4 @@
-import { createRefreshToken, createAccessToken } from "./auth";
+import { createRefreshToken, createAccessToken } from "../auth";
 import {
 	Resolver,
 	Query,
@@ -11,10 +11,10 @@ import {
 	Int
 } from "type-graphql";
 import { hash, compare } from "bcryptjs";
-import { User } from "./entity/User";
-import { MyContext } from "./MyContext";
-import { isAuth } from "./isAuth";
-import { sendRefreshToken } from "./sendRefreshToken";
+import { User } from "../entity/User";
+import { MyContext } from "../MyContext";
+import { isAuth } from "../isAuth";
+import { sendRefreshToken } from "../sendRefreshToken";
 import { getConnection } from "typeorm";
 import { verify } from "jsonwebtoken";
 
