@@ -7,6 +7,7 @@ import { FormTextField } from '../components/FormTextField';
 import { Button, makeStyles, ThemeProvider } from '@material-ui/core';
 import { theme } from '../theme';
 import { Alert } from '@material-ui/lab';
+import { loginValidationSchema } from '../schemas /loginValidationSchema';
 
 const useStyles = makeStyles({
     headerText: {
@@ -57,6 +58,7 @@ export const Login: React.FC<RouteComponentProps> = ({ history }) => {
             )}
             <Formik
                 initialValues={{ email: '', password: '' }}
+                validationSchema={loginValidationSchema}
                 onSubmit={async (data, { setSubmitting, resetForm }) => {
                     setSubmitting(true);
 
