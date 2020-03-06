@@ -6,8 +6,8 @@ import { Formik, Form } from 'formik';
 import { FormTextField } from '../components/FormTextField';
 import { Button, makeStyles, ThemeProvider } from '@material-ui/core';
 import { theme } from '../theme';
-import { Alert } from '@material-ui/lab';
 import { loginValidationSchema } from '../schemas /loginValidationSchema';
+import { AlertMessage } from '../components/AlertMessage';
 
 const useStyles = makeStyles({
     headerText: {
@@ -38,14 +38,6 @@ export const Login: React.FC<RouteComponentProps> = ({ history }) => {
     const [alertMessage, setAlertMessage] = useState('');
     const classes = useStyles();
 
-    const renderAlertMessage = () => {
-        return (
-            <Alert variant="outlined" severity="error">
-                {alertMessage}
-            </Alert>
-        );
-    };
-
     return (
         <div>
             <div>
@@ -53,7 +45,7 @@ export const Login: React.FC<RouteComponentProps> = ({ history }) => {
             </div>
             {alertMessage.length > 0 && (
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
-                    {renderAlertMessage()}
+                    <AlertMessage message={alertMessage} />
                 </div>
             )}
             <Formik

@@ -3,8 +3,7 @@ import { useAccountsQuery, useCreateAccountMutation, AccountsDocument } from '..
 import { makeStyles, Button, ThemeProvider } from '@material-ui/core';
 import { theme } from '../theme';
 import { Loading } from '../components/Loading';
-import { Alert } from '@material-ui/lab';
-import { useHistory } from 'react-router-dom';
+import { AlertMessage } from '../components/AlertMessage';
 
 const useStyles = makeStyles({
     root: {
@@ -24,7 +23,6 @@ export const Accounts: React.FC = () => {
     const { data, loading } = useAccountsQuery();
     const [createAccount] = useCreateAccountMutation();
     const [alertMessage, setAlertMessage] = useState('');
-    const history = useHistory();
     const classes = useStyles();
 
     useEffect(() => {}, [loading, data]);
@@ -33,14 +31,6 @@ export const Accounts: React.FC = () => {
         return <Loading />;
     }
 
-    const renderAlertMessage = () => {
-        return (
-            <Alert variant="outlined" severity="error">
-                {alertMessage}
-            </Alert>
-        );
-    };
-
     return (
         <div className={classes.root}>
             <div>
@@ -48,7 +38,7 @@ export const Accounts: React.FC = () => {
             </div>
             {alertMessage.length > 0 && (
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
-                    {renderAlertMessage()}
+                    <AlertMessage message={alertMessage} />
                 </div>
             )}
             <div className={classes.newAccountButton}>
@@ -76,7 +66,6 @@ export const Accounts: React.FC = () => {
                                 });
                                 if (response && response.data) {
                                     console.log('working...');
-                                    history.push('/accounts');
                                 }
                             } catch (error) {
                                 const errorMessage = error.message.split(':')[1];

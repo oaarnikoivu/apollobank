@@ -3,10 +3,10 @@ import { Formik, Form } from 'formik';
 import { useRegisterMutation } from '../generated/graphql';
 import { RouteComponentProps } from 'react-router-dom';
 import { Button, makeStyles, ThemeProvider } from '@material-ui/core';
-import { Alert } from '@material-ui/lab';
 import { theme } from '../theme';
 import { registerValidationSchema } from '../schemas /registerValidationSchema';
 import { FormTextField } from '../components/FormTextField';
+import { AlertMessage } from '../components/AlertMessage';
 
 const useStyles = makeStyles({
     headerText: {
@@ -46,14 +46,6 @@ export const Register: React.FC<RouteComponentProps> = ({ history }) => {
     const [alertMessage, setAlertMessage] = useState('');
     const classes = useStyles();
 
-    const renderAlertMessage = () => {
-        return (
-            <Alert variant="outlined" severity="error">
-                {alertMessage}
-            </Alert>
-        );
-    };
-
     return (
         <div>
             <div>
@@ -61,7 +53,7 @@ export const Register: React.FC<RouteComponentProps> = ({ history }) => {
             </div>
             {alertMessage.length > 0 && (
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
-                    {renderAlertMessage()}
+                    <AlertMessage message={alertMessage} />
                 </div>
             )}
             <Formik
