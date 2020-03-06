@@ -1,8 +1,9 @@
-import React from 'react';
-import { Formik, Field, Form, FieldAttributes, useField } from 'formik';
+import React, { useState } from 'react';
+import { Formik, Form, FieldAttributes, useField } from 'formik';
 import { useRegisterMutation } from '../generated/graphql';
 import { RouteComponentProps } from 'react-router-dom';
 import { TextField, Button, makeStyles, ThemeProvider, CssBaseline } from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
 import { theme } from '../theme';
 import { registerValidationSchema } from '../schemas /registerValidationSchema';
 
@@ -65,29 +66,29 @@ const FormTextField: React.FC<FieldAttributes<{}>> = ({
     );
 };
 
-const DateTextField = () => {
-    const classes = useStyles();
-
-    return (
-        <TextField
-            className={classes.formField}
-            variant="standard"
-            type="date"
-            defaultValue="Date of birth"
-            InputLabelProps={{ shrink: true }}
-        ></TextField>
-    );
-};
-
 export const Register: React.FC<RouteComponentProps> = ({ history }) => {
     const [register] = useRegisterMutation();
+    const [alertMessage, setAlertMessage] = useState('');
     const classes = useStyles();
+
+    const renderAlertMessage = () => {
+        return (
+            <Alert variant="outlined" severity="error">
+                {alertMessage}
+            </Alert>
+        );
+    };
 
     return (
         <div>
             <div>
                 <h1 className={classes.headerText}>Sign Up</h1>
             </div>
+            {alertMessage.length > 0 && (
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    {renderAlertMessage()}
+                </div>
+            )}
             <Formik
                 initialValues={{
                     firstName: '',
@@ -119,17 +120,19 @@ export const Register: React.FC<RouteComponentProps> = ({ history }) => {
                         },
                     });
 
-                    if (!response.errors) {
+                    if (response.data?.register) {
                         history.push('/login');
+                        setSubmitting(false);
+                        resetForm();
+                    } else {
+                        setAlertMessage('User with that email already exists.');
+                        setSubmitting(false);
                     }
-
-                    setSubmitting(false);
-                    resetForm();
                 }}
             >
                 {({ isSubmitting }) => (
                     <div className={classes.root}>
-                        <Form>
+                        <Form onChange={() => setAlertMessage('')}>
                             <div className={classes.alignedFormContent}>
                                 <FormTextField
                                     className={classes.alignedFormField}
@@ -189,11 +192,10 @@ export const Register: React.FC<RouteComponentProps> = ({ history }) => {
                                     placeholder="Confirm password"
                                     type="password"
                                 />
-                                <Field
+                                <FormTextField
                                     className={classes.formField}
-                                    name="date"
+                                    name="dateOfBirth"
                                     type="date"
-                                    as={DateTextField}
                                 />
                             </div>
                             <div className={classes.formButton}>
