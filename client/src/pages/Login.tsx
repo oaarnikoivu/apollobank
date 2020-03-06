@@ -2,62 +2,127 @@ import React, { useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { useLoginMutation, MeDocument, MeQuery } from '../generated/graphql';
 import { setAccessToken } from '../accessToken';
+import { Formik, Form } from 'formik';
+import { FormTextField } from '../components/FormTextField';
+import { Button, makeStyles, ThemeProvider } from '@material-ui/core';
+import { theme } from '../theme';
+import { Alert } from '@material-ui/lab';
+
+const useStyles = makeStyles({
+    headerText: {
+        textAlign: 'center',
+    },
+    root: {
+        display: 'flex',
+        justifyContent: 'center',
+        width: '420px',
+        margin: '0 auto',
+    },
+    formField: {
+        width: '411px',
+        marginRight: 8,
+        marginTop: 12,
+    },
+    formButton: {
+        marginTop: 12,
+        textAlign: 'center',
+    },
+});
 
 export const Login: React.FC<RouteComponentProps> = ({ history }) => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
     const [login] = useLoginMutation();
+    const [alertMessage, setAlertMessage] = useState('');
+    const classes = useStyles();
+
+    const renderAlertMessage = () => {
+        return (
+            <Alert variant="outlined" severity="error">
+                {alertMessage}
+            </Alert>
+        );
+    };
 
     return (
-        <form
-            onSubmit={async e => {
-                e.preventDefault();
+        <div>
+            <div>
+                <h1 className={classes.headerText}>Login</h1>
+            </div>
+            {alertMessage.length > 0 && (
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    {renderAlertMessage()}
+                </div>
+            )}
+            <Formik
+                initialValues={{ email: '', password: '' }}
+                onSubmit={async (data, { setSubmitting, resetForm }) => {
+                    setSubmitting(true);
 
-                const response = await login({
-                    variables: {
-                        email,
-                        password,
-                    },
-                    update: (store, { data }) => {
-                        if (!data) {
-                            return null;
-                        }
-                        store.writeQuery<MeQuery>({
-                            query: MeDocument,
-                            data: {
-                                me: data.login.user,
+                    try {
+                        const response = await login({
+                            variables: {
+                                email: data.email,
+                                password: data.password,
+                            },
+                            update: (store, { data }) => {
+                                if (!data) {
+                                    return null;
+                                }
+                                store.writeQuery<MeQuery>({
+                                    query: MeDocument,
+                                    data: {
+                                        me: data.login.user,
+                                    },
+                                });
                             },
                         });
-                    },
-                });
 
-                if (response && response.data) {
-                    setAccessToken(response.data.login.accessToken);
-                }
-
-                history.push('/');
-            }}
-        >
-            <div>
-                <input
-                    value={email}
-                    placeholder="Email"
-                    onChange={e => {
-                        setEmail(e.target.value);
-                    }}
-                />
-            </div>
-            <div>
-                <input
-                    value={password}
-                    placeholder="Password"
-                    type="password"
-                    onChange={e => {
-                        setPassword(e.target.value);
-                    }}
-                />
-            </div>
-            <button type="submit">Login</button>
-        </form>
+                        if (response && response.data) {
+                            setAccessToken(response.data.login.accessToken);
+                            history.push('/accounts');
+                            setSubmitting(false);
+                            resetForm();
+                        }
+                    } catch (error) {
+                        const errorMessage = error.message.split(':')[1];
+                        setAlertMessage(errorMessage);
+                        setSubmitting(false);
+                    }
+                }}
+            >
+                {({ isSubmitting }) => (
+                    <div className={classes.root}>
+                        <Form>
+                            <div>
+                                <FormTextField
+                                    className={classes.formField}
+                                    name="email"
+                                    placeholder="Email"
+                                    type="input"
+                                />
+                                <FormTextField
+                                    className={classes.formField}
+                                    name="password"
+                                    placeholder="Password"
+                                    type="password"
+                                />
+                            </div>
+                            <div className={classes.formButton}>
+                                <ThemeProvider theme={theme}>
+                                    <Button
+                                        disabled={isSubmitting}
+                                        variant="contained"
+                                        color="primary"
+                                        type="submit"
+                                        style={{ marginTop: 12 }}
+                                    >
+                                        Login
+                                    </Button>
+                                </ThemeProvider>
+                            </div>
+                        </Form>
+                    </div>
+                )}
+            </Formik>
+        </div>
     );
 };

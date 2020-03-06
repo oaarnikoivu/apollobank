@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Routes } from './Routes';
 import { setAccessToken } from './accessToken';
+import { Loading } from './components/Loading';
 
 const REFRESH_TOKEN_ENDPOINT = 'http://localhost:4000/refresh_token';
 
@@ -19,7 +20,7 @@ export const App: React.FC = () => {
     }, []);
 
     if (loading) {
-        return <div>loading...</div>;
+        return <Loading />;
     }
 
     return <Routes />;

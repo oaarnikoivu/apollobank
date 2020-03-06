@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { Formik, Form, FieldAttributes, useField } from 'formik';
+import { Formik, Form } from 'formik';
 import { useRegisterMutation } from '../generated/graphql';
 import { RouteComponentProps } from 'react-router-dom';
-import { TextField, Button, makeStyles, ThemeProvider, CssBaseline } from '@material-ui/core';
+import { Button, makeStyles, ThemeProvider } from '@material-ui/core';
 import { Alert } from '@material-ui/lab';
 import { theme } from '../theme';
 import { registerValidationSchema } from '../schemas /registerValidationSchema';
+import { FormTextField } from '../components/FormTextField';
 
 const useStyles = makeStyles({
     headerText: {
@@ -39,32 +40,6 @@ const useStyles = makeStyles({
         margintop: 12,
     },
 });
-
-const FormTextField: React.FC<FieldAttributes<{}>> = ({
-    placeholder,
-    className,
-    type,
-    ...props
-}) => {
-    const [field, meta] = useField<{}>(props);
-    const errorText = meta.error && meta.touched ? meta.error : '';
-
-    return (
-        <ThemeProvider theme={theme}>
-            <CssBaseline />
-            <TextField
-                className={className}
-                type={type}
-                variant="standard"
-                required={true}
-                placeholder={placeholder}
-                {...field}
-                helperText={errorText}
-                error={!!errorText}
-            />
-        </ThemeProvider>
-    );
-};
 
 export const Register: React.FC<RouteComponentProps> = ({ history }) => {
     const [register] = useRegisterMutation();
