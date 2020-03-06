@@ -24,11 +24,7 @@ export class AccountResolver {
 
 	@Mutation(() => Boolean)
 	@UseMiddleware(isAuth)
-	async createAccount(
-		@Arg("currency") currency: string,
-		@Arg("balance") balance: number,
-		@Ctx() { payload }: MyContext
-	) {
+	async createAccount(@Arg("currency") currency: string, @Ctx() { payload }: MyContext) {
 		if (!payload) {
 			return false;
 		}
@@ -41,14 +37,12 @@ export class AccountResolver {
 			});
 
 			if (account) {
-				console.log("Account with currency already exists!");
-				return false;
+				throw new Error(`You already have a ${currency} account`);
 			} else {
 				try {
 					await Account.insert({
 						owner,
-						currency,
-						balance
+						currency
 					});
 				} catch (err) {
 					console.log(err);

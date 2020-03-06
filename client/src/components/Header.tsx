@@ -29,17 +29,17 @@ export const Header: React.FC = () => {
         }
     }, [data, loading]);
 
-    let body: any = null;
+    // let body: any = null;
 
-    if (loading) {
-        body = null;
-    } else if (data && data.me) {
-        body = (
-            <div>
-                You are logged in as: {data.me.firstName} {data.me.lastName}
-            </div>
-        );
-    }
+    // if (loading) {
+    //     body = null;
+    // } else if (data && data.me) {
+    //     body = (
+    //         <div>
+    //             You are logged in as: {data.me.firstName} {data.me.lastName}
+    //         </div>
+    //     );
+    // }
 
     const renderNonAuthUserButtons = () => {
         return (
@@ -106,8 +106,6 @@ export const Header: React.FC = () => {
                     </Toolbar>
                 </AppBar>
             </ThemeProvider>
-
-            {body}
         </div>
     );
 };
