@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { useMeQuery, useLogoutMutation } from './generated/graphql';
-import { setAccessToken } from './accessToken';
+import { useMeQuery, useLogoutMutation } from '../generated/graphql';
+import { setAccessToken } from '../accessToken';
 
 export const Header: React.FC = () => {
     const { data, loading } = useMeQuery();
@@ -22,7 +22,7 @@ export const Header: React.FC = () => {
     }
 
     return (
-        <header>
+        <header style={{ display: 'flex', padding: 4 }}>
             <div>
                 <Link to="/">Home</Link>
             </div>

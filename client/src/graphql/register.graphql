@@ -4,7 +4,6 @@ mutation Register(
     $firstName: String!
     $lastName: String!
     $dateOfBirth: String!
-    $phone: String!
     $streetAddress: String!
     $postCode: String!
     $city: String!
@@ -16,7 +15,6 @@ mutation Register(
         firsName: $firstName
         lastName: $lastName
         dateOfBirth: $dateOfBirth
-        phone: $phone
         streetAddress: $streetAddress
         postCode: $postCode
         city: $city

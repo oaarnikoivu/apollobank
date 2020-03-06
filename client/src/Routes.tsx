@@ -4,9 +4,8 @@ import { Helmet } from 'react-helmet';
 import { Home } from './pages/Home';
 import { Register } from './pages/Register';
 import { Login } from './pages/Login';
-import 'typeface-roboto';
 import { Bye } from './pages/Bye';
-import { Header } from './Header';
+import { Header } from './components/Header';
 import { Accounts } from './pages/Accounts';
 
 export const Routes: React.FC = () => {

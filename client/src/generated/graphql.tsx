@@ -50,7 +50,6 @@ export type MutationRegisterArgs = {
   city: Scalars['String'],
   postCode: Scalars['String'],
   streetAddress: Scalars['String'],
-  phone: Scalars['String'],
   dateOfBirth: Scalars['String'],
   lastName: Scalars['String'],
   firsName: Scalars['String'],
@@ -151,7 +150,6 @@ export type RegisterMutationVariables = {
   firstName: Scalars['String'],
   lastName: Scalars['String'],
   dateOfBirth: Scalars['String'],
-  phone: Scalars['String'],
   streetAddress: Scalars['String'],
   postCode: Scalars['String'],
   city: Scalars['String'],
@@ -374,8 +372,8 @@ export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = ApolloReactCommon.QueryResult<MeQuery, MeQueryVariables>;
 export const RegisterDocument = gql`
-    mutation Register($email: String!, $password: String!, $firstName: String!, $lastName: String!, $dateOfBirth: String!, $phone: String!, $streetAddress: String!, $postCode: String!, $city: String!, $country: String!) {
-  register(email: $email, password: $password, firsName: $firstName, lastName: $lastName, dateOfBirth: $dateOfBirth, phone: $phone, streetAddress: $streetAddress, postCode: $postCode, city: $city, country: $country)
+    mutation Register($email: String!, $password: String!, $firstName: String!, $lastName: String!, $dateOfBirth: String!, $streetAddress: String!, $postCode: String!, $city: String!, $country: String!) {
+  register(email: $email, password: $password, firsName: $firstName, lastName: $lastName, dateOfBirth: $dateOfBirth, streetAddress: $streetAddress, postCode: $postCode, city: $city, country: $country)
 }
     `;
 export type RegisterMutationFn = ApolloReactCommon.MutationFunction<RegisterMutation, RegisterMutationVariables>;
@@ -398,7 +396,6 @@ export type RegisterMutationFn = ApolloReactCommon.MutationFunction<RegisterMuta
  *      firstName: // value for 'firstName'
  *      lastName: // value for 'lastName'
  *      dateOfBirth: // value for 'dateOfBirth'
- *      phone: // value for 'phone'
  *      streetAddress: // value for 'streetAddress'
  *      postCode: // value for 'postCode'
  *      city: // value for 'city'

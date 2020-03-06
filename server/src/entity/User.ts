@@ -28,9 +28,6 @@ export class User extends BaseEntity {
 	dateOfBirth: string;
 
 	@Column()
-	phone: string;
-
-	@Column()
 	streetAddress: string;
 
 	@Column()

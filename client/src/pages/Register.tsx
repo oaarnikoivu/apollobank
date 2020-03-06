@@ -1,136 +1,223 @@
-import React, { useState } from 'react';
+import React from 'react';
+import { Formik, Field, Form, FieldAttributes, useField } from 'formik';
 import { useRegisterMutation } from '../generated/graphql';
 import { RouteComponentProps } from 'react-router-dom';
+import { TextField, Button, makeStyles, ThemeProvider, CssBaseline } from '@material-ui/core';
+import { theme } from '../theme';
+import { registerValidationSchema } from '../schemas /registerValidationSchema';
 
-export const Register: React.FC<RouteComponentProps> = ({ history }) => {
-    const [firstName, setFirstName] = useState('');
-    const [lastName, setLastName] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [phone, setPhone] = useState('');
-    const [dateOfBirth, setDateOfBirth] = useState('');
-    const [streetAddress, setStreetAddress] = useState('');
-    const [postCode, setPostCode] = useState('');
-    const [city, setCity] = useState('');
-    const [country, setCountry] = useState('');
-    const [register] = useRegisterMutation();
+const useStyles = makeStyles({
+    headerText: {
+        textAlign: 'center',
+    },
+    root: {
+        display: 'flex',
+        justifyContent: 'center',
+        width: '420px',
+        margin: '0 auto',
+    },
+    alignedFormContent: {
+        marginTop: 12,
+        display: 'flex',
+        width: '100%',
+    },
+    alignedFormField: {
+        width: '50%',
+        marginRight: 8,
+    },
+    formField: {
+        width: '411px',
+        marginRight: 8,
+        marginTop: 12,
+    },
+    formButton: {
+        marginTop: 12,
+        textAlign: 'center',
+    },
+    loginText: {
+        margintop: 12,
+    },
+});
+
+const FormTextField: React.FC<FieldAttributes<{}>> = ({
+    placeholder,
+    className,
+    type,
+    ...props
+}) => {
+    const [field, meta] = useField<{}>(props);
+    const errorText = meta.error && meta.touched ? meta.error : '';
 
     return (
-        <form
-            onSubmit={async e => {
-                e.preventDefault();
+        <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <TextField
+                className={className}
+                type={type}
+                variant="standard"
+                required={true}
+                placeholder={placeholder}
+                {...field}
+                helperText={errorText}
+                error={!!errorText}
+            />
+        </ThemeProvider>
+    );
+};
 
-                const response = await register({
-                    variables: {
-                        firstName,
-                        lastName,
-                        email,
-                        password,
-                        phone,
-                        dateOfBirth,
-                        streetAddress,
-                        postCode,
-                        city,
-                        country,
-                    },
-                });
+const DateTextField = () => {
+    const classes = useStyles();
 
-                console.log(response);
-                history.push('/');
-            }}
-        >
+    return (
+        <TextField
+            className={classes.formField}
+            variant="standard"
+            type="date"
+            defaultValue="Date of birth"
+            InputLabelProps={{ shrink: true }}
+        ></TextField>
+    );
+};
+
+export const Register: React.FC<RouteComponentProps> = ({ history }) => {
+    const [register] = useRegisterMutation();
+    const classes = useStyles();
+
+    return (
+        <div>
             <div>
-                <input
-                    value={firstName}
-                    placeholder="First name"
-                    onChange={e => {
-                        setFirstName(e.target.value);
-                    }}
-                />
+                <h1 className={classes.headerText}>Sign Up</h1>
             </div>
-            <div>
-                <input
-                    value={lastName}
-                    placeholder="Last name"
-                    onChange={e => {
-                        setLastName(e.target.value);
-                    }}
-                />
-            </div>
-            <div>
-                <input
-                    value={email}
-                    placeholder="Email"
-                    onChange={e => {
-                        setEmail(e.target.value);
-                    }}
-                />
-            </div>
-            <div>
-                <input
-                    value={password}
-                    placeholder="Password"
-                    type="password"
-                    onChange={e => {
-                        setPassword(e.target.value);
-                    }}
-                />
-            </div>
-            <div>
-                <input
-                    value={phone}
-                    placeholder="Phone number"
-                    onChange={e => {
-                        setPhone(e.target.value);
-                    }}
-                />
-            </div>
-            <div>
-                <input
-                    value={dateOfBirth}
-                    placeholder="Date of birth"
-                    onChange={e => {
-                        setDateOfBirth(e.target.value);
-                    }}
-                />
-            </div>
-            <div>
-                <input
-                    value={streetAddress}
-                    placeholder="Street address"
-                    onChange={e => {
-                        setStreetAddress(e.target.value);
-                    }}
-                />
-            </div>
-            <div>
-                <input
-                    value={postCode}
-                    placeholder="Post code"
-                    onChange={e => {
-                        setPostCode(e.target.value);
-                    }}
-                />
-            </div>
-            <div>
-                <input
-                    value={city}
-                    placeholder="City"
-                    onChange={e => {
-                        setCity(e.target.value);
-                    }}
-                />
-            </div>
-            <div>
-                <input
-                    value={country}
-                    placeholder="Country"
-                    onChange={e => {
-                        setCountry(e.target.value);
-                    }}
-                />
-            </div>
-            <button type="submit">Register</button>
-        </form>
+            <Formik
+                initialValues={{
+                    firstName: '',
+                    lastName: '',
+                    streetAddres: '',
+                    postCode: '',
+                    city: '',
+                    country: '',
+                    email: '',
+                    password: '',
+                    confirmPassword: '',
+                    dateOfBirth: '',
+                }}
+                validationSchema={registerValidationSchema}
+                onSubmit={async (data, { setSubmitting, resetForm }) => {
+                    setSubmitting(true);
+
+                    const response = await register({
+                        variables: {
+                            firstName: data.firstName,
+                            lastName: data.lastName,
+                            email: data.email,
+                            password: data.password,
+                            streetAddress: data.streetAddres,
+                            postCode: data.postCode,
+                            city: data.city,
+                            country: data.country,
+                            dateOfBirth: data.dateOfBirth,
+                        },
+                    });
+
+                    if (!response.errors) {
+                        history.push('/login');
+                    }
+
+                    setSubmitting(false);
+                    resetForm();
+                }}
+            >
+                {({ isSubmitting }) => (
+                    <div className={classes.root}>
+                        <Form>
+                            <div className={classes.alignedFormContent}>
+                                <FormTextField
+                                    className={classes.alignedFormField}
+                                    name="firstName"
+                                    placeholder="First name"
+                                    type="input"
+                                />
+                                <FormTextField
+                                    className={classes.alignedFormField}
+                                    name="lastName"
+                                    placeholder="Last name"
+                                    type="input"
+                                />
+                            </div>
+                            <div>
+                                <FormTextField
+                                    className={classes.formField}
+                                    name="streetAddres"
+                                    placeholder="Street address"
+                                    type="input"
+                                />
+                                <FormTextField
+                                    className={classes.formField}
+                                    name="postCode"
+                                    placeholder="Post code"
+                                    type="input"
+                                />
+                                <div className={classes.alignedFormContent}>
+                                    <FormTextField
+                                        className={classes.alignedFormField}
+                                        name="city"
+                                        placeholder="City"
+                                        type="input"
+                                    />
+                                    <FormTextField
+                                        className={classes.alignedFormField}
+                                        name="country"
+                                        placeholder="Country"
+                                        type="input"
+                                    />
+                                </div>
+                                <FormTextField
+                                    className={classes.formField}
+                                    name="email"
+                                    placeholder="Email"
+                                    type="input"
+                                />
+                                <FormTextField
+                                    className={classes.formField}
+                                    name="password"
+                                    placeholder="Password"
+                                    type="password"
+                                />
+                                <FormTextField
+                                    className={classes.formField}
+                                    name="confirmPassword"
+                                    placeholder="Confirm password"
+                                    type="password"
+                                />
+                                <Field
+                                    className={classes.formField}
+                                    name="date"
+                                    type="date"
+                                    as={DateTextField}
+                                />
+                            </div>
+                            <div className={classes.formButton}>
+                                <ThemeProvider theme={theme}>
+                                    <Button
+                                        disabled={isSubmitting}
+                                        variant="contained"
+                                        color="primary"
+                                        type="submit"
+                                        style={{ marginTop: 12 }}
+                                    >
+                                        Sign Up
+                                    </Button>
+                                </ThemeProvider>
+                            </div>
+                            <div className={classes.loginText}>
+                                <p>
+                                    Already have an account? <a href="/login">Login here.</a>
+                                </p>
+                            </div>
+                        </Form>
+                    </div>
+                )}
+            </Formik>
+        </div>
     );
 };
