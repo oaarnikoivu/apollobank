@@ -27,6 +27,9 @@ const useStyles = makeStyles({
         marginTop: 12,
         textAlign: 'center',
     },
+    registerText: {
+        marginTop: 12,
+    },
 });
 
 export const Login: React.FC<RouteComponentProps> = ({ history }) => {
@@ -118,6 +121,11 @@ export const Login: React.FC<RouteComponentProps> = ({ history }) => {
                                         Login
                                     </Button>
                                 </ThemeProvider>
+                            </div>
+                            <div className={classes.registerText}>
+                                <p>
+                                    Don't have an account? <a href="/register">Sign up here.</a>
+                                </p>
                             </div>
                         </Form>
                     </div>

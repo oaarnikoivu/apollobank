@@ -1,11 +1,33 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { AppBar, Typography, Button, makeStyles, Toolbar, ThemeProvider } from '@material-ui/core';
 import { useMeQuery, useLogoutMutation } from '../generated/graphql';
 import { setAccessToken } from '../accessToken';
+import { useHistory } from 'react-router-dom';
+import { theme } from '../theme';
+
+const useStyles = makeStyles({
+    root: {
+        flexGrow: 1,
+    },
+    title: {
+        flexGrow: 1,
+    },
+});
 
 export const Header: React.FC = () => {
     const { data, loading } = useMeQuery();
     const [logout, { client }] = useLogoutMutation();
+    const [showAuthUserButtons, setShowAuthUserButtons] = useState(false);
+    const history = useHistory();
+    const classes = useStyles();
+
+    useEffect(() => {
+        if (!loading && data && data.me) {
+            setShowAuthUserButtons(true);
+        } else {
+            setShowAuthUserButtons(false);
+        }
+    }, [data, loading]);
 
     let body: any = null;
 
@@ -17,41 +39,75 @@ export const Header: React.FC = () => {
                 You are logged in as: {data.me.firstName} {data.me.lastName}
             </div>
         );
-    } else {
-        body = <div>Not logged in</div>;
     }
 
+    const renderNonAuthUserButtons = () => {
+        return (
+            <div>
+                <Button
+                    color="inherit"
+                    onClick={e => {
+                        e.preventDefault();
+                        history.push('/login');
+                    }}
+                >
+                    Login
+                </Button>
+                <Button
+                    color="inherit"
+                    onClick={e => {
+                        e.preventDefault();
+                        history.push('/register');
+                    }}
+                >
+                    Sign Up
+                </Button>
+            </div>
+        );
+    };
+
+    const renderAuthUserButtons = () => {
+        return (
+            <div>
+                <Button
+                    color="inherit"
+                    onClick={e => {
+                        e.preventDefault();
+                        history.push('/accounts');
+                    }}
+                >
+                    Accounts
+                </Button>
+                <Button
+                    color="inherit"
+                    onClick={async () => {
+                        await logout().then(() => history.push('/'));
+                        setAccessToken('');
+                        await client!.resetStore();
+                    }}
+                >
+                    Logout
+                </Button>
+            </div>
+        );
+    };
+
     return (
-        <header style={{ display: 'flex', padding: 4 }}>
-            <div>
-                <Link to="/">Home</Link>
-            </div>
-            <div>
-                <Link to="/register">Register</Link>
-            </div>
-            <div>
-                <Link to="/login">Login</Link>
-            </div>
-            <div>
-                <Link to="/bye">Bye</Link>
-            </div>
-            <div>
-                <Link to="/accounts">Accounts</Link>
-            </div>
-            <div>
-                {!loading && data && data.me ? (
-                    <button
-                        onClick={async () => {
-                            await logout();
-                            setAccessToken('');
-                            await client!.resetStore();
-                        }}
-                    >
-                        Logout
-                    </button>
-                ) : null}
-            </div>
+        <div className={classes.root}>
+            <ThemeProvider theme={theme}>
+                <AppBar position="static">
+                    <Toolbar>
+                        <Typography className={classes.title} variant="h6">
+                            Apollo
+                        </Typography>
+                        {!!showAuthUserButtons
+                            ? renderAuthUserButtons()
+                            : renderNonAuthUserButtons()}
+                    </Toolbar>
+                </AppBar>
+            </ThemeProvider>
+
             {body}
-        </header>
+        </div>
     );
 };

@@ -1,12 +1,40 @@
-import React from 'react';
-import { BrowserRouter, Switch, Route } from 'react-router-dom';
+import React, { ComponentType } from 'react';
+import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import { Home } from './pages/Home';
 import { Register } from './pages/Register';
 import { Login } from './pages/Login';
-import { Bye } from './pages/Bye';
 import { Header } from './components/Header';
 import { Accounts } from './pages/Accounts';
+import { getAccessToken } from './accessToken';
+
+interface AuthenticatedRouteProps {
+    exact?: boolean;
+    path: string;
+    component: ComponentType<any>;
+}
+
+const AuthenticatedRoute = ({ component: Component, ...rest }: AuthenticatedRouteProps) => (
+    <Route
+        {...rest}
+        render={props =>
+            getAccessToken() ? <Component {...props} /> : <Redirect to={{ pathname: '/login' }} />
+        }
+    />
+);
+
+const LoggedInRoute = ({ component: Component, ...rest }: AuthenticatedRouteProps) => (
+    <Route
+        {...rest}
+        render={props =>
+            getAccessToken() ? (
+                <Redirect to={{ pathname: '/accounts' }} />
+            ) : (
+                <Component {...props} />
+            )
+        }
+    />
+);
 
 export const Routes: React.FC = () => {
     return (
@@ -19,10 +47,9 @@ export const Routes: React.FC = () => {
                     <Header />
                     <Switch>
                         <Route exact path="/" component={Home} />
-                        <Route exact path="/register" component={Register} />
-                        <Route exact path="/login" component={Login} />
-                        <Route exact path="/bye" component={Bye} />
-                        <Route exact path="/accounts" component={Accounts} />
+                        <LoggedInRoute exact path="/register" component={Register} />
+                        <LoggedInRoute exact path="/login" component={Login} />
+                        <AuthenticatedRoute exact path="/accounts" component={Accounts} />
                     </Switch>
                 </div>
             </BrowserRouter>
