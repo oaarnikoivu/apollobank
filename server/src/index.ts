@@ -68,6 +68,6 @@ import { typeOrmConnections } from "./utils/createDatabaseConnection";
 	appolloServer.applyMiddleware({ app, cors: false });
 
 	app.listen(process.env.PORT || 4000, () => {
-		console.log("express server started");
+		console.log(`🚀 Server ready at ${process.env.PORT || 4000}/${appolloServer.graphqlPath}`);
 	});
 })();
