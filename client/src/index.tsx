@@ -65,7 +65,7 @@ const client = new ApolloClient({
                 }
             },
             fetchAccessToken: () => {
-                return fetch(process.env.REACT_APP_SERVER_REFRESH_TOKEN_URL as string, {
+                return fetch(process.env.REACT_APP_SERVER_URL as string, {
                     method: 'POST',
                     credentials: 'include',
                 });
