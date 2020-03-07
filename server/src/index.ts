@@ -12,6 +12,7 @@ import { User } from "./entity/User";
 import { createAccessToken, createRefreshToken } from "./auth";
 import { sendRefreshToken } from "./sendRefreshToken";
 import { AccountResolver } from "./resolvers/AccountResolver";
+import { typeOrmConnections } from "./utils/createDatabaseConnection";
 
 (async () => {
 	const app = express();
@@ -55,7 +56,8 @@ import { AccountResolver } from "./resolvers/AccountResolver";
 		return res.send({ ok: true, accessToken: createAccessToken(user) });
 	});
 
-	await createConnection();
+	// await createConnection();
+	await createConnection(typeOrmConnections);
 
 	const appolloServer = new ApolloServer({
 		schema: await buildSchema({

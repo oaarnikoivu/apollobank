@@ -26,6 +26,7 @@ const User_1 = require("./entity/User");
 const auth_1 = require("./auth");
 const sendRefreshToken_1 = require("./sendRefreshToken");
 const AccountResolver_1 = require("./resolvers/AccountResolver");
+const createDatabaseConnection_1 = require("./utils/createDatabaseConnection");
 (() => __awaiter(void 0, void 0, void 0, function* () {
     const app = express_1.default();
     app.use(cookie_parser_1.default());
@@ -57,7 +58,7 @@ const AccountResolver_1 = require("./resolvers/AccountResolver");
         sendRefreshToken_1.sendRefreshToken(res, auth_1.createRefreshToken(user));
         return res.send({ ok: true, accessToken: auth_1.createAccessToken(user) });
     }));
-    yield typeorm_1.createConnection();
+    yield typeorm_1.createConnection(createDatabaseConnection_1.typeOrmConnections);
     const appolloServer = new apollo_server_express_1.ApolloServer({
         schema: yield type_graphql_1.buildSchema({
             resolvers: [UserResolver_1.UserResolver, AccountResolver_1.AccountResolver]
