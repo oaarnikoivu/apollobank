@@ -7,7 +7,7 @@ export const App: React.FC = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        fetch(process.env.REACT_APP_SERVER_URL as string, {
+        fetch((process.env.REACT_APP_SERVER_URL as string) + '/refresh_token', {
             method: 'POST',
             credentials: 'include',
         }).then(async res => {
