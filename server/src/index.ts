@@ -21,7 +21,9 @@ import { createConnection } from "typeorm";
 	app.use(
 		cors({
 			origin:
-				process.env.NODE_ENV === "production" ? process.env.FRONTEND_HOST : "http://localhost:3000",
+				process.env.NODE_ENV === "production"
+					? "https://vigilant-goldwasser-9ac664.netlify.com"
+					: "http://localhost:3000",
 			credentials: true
 		})
 	);
