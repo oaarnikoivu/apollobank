@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { MouseEventHandler } from 'react';
 import { Button, makeStyles, ThemeProvider } from '@material-ui/core';
 import { theme, ColorScheme } from '../theme';
 
@@ -36,7 +36,7 @@ interface CardProps {
     currencyIcon: string;
     balance: number;
     svg?: string;
-    onClick(): void;
+    onClick: MouseEventHandler<any>;
 }
 
 export const Card: React.FC<CardProps> = ({
@@ -56,7 +56,7 @@ export const Card: React.FC<CardProps> = ({
                     color="primary"
                     className={classes.card}
                     variant="outlined"
-                    onClick={() => onClick()}
+                    onClick={onClick}
                 >
                     <div className={classes.icon}>
                         <img src={svg} alt="..." style={{ width: 32 }} />

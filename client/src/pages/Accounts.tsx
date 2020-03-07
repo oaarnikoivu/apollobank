@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, MouseEvent } from 'react';
 import { useAccountsQuery, useCreateAccountMutation, AccountsDocument } from '../generated/graphql';
 import { makeStyles, Button, ThemeProvider } from '@material-ui/core';
 import { theme, ColorScheme } from '../theme';
@@ -6,6 +6,7 @@ import { Loading } from '../components/Loading';
 import { AlertMessage } from '../components/AlertMessage';
 import { Card } from '../components/Card';
 import { Currency } from '../utils/currencies';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles({
     root: {
@@ -35,6 +36,7 @@ export const Accounts: React.FC = () => {
     const [createAccount] = useCreateAccountMutation();
     const [totalBalance, setTotalBalance] = useState(0);
     const [alertMessage, setAlertMessage] = useState('');
+    const history = useHistory();
     const classes = useStyles();
 
     useEffect(() => {
@@ -139,8 +141,12 @@ export const Accounts: React.FC = () => {
                                 currencyIcon={currencyIcon}
                                 balance={account.balance}
                                 svg={svg}
-                                onClick={() => {
-                                    console.log('clicked!');
+                                onClick={(e: MouseEvent<HTMLButtonElement>) => {
+                                    e.preventDefault();
+                                    history.push({
+                                        pathname: `/accounts/${account.id}`,
+                                        state: account,
+                                    });
                                 }}
                             />
                         );
