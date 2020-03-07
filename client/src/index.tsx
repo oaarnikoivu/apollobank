@@ -12,8 +12,6 @@ import { TokenRefreshLink } from 'apollo-link-token-refresh';
 import jwtDecode from 'jwt-decode';
 import { App } from './App';
 
-const REFRESH_TOKEN_ENDPOINT = 'https://apollo-bank.herokuapp.com/refresh_token';
-
 const cache = new InMemoryCache({});
 
 const requestLink = new ApolloLink(
@@ -67,7 +65,7 @@ const client = new ApolloClient({
                 }
             },
             fetchAccessToken: () => {
-                return fetch(REFRESH_TOKEN_ENDPOINT, {
+                return fetch(process.env.REACT_APP_SERVER_REFRESH_TOKEN_URL as string, {
                     method: 'POST',
                     credentials: 'include',
                 });
@@ -86,7 +84,7 @@ const client = new ApolloClient({
         }),
         requestLink,
         new HttpLink({
-            uri: 'https://apollo-bank.herokuapp.com/graphql',
+            uri: process.env.REACT_APP_SERVER_URL,
             credentials: 'include',
         }),
     ]),
