@@ -3,7 +3,7 @@ import { Routes } from './Routes';
 import { setAccessToken } from './accessToken';
 import { Loading } from './components/Loading';
 
-const REFRESH_TOKEN_ENDPOINT = 'http://localhost:4000/refresh_token';
+const REFRESH_TOKEN_ENDPOINT = 'https://apollo-bank.herokuapp.com/refresh_token';
 
 export const App: React.FC = () => {
     const [loading, setLoading] = useState(true);
