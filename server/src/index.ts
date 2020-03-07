@@ -66,7 +66,7 @@ import { AccountResolver } from "./resolvers/AccountResolver";
 
 	appolloServer.applyMiddleware({ app, cors: false });
 
-	app.listen(4000, () => {
+	app.listen(process.env.PORT || 4000, () => {
 		console.log("express server started");
 	});
 })();

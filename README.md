@@ -1,3 +1,3 @@
 # expressbank 💸
 
-Banking application built using MongoDB, Express, React and Node with TypeScript.
+A fullstack GraphQL banking application using React & Node
