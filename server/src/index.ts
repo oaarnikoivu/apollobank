@@ -19,7 +19,7 @@ import { createTypeOrmConnection } from "./utils/createTypeOrmConnection";
 	app.use(cookieParser());
 	app.use(
 		cors({
-			origin: "http://localhost:3000",
+			origin: "https://vigilant-goldwasser-9ac664.netlify.com/",
 			credentials: true
 		})
 	);

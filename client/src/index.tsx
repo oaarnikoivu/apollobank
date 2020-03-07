@@ -12,7 +12,7 @@ import { TokenRefreshLink } from 'apollo-link-token-refresh';
 import jwtDecode from 'jwt-decode';
 import { App } from './App';
 
-const REFRESH_TOKEN_ENDPOINT = 'http://localhost:4000/refresh_token';
+const REFRESH_TOKEN_ENDPOINT = 'https://apollo-bank.herokuapp.com/refresh_token';
 
 const cache = new InMemoryCache({});
 
@@ -86,7 +86,7 @@ const client = new ApolloClient({
         }),
         requestLink,
         new HttpLink({
-            uri: 'http://localhost:4000/graphql',
+            uri: 'https://apollo-bank.herokuapp.com/graphql',
             credentials: 'include',
         }),
     ]),
