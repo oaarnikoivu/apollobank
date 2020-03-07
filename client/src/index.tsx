@@ -84,7 +84,7 @@ const client = new ApolloClient({
         }),
         requestLink,
         new HttpLink({
-            uri: process.env.REACT_APP_SERVER_URL,
+            uri: process.env.REACT_APP_SERVER_URL + '/graphql',
             credentials: 'include',
         }),
     ]),
