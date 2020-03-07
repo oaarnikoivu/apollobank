@@ -32,5 +32,8 @@
 		"start": "ts-node src/index.ts",
 		"dev": "nodemon --exec ts-node src/index.ts",
 		"build": "tsc"
+	},
+	"engines": {
+		"node": "13.2.0"
 	}
 }
