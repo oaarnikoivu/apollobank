@@ -62,12 +62,14 @@ import { typeOrmConnections } from "./utils/createDatabaseConnection";
 		schema: await buildSchema({
 			resolvers: [UserResolver, AccountResolver]
 		}),
+		introspection: true,
+		playground: true,
 		context: ({ req, res }) => ({ req, res })
 	});
 
 	appolloServer.applyMiddleware({ app, cors: false });
 
 	app.listen(process.env.PORT || 4000, () => {
-		console.log(`🚀 Server ready at ${process.env.PORT || 4000}/${appolloServer.graphqlPath}`);
+		console.log(`🚀 Server ready at ${process.env.PORT || 4000}${appolloServer.graphqlPath}`);
 	});
 })();
