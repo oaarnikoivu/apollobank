@@ -24,6 +24,11 @@ import { typeOrmConnections } from "./utils/createDatabaseConnection";
 			credentials: true
 		})
 	);
+
+	app.get("/", (_req, res) => {
+		res.send("🚀 Server is running");
+	});
+
 	app.post("/refresh_token", async (req, res) => {
 		const token = req.cookies.jid;
 		if (!token) {
