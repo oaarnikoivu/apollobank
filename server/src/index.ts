@@ -12,6 +12,7 @@ import { createAccessToken, createRefreshToken } from "./auth";
 import { sendRefreshToken } from "./sendRefreshToken";
 import { AccountResolver } from "./resolvers/AccountResolver";
 import { createTypeOrmConnection } from "./utils/createTypeOrmConnection";
+import { createConnection } from "typeorm";
 
 (async () => {
 	const app = express();
@@ -19,7 +20,8 @@ import { createTypeOrmConnection } from "./utils/createTypeOrmConnection";
 	app.use(cookieParser());
 	app.use(
 		cors({
-			origin: "https://vigilant-goldwasser-9ac664.netlify.com",
+			origin:
+				process.env.NODE_ENV === "production" ? process.env.FRONTEND_HOST : "http://localhost:3000",
 			credentials: true
 		})
 	);
@@ -59,8 +61,9 @@ import { createTypeOrmConnection } from "./utils/createTypeOrmConnection";
 		return res.send({ ok: true, accessToken: createAccessToken(user) });
 	});
 
-	// await createConnection();
-	await createTypeOrmConnection();
+	process.env.NODE_ENV === "production"
+		? await createTypeOrmConnection()
+		: await createConnection();
 
 	const appolloServer = new ApolloServer({
 		schema: await buildSchema({
