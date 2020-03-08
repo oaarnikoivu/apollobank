@@ -35,7 +35,7 @@ interface CardProps {
     fullCurrencyText: string;
     currencyIcon: string;
     balance: number;
-    svg?: string;
+    svg?: any | string;
     onClick: MouseEventHandler<any>;
 }
 
@@ -59,7 +59,15 @@ export const Card: React.FC<CardProps> = ({
                     onClick={onClick}
                 >
                     <div className={classes.icon}>
-                        <img src={svg} alt="..." style={{ width: 32 }} />
+                        {!!svg ? (
+                            svg
+                        ) : (
+                            <img
+                                src="https://upload.wikimedia.org/wikipedia/commons/4/46/Bitcoin.svg"
+                                alt="..."
+                                style={{ width: 32 }}
+                            />
+                        )}
                     </div>
                     <div>
                         <div className={classes.cardBalance}>

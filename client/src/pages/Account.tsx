@@ -1,10 +1,13 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import { makeStyles } from '@material-ui/core';
+import { makeStyles, ThemeProvider, IconButton } from '@material-ui/core';
+import AddIcon from '@material-ui/icons/Add';
+import SwapVert from '@material-ui/icons/SwapVert';
+import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import { ReactComponent as Euro } from '../assets/world.svg';
 import { ReactComponent as Dollar } from '../assets/flag.svg';
-// import { ReactComponent as Bitcoin } from '../assets/Bitcoin.svg';
 import { ReactComponent as Pound } from '../assets/uk.svg';
+import { theme, ColorScheme } from '../theme';
 
 const useStyles = makeStyles({
     root: {
@@ -23,6 +26,32 @@ const useStyles = makeStyles({
         marginTop: 12,
         alignItems: 'center',
     },
+    accountButtonsSection: {
+        display: 'flex',
+        justifyContent: 'space-evenly',
+        alignItems: 'center',
+        margin: '0 auto',
+        width: '480px',
+        marginTop: 24,
+    },
+    accountButton: {
+        backgroundColor: ColorScheme.PRIMARY,
+        color: ColorScheme.WHITE,
+        '&:hover, &.Mui-focusVisible': { backgroundColor: ColorScheme.HOVER },
+        width: 32,
+        height: 32,
+    },
+    accountButtonSection: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    accountButtonText: {
+        marginTop: 12,
+        fontSize: 14,
+        color: ColorScheme.INFO,
+    },
 });
 
 export const Account: React.FC = () => {
@@ -31,7 +60,7 @@ export const Account: React.FC = () => {
 
     let currencyIcon: string = '';
     let currencyFullText: string = '';
-    let svg: any;
+    let svg: any | string;
 
     switch (history.location.state.currency) {
         case 'EUR':
@@ -64,8 +93,40 @@ export const Account: React.FC = () => {
             </div>
             <div className={classes.accountInfo}>
                 <div>{currencyFullText}</div>
-                <div style={{ width: 32 }}>{svg}</div>
+                <div style={{ width: 32 }}>
+                    {!!svg ? (
+                        svg
+                    ) : (
+                        <img
+                            src="https://upload.wikimedia.org/wikipedia/commons/4/46/Bitcoin.svg"
+                            alt="..."
+                            style={{ width: 32 }}
+                        />
+                    )}
+                </div>
                 <div>{history.location.state.currency}</div>
+            </div>
+            <div className={classes.accountButtonsSection}>
+                <ThemeProvider theme={theme}>
+                    <div>
+                        <IconButton className={classes.accountButton} aria-label="Add">
+                            <AddIcon />
+                        </IconButton>
+                        <div className={classes.accountButtonText}>Add</div>
+                    </div>
+                    <div>
+                        <IconButton className={classes.accountButton} aria-label="Exchange">
+                            <SwapVert />
+                        </IconButton>
+                        <div className={classes.accountButtonText}>Exchange</div>
+                    </div>
+                    <div>
+                        <IconButton className={classes.accountButton} aria-label="Details">
+                            <InfoOutlinedIcon />
+                        </IconButton>
+                        <div className={classes.accountButtonText}>Details</div>
+                    </div>
+                </ThemeProvider>
             </div>
         </div>
     );

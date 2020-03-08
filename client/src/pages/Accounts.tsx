@@ -7,6 +7,9 @@ import { AlertMessage } from '../components/AlertMessage';
 import { Card } from '../components/Card';
 import { Currency } from '../utils/currencies';
 import { useHistory } from 'react-router-dom';
+import { ReactComponent as Euro } from '../assets/world.svg';
+import { ReactComponent as Dollar } from '../assets/flag.svg';
+import { ReactComponent as Pound } from '../assets/uk.svg';
 
 const useStyles = makeStyles({
     root: {
@@ -106,28 +109,28 @@ export const Accounts: React.FC = () => {
                 </div>
                 <div className={classes.accountList}>
                     {data.accounts.map(account => {
-                        let svg: string = '';
+                        let svg: any | string;
                         let currencyIcon: string = '';
                         let fullCurrencyText: string = '';
 
                         switch (account.currency) {
                             case Currency.EURO:
-                                svg = 'world.svg';
+                                svg = <Euro />;
                                 currencyIcon = '€';
                                 fullCurrencyText = 'Euro';
                                 break;
                             case Currency.DOLLAR:
-                                svg = 'flag.svg';
+                                svg = <Dollar />;
                                 currencyIcon = '＄';
                                 fullCurrencyText = 'US Dollar';
                                 break;
                             case Currency.POUND:
-                                svg = 'uk.svg';
+                                svg = <Pound />;
                                 currencyIcon = '£';
                                 fullCurrencyText = 'British Pound';
                                 break;
                             case Currency.BITCOIN:
-                                svg = 'Bitcoin.svg';
+                                svg = '';
                                 currencyIcon = '฿';
                                 fullCurrencyText = 'Bitcoin';
                                 break;
