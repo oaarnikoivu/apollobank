@@ -8,6 +8,7 @@ import { Header } from './components/Header';
 import { Accounts } from './pages/Accounts';
 import { getAccessToken } from './accessToken';
 import { Account } from './pages/Account';
+import { Dashboard } from './pages/Dashboard';
 
 interface AuthenticatedRouteProps {
     exact?: boolean;
@@ -50,6 +51,7 @@ export const Routes: React.FC = () => {
                         <Route exact path="/" component={Home} />
                         <LoggedInRoute exact path="/register" component={Register} />
                         <LoggedInRoute exact path="/login" component={Login} />
+                        <AuthenticatedRoute exact path="/dashboard" component={Dashboard} />
                         <AuthenticatedRoute exact path="/accounts" component={Accounts} />
                         <AuthenticatedRoute exact path="/accounts/:id" component={Account} />
                         <Route

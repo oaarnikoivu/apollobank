@@ -29,39 +29,29 @@ export const Header: React.FC = () => {
         }
     }, [data, loading]);
 
-    // let body: any = null;
-
-    // if (loading) {
-    //     body = null;
-    // } else if (data && data.me) {
-    //     body = (
-    //         <div>
-    //             You are logged in as: {data.me.firstName} {data.me.lastName}
-    //         </div>
-    //     );
-    // }
-
     const renderNonAuthUserButtons = () => {
         return (
             <div>
-                <Button
-                    color="inherit"
-                    onClick={e => {
-                        e.preventDefault();
-                        history.push('/login');
-                    }}
-                >
-                    Login
-                </Button>
-                <Button
-                    color="inherit"
-                    onClick={e => {
-                        e.preventDefault();
-                        history.push('/register');
-                    }}
-                >
-                    Sign Up
-                </Button>
+                <ThemeProvider theme={theme}>
+                    <Button
+                        color="primary"
+                        onClick={e => {
+                            e.preventDefault();
+                            history.push('/login');
+                        }}
+                    >
+                        Login
+                    </Button>
+                    <Button
+                        color="primary"
+                        onClick={e => {
+                            e.preventDefault();
+                            history.push('/register');
+                        }}
+                    >
+                        Sign Up
+                    </Button>
+                </ThemeProvider>
             </div>
         );
     };
@@ -69,25 +59,38 @@ export const Header: React.FC = () => {
     const renderAuthUserButtons = () => {
         return (
             <div>
-                <Button
-                    color="inherit"
-                    onClick={e => {
-                        e.preventDefault();
-                        history.push('/accounts');
-                    }}
-                >
-                    Accounts
-                </Button>
-                <Button
-                    color="inherit"
-                    onClick={async () => {
-                        await logout().then(() => history.push('/'));
-                        setAccessToken('');
-                        await client!.resetStore();
-                    }}
-                >
-                    Logout
-                </Button>
+                <ThemeProvider theme={theme}>
+                    <Button
+                        color="primary"
+                        onClick={e => {
+                            e.preventDefault();
+                            history.push('/dashboard');
+                        }}
+                    >
+                        Dashboard
+                    </Button>
+                    <Button
+                        style={{ marginLeft: 12 }}
+                        color="primary"
+                        onClick={e => {
+                            e.preventDefault();
+                            history.push('/accounts');
+                        }}
+                    >
+                        Accounts
+                    </Button>
+                    <Button
+                        style={{ marginLeft: 12 }}
+                        color="primary"
+                        onClick={async () => {
+                            await logout().then(() => history.push('/'));
+                            setAccessToken('');
+                            await client!.resetStore();
+                        }}
+                    >
+                        Logout
+                    </Button>
+                </ThemeProvider>
             </div>
         );
     };
@@ -95,10 +98,14 @@ export const Header: React.FC = () => {
     return (
         <div className={classes.root}>
             <ThemeProvider theme={theme}>
-                <AppBar position="static">
+                <AppBar position="static" style={{ background: 'transparent', boxShadow: 'none' }}>
                     <Toolbar>
-                        <Typography className={classes.title} variant="h6">
-                            Apollo
+                        <Typography
+                            className={classes.title}
+                            variant="h5"
+                            style={{ color: 'black' }}
+                        >
+                            AP
                         </Typography>
                         {!!showAuthUserButtons
                             ? renderAuthUserButtons()
