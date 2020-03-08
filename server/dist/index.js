@@ -12,13 +12,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const TransactionResolver_1 = require("./resolvers/TransactionResolver");
 require("dotenv/config");
 require("reflect-metadata");
 const express_1 = __importDefault(require("express"));
 const apollo_server_express_1 = require("apollo-server-express");
 const type_graphql_1 = require("type-graphql");
 const UserResolver_1 = require("./resolvers/UserResolver");
-const typeorm_1 = require("typeorm");
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const jsonwebtoken_1 = require("jsonwebtoken");
 const cors_1 = __importDefault(require("cors"));
@@ -26,15 +26,20 @@ const User_1 = require("./entity/User");
 const auth_1 = require("./auth");
 const sendRefreshToken_1 = require("./sendRefreshToken");
 const AccountResolver_1 = require("./resolvers/AccountResolver");
-const createDatabaseConnection_1 = require("./utils/createDatabaseConnection");
+const createTypeOrmConnection_1 = require("./utils/createTypeOrmConnection");
+const typeorm_1 = require("typeorm");
 (() => __awaiter(void 0, void 0, void 0, function* () {
     const app = express_1.default();
     app.use(cookie_parser_1.default());
     app.use(cors_1.default({
-        origin: "http://localhost:3000",
+        origin: process.env.NODE_ENV === "production"
+            ? "https://vigilant-goldwasser-9ac664.netlify.com"
+            : "http://localhost:3000",
         credentials: true
     }));
-    app.get("/", (_req, res) => res.send("hello"));
+    app.get("/", (_req, res) => {
+        res.send("🚀 Server is running");
+    });
     app.post("/refresh_token", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const token = req.cookies.jid;
         if (!token) {
@@ -58,16 +63,20 @@ const createDatabaseConnection_1 = require("./utils/createDatabaseConnection");
         sendRefreshToken_1.sendRefreshToken(res, auth_1.createRefreshToken(user));
         return res.send({ ok: true, accessToken: auth_1.createAccessToken(user) });
     }));
-    yield typeorm_1.createConnection(createDatabaseConnection_1.typeOrmConnections);
+    process.env.NODE_ENV === "production"
+        ? yield createTypeOrmConnection_1.createTypeOrmConnection()
+        : yield typeorm_1.createConnection();
     const appolloServer = new apollo_server_express_1.ApolloServer({
         schema: yield type_graphql_1.buildSchema({
-            resolvers: [UserResolver_1.UserResolver, AccountResolver_1.AccountResolver]
+            resolvers: [UserResolver_1.UserResolver, AccountResolver_1.AccountResolver, TransactionResolver_1.TransactionResolver]
         }),
+        introspection: true,
+        playground: true,
         context: ({ req, res }) => ({ req, res })
     });
     appolloServer.applyMiddleware({ app, cors: false });
     app.listen(process.env.PORT || 4000, () => {
-        console.log("express server started");
+        console.log(`🚀 Server ready at ${process.env.PORT || 4000}${appolloServer.graphqlPath}`);
     });
 }))();
 //# sourceMappingURL=index.js.map

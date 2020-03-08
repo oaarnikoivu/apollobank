@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const type_graphql_1 = require("type-graphql");
 const typeorm_1 = require("typeorm");
 const User_1 = require("./User");
+const Transaction_1 = require("./Transaction");
 let Account = class Account extends typeorm_1.BaseEntity {
 };
 __decorate([
@@ -33,6 +34,10 @@ __decorate([
     typeorm_1.Column({ default: 0 }),
     __metadata("design:type", Number)
 ], Account.prototype, "balance", void 0);
+__decorate([
+    typeorm_1.OneToMany(() => Transaction_1.Transaction, transaction => transaction.account),
+    __metadata("design:type", Array)
+], Account.prototype, "transactions", void 0);
 Account = __decorate([
     type_graphql_1.ObjectType(),
     typeorm_1.Entity("accounts")

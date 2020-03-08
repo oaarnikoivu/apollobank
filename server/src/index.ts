@@ -4,13 +4,15 @@ import express from "express";
 import { ApolloServer } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
 import { UserResolver } from "./resolvers/UserResolver";
+import { AccountResolver } from "./resolvers/AccountResolver";
+import { TransactionResolver } from "./resolvers/TransactionResolver";
 import cookieParser from "cookie-parser";
 import { verify } from "jsonwebtoken";
 import cors from "cors";
 import { User } from "./entity/User";
 import { createAccessToken, createRefreshToken } from "./auth";
 import { sendRefreshToken } from "./sendRefreshToken";
-import { AccountResolver } from "./resolvers/AccountResolver";
+
 import { createTypeOrmConnection } from "./utils/createTypeOrmConnection";
 import { createConnection } from "typeorm";
 
@@ -69,7 +71,7 @@ import { createConnection } from "typeorm";
 
 	const appolloServer = new ApolloServer({
 		schema: await buildSchema({
-			resolvers: [UserResolver, AccountResolver]
+			resolvers: [UserResolver, AccountResolver, TransactionResolver]
 		}),
 		introspection: true,
 		playground: true,
