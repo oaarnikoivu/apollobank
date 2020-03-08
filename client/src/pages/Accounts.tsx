@@ -1,38 +1,16 @@
 import React, { useEffect, useState, MouseEvent } from 'react';
 import { useAccountsQuery, useCreateAccountMutation, AccountsDocument } from '../generated/graphql';
-import { makeStyles, Button, ThemeProvider } from '@material-ui/core';
-import { theme, ColorScheme } from '../theme';
+import { Button, ThemeProvider } from '@material-ui/core';
+import { theme } from '../utils/theme';
 import { Loading } from '../components/Loading';
 import { AlertMessage } from '../components/AlertMessage';
-import { Card } from '../components/Card';
+import { AccountCard } from '../components/cards/AccountCard';
 import { Currency } from '../utils/currencies';
 import { useHistory } from 'react-router-dom';
 import { ReactComponent as Euro } from '../assets/world.svg';
 import { ReactComponent as Dollar } from '../assets/flag.svg';
 import { ReactComponent as Pound } from '../assets/uk.svg';
-
-const useStyles = makeStyles({
-    root: {
-        display: 'flex',
-        alignItems: 'center',
-        textalign: 'center',
-        flexDirection: 'column',
-    },
-    newAccountButton: {
-        position: 'absolute',
-        right: 20,
-        marginTop: 10,
-    },
-    accountInfo: {
-        display: 'flex',
-        justifyContent: 'space-between',
-        fontSize: 15,
-        color: ColorScheme.INFO,
-    },
-    accountList: {
-        marginTop: 8,
-    },
-});
+import { useAccountsStyles } from './styles/accounts/Accounts.style';
 
 export const Accounts: React.FC = () => {
     const { data, loading } = useAccountsQuery();
@@ -40,7 +18,7 @@ export const Accounts: React.FC = () => {
     const [totalBalance, setTotalBalance] = useState(0);
     const [alertMessage, setAlertMessage] = useState('');
     const history = useHistory();
-    const classes = useStyles();
+    const classes = useAccountsStyles();
 
     useEffect(() => {
         let balance = 0;
@@ -137,7 +115,7 @@ export const Accounts: React.FC = () => {
                         }
 
                         return (
-                            <Card
+                            <AccountCard
                                 key={account.id}
                                 currency={account.currency}
                                 fullCurrencyText={fullCurrencyText}

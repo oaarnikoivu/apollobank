@@ -2,49 +2,17 @@ import React, { useState } from 'react';
 import { Formik, Form } from 'formik';
 import { useRegisterMutation } from '../generated/graphql';
 import { RouteComponentProps } from 'react-router-dom';
-import { Button, makeStyles, ThemeProvider } from '@material-ui/core';
-import { theme } from '../theme';
+import { Button, ThemeProvider } from '@material-ui/core';
+import { theme } from '../utils/theme';
 import { registerValidationSchema } from '../schemas /registerValidationSchema';
 import { FormTextField } from '../components/FormTextField';
 import { AlertMessage } from '../components/AlertMessage';
-
-const useStyles = makeStyles({
-    headerText: {
-        textAlign: 'center',
-    },
-    root: {
-        display: 'flex',
-        justifyContent: 'center',
-        width: '420px',
-        margin: '0 auto',
-    },
-    alignedFormContent: {
-        marginTop: 12,
-        display: 'flex',
-        width: '100%',
-    },
-    alignedFormField: {
-        width: '50%',
-        marginRight: 8,
-    },
-    formField: {
-        width: '411px',
-        marginRight: 8,
-        marginTop: 12,
-    },
-    formButton: {
-        marginTop: 12,
-        textAlign: 'center',
-    },
-    loginText: {
-        margintop: 12,
-    },
-});
+import { useRegisterStyles } from './styles/register/Register.style';
 
 export const Register: React.FC<RouteComponentProps> = ({ history }) => {
     const [register] = useRegisterMutation();
     const [alertMessage, setAlertMessage] = useState('');
-    const classes = useStyles();
+    const classes = useRegisterStyles();
 
     return (
         <div>

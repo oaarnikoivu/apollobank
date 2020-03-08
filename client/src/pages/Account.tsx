@@ -1,62 +1,97 @@
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import { makeStyles, ThemeProvider, IconButton } from '@material-ui/core';
+import { ThemeProvider, IconButton } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import SwapVert from '@material-ui/icons/SwapVert';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 import { ReactComponent as Euro } from '../assets/world.svg';
 import { ReactComponent as Dollar } from '../assets/flag.svg';
 import { ReactComponent as Pound } from '../assets/uk.svg';
-import { theme, ColorScheme } from '../theme';
+import { theme } from '../utils/theme';
+import { useAccountStyles } from './styles/accounts/Account.style';
+import { TransactionCard } from '../components/cards/TransactionCard';
 
-const useStyles = makeStyles({
-    root: {
-        margin: '0 auto',
-        textAlign: 'center',
-        marginTop: 24,
+interface Transaction {
+    date: string;
+    title: string;
+    time: string;
+    income: number;
+    expenses: number;
+}
+
+let transactions: Transaction[] = [];
+
+transactions.push(
+    {
+        date: 'Today',
+        title: 'Asda Aberdeen Beach Superstore',
+        time: '15:52',
+        income: 0,
+        expenses: 24.28,
     },
-    accountBalance: {
-        fontSize: 28,
+    {
+        date: 'Today',
+        title: 'Robert Gordon University',
+        time: '12:30',
+        income: 0,
+        expenses: 3.79,
     },
-    accountInfo: {
-        display: 'flex',
-        justifyContent: 'space-evenly',
-        width: '240px',
-        margin: '0 auto',
-        marginTop: 12,
-        alignItems: 'center',
+    {
+        date: 'Today',
+        title: 'Robert Gordon University',
+        time: '12:30',
+        income: 0,
+        expenses: 3.79,
     },
-    accountButtonsSection: {
-        display: 'flex',
-        justifyContent: 'space-evenly',
-        alignItems: 'center',
-        margin: '0 auto',
-        width: '480px',
-        marginTop: 24,
+    {
+        date: 'Today',
+        title: 'Robert Gordon University',
+        time: '12:30',
+        income: 0,
+        expenses: 3.79,
     },
-    accountButton: {
-        backgroundColor: ColorScheme.PRIMARY,
-        color: ColorScheme.WHITE,
-        '&:hover, &.Mui-focusVisible': { backgroundColor: ColorScheme.HOVER },
-        width: 32,
-        height: 32,
+    {
+        date: 'Today',
+        title: 'Robert Gordon University',
+        time: '12:30',
+        income: 0,
+        expenses: 3.79,
     },
-    accountButtonSection: {
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    accountButtonText: {
-        marginTop: 12,
-        fontSize: 14,
-        color: ColorScheme.INFO,
-    },
-});
+);
+
+const Transactions = (): JSX.Element => {
+    const classes = useAccountStyles();
+
+    return (
+        <div>
+            <div className={classes.transactions}>
+                <div className={classes.transactionsHeader}>Today</div>
+                <div className={classes.transactionCards}>
+                    {transactions.map((transaction, index) => {
+                        return (
+                            <TransactionCard
+                                key={index}
+                                title={transaction.title}
+                                time={transaction.time}
+                                card={6254}
+                                fee={0}
+                                amount={
+                                    !!transaction.expenses
+                                        ? transaction.expenses
+                                        : transaction.income
+                                }
+                            />
+                        );
+                    })}
+                </div>
+            </div>
+        </div>
+    );
+};
 
 export const Account: React.FC = () => {
     const history = useHistory<any>();
-    const classes = useStyles();
+    const classes = useAccountStyles();
 
     let currencyIcon: string = '';
     let currencyFullText: string = '';
@@ -128,6 +163,8 @@ export const Account: React.FC = () => {
                     </div>
                 </ThemeProvider>
             </div>
+            <hr style={{ width: 480, marginTop: 24, color: '#fcfcfc' }} />
+            <Transactions />
         </div>
     );
 };

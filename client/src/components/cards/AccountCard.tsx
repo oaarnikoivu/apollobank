@@ -1,36 +1,9 @@
 import React, { MouseEventHandler } from 'react';
-import { Button, makeStyles, ThemeProvider } from '@material-ui/core';
-import { theme, ColorScheme } from '../theme';
+import { Button, ThemeProvider } from '@material-ui/core';
+import { theme } from '../../utils/theme';
+import { useAccountCardStyles } from '../styles/cards/AccountCard.style';
 
-const useStyles = makeStyles({
-    root: {
-        display: 'flex',
-        flexDirection: 'column',
-    },
-    icon: {
-        position: 'absolute',
-        left: 40,
-        width: 32,
-    },
-    card: {
-        marginTop: 8,
-        width: 480,
-        height: 84,
-        borderTop: 'none',
-        borderRight: 'none',
-        borderLeft: 'none',
-        borderRadius: 0,
-    },
-    cardBalance: {
-        color: 'black',
-    },
-    cardCurrency: {
-        color: ColorScheme.INFO,
-        textTransform: 'none',
-    },
-});
-
-interface CardProps {
+interface AccountCardProps {
     currency: string;
     fullCurrencyText: string;
     currencyIcon: string;
@@ -39,7 +12,7 @@ interface CardProps {
     onClick: MouseEventHandler<any>;
 }
 
-export const Card: React.FC<CardProps> = ({
+export const AccountCard: React.FC<AccountCardProps> = ({
     currency,
     fullCurrencyText,
     currencyIcon,
@@ -47,7 +20,7 @@ export const Card: React.FC<CardProps> = ({
     svg,
     onClick,
 }) => {
-    const classes = useStyles();
+    const classes = useAccountCardStyles();
 
     return (
         <div className={classes.root}>

@@ -11,6 +11,10 @@ export class Transaction extends BaseEntity {
 
 	@Field()
 	@Column()
+	name: string;
+
+	@Field()
+	@Column()
 	date: string;
 
 	@Field()

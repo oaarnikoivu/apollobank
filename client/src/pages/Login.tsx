@@ -4,39 +4,16 @@ import { useLoginMutation, MeDocument, MeQuery } from '../generated/graphql';
 import { setAccessToken } from '../accessToken';
 import { Formik, Form } from 'formik';
 import { FormTextField } from '../components/FormTextField';
-import { Button, makeStyles, ThemeProvider } from '@material-ui/core';
-import { theme } from '../theme';
+import { Button, ThemeProvider } from '@material-ui/core';
+import { theme } from '../utils/theme';
 import { loginValidationSchema } from '../schemas /loginValidationSchema';
 import { AlertMessage } from '../components/AlertMessage';
-
-const useStyles = makeStyles({
-    headerText: {
-        textAlign: 'center',
-    },
-    root: {
-        display: 'flex',
-        justifyContent: 'center',
-        width: '420px',
-        margin: '0 auto',
-    },
-    formField: {
-        width: '411px',
-        marginRight: 8,
-        marginTop: 12,
-    },
-    formButton: {
-        marginTop: 12,
-        textAlign: 'center',
-    },
-    registerText: {
-        marginTop: 12,
-    },
-});
+import { useLoginStyles } from './styles/login/Login.style';
 
 export const Login: React.FC<RouteComponentProps> = ({ history }) => {
     const [login] = useLoginMutation();
     const [alertMessage, setAlertMessage] = useState('');
-    const classes = useStyles();
+    const classes = useLoginStyles();
 
     return (
         <div>

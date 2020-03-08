@@ -41,7 +41,7 @@ export const Routes: React.FC = () => {
     return (
         <>
             <Helmet>
-                <style>{'body { background-color: snow; }'}</style>
+                <style>{'body { background-color: white; }'}</style>
             </Helmet>
             <BrowserRouter>
                 <div>

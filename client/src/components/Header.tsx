@@ -3,7 +3,7 @@ import { AppBar, Typography, Button, makeStyles, Toolbar, ThemeProvider } from '
 import { useMeQuery, useLogoutMutation } from '../generated/graphql';
 import { setAccessToken } from '../accessToken';
 import { useHistory } from 'react-router-dom';
-import { theme } from '../theme';
+import { theme } from '../utils/theme';
 
 const useStyles = makeStyles({
     root: {
