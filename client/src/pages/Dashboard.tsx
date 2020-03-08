@@ -10,6 +10,10 @@ import {
     ThemeProvider,
     CardActionArea,
 } from '@material-ui/core';
+import SwapVert from '@material-ui/icons/SwapVert';
+import EqualizerIcon from '@material-ui/icons/Equalizer';
+import LoopIcon from '@material-ui/icons/Loop';
+import ShowChartIcon from '@material-ui/icons/ShowChart';
 import { ReactComponent as MasterCard } from '../assets/mc_symbol.svg';
 import { theme } from '../utils/theme';
 
@@ -81,6 +85,22 @@ const Services = () => {
             <div style={{ letterSpacing: 4 }}>Main Services</div>
             <Grid style={{ marginTop: 4 }} container spacing={4}>
                 {services.map(service => {
+                    let icon: JSX.Element = <SwapVert />;
+
+                    switch (service) {
+                        case 'Transactions':
+                            icon = <SwapVert color="secondary" fontSize="large" />;
+                            break;
+                        case 'Exchange':
+                            icon = <LoopIcon color="secondary" fontSize="large" />;
+                            break;
+                        case 'Statistics':
+                            icon = <EqualizerIcon color="secondary" fontSize="large" />;
+                        case 'Trading':
+                            icon = <ShowChartIcon color="secondary" fontSize="large" />;
+                            break;
+                    }
+
                     return (
                         <Grid item key={service} xs={12} sm={4} md={3}>
                             <ThemeProvider theme={theme}>
@@ -88,7 +108,16 @@ const Services = () => {
                                     <CardActionArea
                                         style={{ height: 80, display: 'flex', fontSize: 14 }}
                                     >
-                                        {service}
+                                        <div
+                                            style={{
+                                                display: 'flex',
+                                                flexDirection: 'column',
+                                                alignItems: 'center',
+                                            }}
+                                        >
+                                            <div>{icon}</div>
+                                            <div>{service}</div>
+                                        </div>
                                     </CardActionArea>
                                 </Card>
                             </ThemeProvider>
