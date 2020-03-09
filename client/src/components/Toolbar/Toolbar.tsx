@@ -3,7 +3,7 @@ import { useToolbarStyles } from './Toolbar.style';
 import { DrawerToggleButton } from '../SideDrawer/DrawerToggleButton';
 import { useMeQuery, useLogoutMutation } from '../../generated/graphql';
 import { useHistory } from 'react-router-dom';
-import { setAccessToken } from '../../accessToken';
+import { setAccessToken } from '../../utils/accessToken';
 
 interface ToolbarProps {
     drawerClickHandler(): void;
@@ -93,7 +93,11 @@ export const Toolbar: React.FC<ToolbarProps> = (props: ToolbarProps) => {
                     <DrawerToggleButton click={props.drawerClickHandler} />
                 </div>
                 <div className={classes.logo}>
-                    <a href="/">🚀</a>
+                    <a href="/">
+                        <span role="img" aria-label="logo">
+                            🚀
+                        </span>
+                    </a>
                 </div>
                 <div className={classes.spacer} />
                 <div className={classes.navigationItems}>

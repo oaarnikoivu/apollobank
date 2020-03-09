@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { Formik, Form } from 'formik';
-import { useRegisterMutation } from '../generated/graphql';
+import { useRegisterMutation } from '../../generated/graphql';
 import { RouteComponentProps } from 'react-router-dom';
 import { Button, ThemeProvider } from '@material-ui/core';
-import { theme } from '../utils/theme';
-import { registerValidationSchema } from '../schemas /registerValidationSchema';
-import { FormTextField } from '../components/FormTextField';
-import { AlertMessage } from '../components/AlertMessage';
-import { useRegisterStyles } from './styles/register/Register.style';
+import { theme } from '../../utils/theme';
+import { registerValidationSchema } from '../../schemas /registerValidationSchema';
+import { FormTextField } from '../Forms/FormTextField';
+import { AlertMessage } from '../Alerts/AlertMessage';
+import { useRegisterStyles } from './Register.style';
 
 export const Register: React.FC<RouteComponentProps> = ({ history }) => {
     const [register] = useRegisterMutation();
@@ -83,18 +83,20 @@ export const Register: React.FC<RouteComponentProps> = ({ history }) => {
                                 />
                             </div>
                             <div>
-                                <FormTextField
-                                    className={classes.formField}
-                                    name="streetAddres"
-                                    placeholder="Street address"
-                                    type="input"
-                                />
-                                <FormTextField
-                                    className={classes.formField}
-                                    name="postCode"
-                                    placeholder="Post code"
-                                    type="input"
-                                />
+                                <div className={classes.alignedFormContent}>
+                                    <FormTextField
+                                        className={classes.alignedFormField}
+                                        name="streetAddres"
+                                        placeholder="Street address"
+                                        type="input"
+                                    />
+                                    <FormTextField
+                                        className={classes.alignedFormField}
+                                        name="postCode"
+                                        placeholder="Post code"
+                                        type="input"
+                                    />
+                                </div>
                                 <div className={classes.alignedFormContent}>
                                     <FormTextField
                                         className={classes.alignedFormField}
@@ -136,11 +138,11 @@ export const Register: React.FC<RouteComponentProps> = ({ history }) => {
                             <div className={classes.formButton}>
                                 <ThemeProvider theme={theme}>
                                     <Button
+                                        className={classes.formButton}
                                         disabled={isSubmitting}
                                         variant="contained"
-                                        color="primary"
+                                        color="secondary"
                                         type="submit"
-                                        style={{ marginTop: 12 }}
                                     >
                                         Sign Up
                                     </Button>

@@ -9,13 +9,14 @@ export enum ColorScheme {
     HOVER = '#148C9C',
 }
 
+// For Material UI
 export const theme: Theme = createMuiTheme({
     palette: {
         primary: {
             main: ColorScheme.PRIMARY,
         },
         secondary: {
-            main: ColorScheme.SECONDARY,
+            main: ColorScheme.ORANGE,
         },
         contrastThreshold: 3,
         tonalOffset: 0.2,

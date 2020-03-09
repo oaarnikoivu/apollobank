@@ -1,16 +1,20 @@
 import React, { useEffect, useState, MouseEvent } from 'react';
-import { useAccountsQuery, useCreateAccountMutation, AccountsDocument } from '../generated/graphql';
+import {
+    useAccountsQuery,
+    useCreateAccountMutation,
+    AccountsDocument,
+} from '../../generated/graphql';
 import { Button, ThemeProvider } from '@material-ui/core';
-import { theme } from '../utils/theme';
-import { Loading } from '../components/Loading';
-import { AlertMessage } from '../components/AlertMessage';
-import { AccountCard } from '../components/cards/AccountCard';
-import { Currency } from '../utils/currencies';
+import { theme } from '../../utils/theme';
+import { Loading } from '../Loading/Loading';
+import { AlertMessage } from '../Alerts/AlertMessage';
+import { AccountCard } from '../cards/AccountCard';
+import { Currency } from '../../utils/currencies';
 import { useHistory } from 'react-router-dom';
-import { ReactComponent as Euro } from '../assets/world.svg';
-import { ReactComponent as Dollar } from '../assets/flag.svg';
-import { ReactComponent as Pound } from '../assets/uk.svg';
-import { useAccountsStyles } from './styles/accounts/Accounts.style';
+import { ReactComponent as Euro } from '../../assets/world.svg';
+import { ReactComponent as Dollar } from '../../assets/flag.svg';
+import { ReactComponent as Pound } from '../../assets/uk.svg';
+import { useAccountsStyles } from './Accounts.style';
 
 export const Accounts: React.FC = () => {
     const { data, loading } = useAccountsQuery();

@@ -10,7 +10,7 @@ import {
     ThemeProvider,
 } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { ColorScheme, theme } from '../../utils/theme';
+import { theme } from '../../utils/theme';
 import { useTransactionCardStyles } from '../styles/cards/TransactionCard.style';
 
 interface TransactionCardProps {

@@ -4,12 +4,12 @@ import { ThemeProvider, IconButton } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import SwapVert from '@material-ui/icons/SwapVert';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
-import { ReactComponent as Euro } from '../assets/world.svg';
-import { ReactComponent as Dollar } from '../assets/flag.svg';
-import { ReactComponent as Pound } from '../assets/uk.svg';
-import { theme } from '../utils/theme';
-import { useAccountStyles } from './styles/accounts/Account.style';
-import { TransactionCard } from '../components/cards/TransactionCard';
+import { ReactComponent as Euro } from '../../assets/world.svg';
+import { ReactComponent as Dollar } from '../../assets/flag.svg';
+import { ReactComponent as Pound } from '../../assets/uk.svg';
+import { theme } from '../../utils/theme';
+import { TransactionCard } from '../cards/TransactionCard';
+import { useAccountStyles } from './Account.style';
 
 interface Transaction {
     date: string;

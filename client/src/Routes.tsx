@@ -2,12 +2,11 @@ import React, { ComponentType, useState } from 'react';
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import { Home } from './pages/Home';
-import { Register } from './pages/Register';
-import { Login } from './pages/Login';
-import { Accounts } from './pages/Accounts';
-import { getAccessToken } from './accessToken';
-import { Account } from './pages/Account';
-import { Dashboard } from './pages/Dashboard';
+import { Register } from './components/Register/Register';
+import { Login } from './components/Login/Login';
+import { Accounts } from './components/Accounts/Accounts';
+import { getAccessToken } from './utils/accessToken';
+import { Account } from './components/Accounts/Account';
 import { Toolbar } from './components/Toolbar/Toolbar';
 import { SideDrawer } from './components/SideDrawer/SideDrawer';
 import { Backdrop } from './components/Backdrop/Backdrop';
@@ -67,12 +66,11 @@ export const Routes: React.FC = () => {
                     <Toolbar drawerClickHandler={drawerToggleClickHandler} />
                     <SideDrawer show={sideDrawerOpen} />
                     {backdrop}
-                    <main style={{ marginTop: 64 }}>
+                    <main style={{ marginTop: 84 }}>
                         <Switch>
                             <Route exact path="/" component={Home} />
                             <LoggedInRoute exact path="/register" component={Register} />
                             <LoggedInRoute exact path="/login" component={Login} />
-                            <AuthenticatedRoute exact path="/dashboard" component={Dashboard} />
                             <AuthenticatedRoute exact path="/accounts" component={Accounts} />
                             <AuthenticatedRoute exact path="/accounts/:id" component={Account} />
                             <Route

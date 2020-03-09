@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import { useLoginMutation, MeDocument, MeQuery } from '../generated/graphql';
-import { setAccessToken } from '../accessToken';
+import { useLoginMutation, MeDocument, MeQuery } from '../../generated/graphql';
+import { setAccessToken } from '../../utils/accessToken';
 import { Formik, Form } from 'formik';
-import { FormTextField } from '../components/FormTextField';
+import { FormTextField } from '../Forms/FormTextField';
 import { Button, ThemeProvider } from '@material-ui/core';
-import { theme } from '../utils/theme';
-import { loginValidationSchema } from '../schemas /loginValidationSchema';
-import { AlertMessage } from '../components/AlertMessage';
-import { useLoginStyles } from './styles/login/Login.style';
+import { theme } from '../../utils/theme';
+import { loginValidationSchema } from '../../schemas /loginValidationSchema';
+import { AlertMessage } from '../Alerts/AlertMessage';
+import { useLoginStyles } from './Login.style';
 
 export const Login: React.FC<RouteComponentProps> = ({ history }) => {
     const [login] = useLoginMutation();
@@ -16,7 +16,7 @@ export const Login: React.FC<RouteComponentProps> = ({ history }) => {
     const classes = useLoginStyles();
 
     return (
-        <div>
+        <div className={classes.root}>
             <div>
                 <h1 className={classes.headerText}>Login</h1>
             </div>
@@ -64,7 +64,7 @@ export const Login: React.FC<RouteComponentProps> = ({ history }) => {
                 }}
             >
                 {({ isSubmitting }) => (
-                    <div className={classes.root}>
+                    <div>
                         <Form>
                             <div>
                                 <FormTextField
@@ -83,11 +83,11 @@ export const Login: React.FC<RouteComponentProps> = ({ history }) => {
                             <div className={classes.formButton}>
                                 <ThemeProvider theme={theme}>
                                     <Button
+                                        className={classes.formButton}
                                         disabled={isSubmitting}
                                         variant="contained"
-                                        color="primary"
+                                        color="secondary"
                                         type="submit"
-                                        style={{ marginTop: 12 }}
                                     >
                                         Login
                                     </Button>

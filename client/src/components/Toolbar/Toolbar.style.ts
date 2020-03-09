@@ -66,6 +66,9 @@ export const useToolbarStyles = createUseStyles({
         '&:hover': {
             backgroundColor: ColorScheme.HOVER,
         },
+        '&:focus': {
+            outline: 0,
+        },
     },
     spacer: {
         flex: 1,

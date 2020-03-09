@@ -1,7 +1,7 @@
 import { FieldAttributes, useField } from 'formik';
 import React from 'react';
-import { ThemeProvider, CssBaseline, TextField } from '@material-ui/core';
-import { theme } from '../utils/theme';
+import { ThemeProvider, TextField } from '@material-ui/core';
+import { theme } from '../../utils/theme';
 
 export const FormTextField: React.FC<FieldAttributes<{}>> = ({
     placeholder,
@@ -14,11 +14,10 @@ export const FormTextField: React.FC<FieldAttributes<{}>> = ({
 
     return (
         <ThemeProvider theme={theme}>
-            <CssBaseline />
             <TextField
                 className={className}
                 type={type}
-                variant="standard"
+                variant="outlined"
                 required={true}
                 placeholder={placeholder}
                 {...field}
