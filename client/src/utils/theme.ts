@@ -1,11 +1,12 @@
 import { createMuiTheme, Theme } from '@material-ui/core';
 
 export enum ColorScheme {
-    PRIMARY = '#1976d2',
-    SECONDARY = '#dc004e',
-    INFO = '#6f6f6f',
-    WHITE = '#fafafa',
-    HOVER = '#0c61b6',
+    PRIMARY = '#222B2D',
+    SECONDARY = '#29AABB',
+    ORANGE = '#F15742',
+    MAROON = '#432D32',
+    WHITE = '#FFFEF9',
+    HOVER = '#148C9C',
 }
 
 export const theme: Theme = createMuiTheme({

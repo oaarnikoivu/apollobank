@@ -62,17 +62,17 @@ export const TransactionCard: React.FC<TransactionCardProps> = ({
                         <hr
                             style={{
                                 border: 'none',
-                                borderBottom: `1px solid ${ColorScheme.INFO}`,
+                                borderBottom: `1px solid black`,
                             }}
                         />
                         <div className={classes.expandedText} style={{ marginTop: 12 }}>
-                            Apollo card: <span style={{ color: ColorScheme.INFO }}>*{card}</span>
+                            Apollo card: <span style={{ color: 'black' }}>*{card}</span>
                         </div>
                         <div className={classes.expandedText}>
-                            Spent: <span style={{ color: ColorScheme.INFO }}>£{amount}</span>
+                            Spent: <span style={{ color: 'black' }}>£{amount}</span>
                         </div>
                         <div className={classes.expandedText}>
-                            Fee: <span style={{ color: ColorScheme.INFO }}>{fee}</span>
+                            Fee: <span style={{ color: 'black' }}>{fee}</span>
                         </div>
                     </CardContent>
                 </Collapse>

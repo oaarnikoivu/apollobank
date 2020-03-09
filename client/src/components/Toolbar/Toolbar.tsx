@@ -1,6 +1,9 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useToolbarStyles } from './Toolbar.style';
 import { DrawerToggleButton } from '../SideDrawer/DrawerToggleButton';
+import { useMeQuery, useLogoutMutation } from '../../generated/graphql';
+import { useHistory } from 'react-router-dom';
+import { setAccessToken } from '../../accessToken';
 
 interface ToolbarProps {
     drawerClickHandler(): void;
@@ -9,7 +12,79 @@ interface ToolbarProps {
 const navigationItems: string[] = ['Dashboard', 'Accounts'];
 
 export const Toolbar: React.FC<ToolbarProps> = (props: ToolbarProps) => {
+    const { data, loading } = useMeQuery();
+    const [logout, { client }] = useLogoutMutation();
+    const [showAuthUserButtons, setShowAuthUserButtons] = useState(false);
+    const history = useHistory();
     const classes = useToolbarStyles();
+
+    useEffect(() => {
+        if (!loading && data && data.me) {
+            setShowAuthUserButtons(true);
+        } else {
+            setShowAuthUserButtons(false);
+        }
+    }, [data, loading]);
+
+    const renderAuthUserButtons = () => {
+        return (
+            <>
+                {navigationItems.map(item => {
+                    let routeTo: string = '/';
+
+                    switch (item) {
+                        case 'Dashboard':
+                            routeTo = '/dashboard';
+                            break;
+                        case 'Accounts':
+                            routeTo = '/accounts';
+                            break;
+                    }
+                    return (
+                        <li key={item}>
+                            <a href={routeTo}>{item}</a>
+                        </li>
+                    );
+                })}
+                <button
+                    className={classes.navButton}
+                    onClick={async e => {
+                        e.preventDefault();
+                        await logout().then(() => history.push('/'));
+                        setAccessToken('');
+                        await client!.resetStore();
+                    }}
+                >
+                    Logout
+                </button>
+            </>
+        );
+    };
+
+    const renderNonAuthUserButtons = () => {
+        return (
+            <>
+                <button
+                    className={classes.navButton}
+                    onClick={e => {
+                        e.preventDefault();
+                        history.push('/login');
+                    }}
+                >
+                    Login
+                </button>
+                <button
+                    className={classes.navButton}
+                    onClick={e => {
+                        e.preventDefault();
+                        history.push('/register');
+                    }}
+                >
+                    Sign Up
+                </button>
+            </>
+        );
+    };
 
     return (
         <header className={classes.toolbar}>
@@ -18,28 +93,14 @@ export const Toolbar: React.FC<ToolbarProps> = (props: ToolbarProps) => {
                     <DrawerToggleButton click={props.drawerClickHandler} />
                 </div>
                 <div className={classes.logo}>
-                    <a href="/">Apollo</a>
+                    <a href="/">🚀</a>
                 </div>
                 <div className={classes.spacer} />
                 <div className={classes.navigationItems}>
                     <ul>
-                        {navigationItems.map(item => {
-                            let routeTo: string = '/';
-
-                            switch (item) {
-                                case 'Dashboard':
-                                    routeTo = '/dashboard';
-                                    break;
-                                case 'Accounts':
-                                    routeTo = '/accounts';
-                                    break;
-                            }
-                            return (
-                                <li key={item}>
-                                    <a href={routeTo}>{item}</a>
-                                </li>
-                            );
-                        })}
+                        {!!showAuthUserButtons
+                            ? renderAuthUserButtons()
+                            : renderNonAuthUserButtons()}
                     </ul>
                 </div>
             </nav>

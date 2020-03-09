@@ -30,7 +30,7 @@ export const useAccountStyles = makeStyles({
     accountButton: {
         backgroundColor: ColorScheme.PRIMARY,
         color: ColorScheme.WHITE,
-        '&:hover, &.Mui-focusVisible': { backgroundColor: ColorScheme.HOVER },
+
         width: 32,
         height: 32,
     },
@@ -43,7 +43,6 @@ export const useAccountStyles = makeStyles({
     accountButtonText: {
         marginTop: 12,
         fontSize: 14,
-        color: ColorScheme.INFO,
     },
     transactions: {
         marginTop: 12,
@@ -51,7 +50,6 @@ export const useAccountStyles = makeStyles({
         display: 'flex',
         flexDirection: 'column',
         width: 480,
-        color: ColorScheme.INFO,
     },
     transactionsHeader: {
         marginTop: 12,

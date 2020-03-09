@@ -1,6 +1,4 @@
 import { makeStyles } from '@material-ui/core';
-import { ColorScheme } from '../../../utils/theme';
-
 export const useAccountsStyles = makeStyles({
     root: {
         display: 'flex',
@@ -17,7 +15,6 @@ export const useAccountsStyles = makeStyles({
         display: 'flex',
         justifyContent: 'space-between',
         fontSize: 15,
-        color: ColorScheme.INFO,
     },
     accountList: {
         marginTop: 8,

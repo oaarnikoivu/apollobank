@@ -1,4 +1,5 @@
 import { createUseStyles } from 'react-jss';
+import { ColorScheme } from '../../utils/theme';
 
 export const useToolbarStyles = createUseStyles({
     toolbar: {
@@ -7,7 +8,7 @@ export const useToolbarStyles = createUseStyles({
         left: 0,
         width: '100%',
         height: '56px',
-        backgroundColor: 'blue',
+        backgroundColor: ColorScheme.PRIMARY,
     },
     navigation: {
         display: 'flex',
@@ -20,7 +21,7 @@ export const useToolbarStyles = createUseStyles({
         letterSpacing: 2,
         marginLeft: '1.5rem',
         '& a': {
-            color: 'white',
+            color: ColorScheme.WHITE,
             textDecoration: 'none',
             fontSize: '1.5rem',
         },
@@ -32,19 +33,38 @@ export const useToolbarStyles = createUseStyles({
             margin: 0,
             padding: 0,
             display: 'flex',
+            alignItems: 'center',
         },
         '& li': {
             padding: '0 0.5rem',
         },
         '& a': {
-            color: 'white',
+            color: ColorScheme.WHITE,
+            letterSpacing: 1,
             textDecoration: 'none',
+            fontWeight: 'bold',
         },
         '& a:hover': {
-            color: 'orange',
+            color: ColorScheme.SECONDARY,
         },
         '& a:active': {
-            color: 'orange',
+            color: ColorScheme.SECONDARY,
+        },
+    },
+    navButton: {
+        fontSize: 14,
+        fontWeight: 'bold',
+        letterSpacing: 1,
+        marginLeft: '1rem',
+        height: 32,
+        width: 102,
+        borderRadius: 4,
+        border: 'none',
+        backgroundColor: ColorScheme.SECONDARY,
+        color: ColorScheme.WHITE,
+        cursor: 'pointer',
+        '&:hover': {
+            backgroundColor: ColorScheme.HOVER,
         },
     },
     spacer: {

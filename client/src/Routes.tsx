@@ -11,6 +11,7 @@ import { Dashboard } from './pages/Dashboard';
 import { Toolbar } from './components/Toolbar/Toolbar';
 import { SideDrawer } from './components/SideDrawer/SideDrawer';
 import { Backdrop } from './components/Backdrop/Backdrop';
+import { ColorScheme } from './utils/theme';
 
 interface AuthenticatedRouteProps {
     exact?: boolean;
@@ -59,7 +60,7 @@ export const Routes: React.FC = () => {
     return (
         <>
             <Helmet>
-                <style>{'body { background-color: white; }'}</style>
+                <style>{`body { background-color: ${ColorScheme.WHITE}; }`}</style>
             </Helmet>
             <BrowserRouter>
                 <div style={{ height: '100%' }}>

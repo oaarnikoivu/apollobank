@@ -1,9 +1,10 @@
 import { createUseStyles } from 'react-jss';
+import { ColorScheme } from '../../utils/theme';
 
 export const useSideDrawerStyles = createUseStyles({
     siderDrawer: {
         height: '100%',
-        background: 'white',
+        background: ColorScheme.WHITE,
         boxShadow: '1px 0 7px rgba(0,0,0,0.5)',
         position: 'fixed',
         top: 0,
@@ -24,15 +25,15 @@ export const useSideDrawerStyles = createUseStyles({
             margin: '0.5rem 0',
         },
         '& a': {
-            color: 'red',
+            color: ColorScheme.PRIMARY,
             textDecoration: 'none',
             fontSize: '1.2rem',
         },
         '& a:hover': {
-            color: 'orange',
+            color: ColorScheme.ORANGE,
         },
         '& a:active': {
-            color: 'orange',
+            color: ColorScheme.ORANGE,
         },
     },
     open: {

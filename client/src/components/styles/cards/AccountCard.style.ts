@@ -24,7 +24,7 @@ export const useAccountCardStyles = makeStyles({
         color: 'black',
     },
     cardCurrency: {
-        color: ColorScheme.INFO,
+        color: 'black',
         textTransform: 'none',
     },
 });
