@@ -1,11 +1,24 @@
 import React, { useEffect, useState } from 'react';
-import { AppBar, Typography, Button, makeStyles, Toolbar, ThemeProvider } from '@material-ui/core';
+import { AppBar, Button, makeStyles, Toolbar, ThemeProvider } from '@material-ui/core';
+import { Typography } from 'antd';
 import { useMeQuery, useLogoutMutation } from '../generated/graphql';
 import { setAccessToken } from '../accessToken';
 import { useHistory } from 'react-router-dom';
 import { theme } from '../utils/theme';
+import { createUseStyles } from 'react-jss';
 
-const useStyles = makeStyles({
+const { Title } = Typography;
+
+// const useStyles = makeStyles({
+//     root: {
+//         flexGrow: 1,
+//     },
+//     title: {
+//         flexGrow: 1,
+//     },
+// });
+
+const useStyles = createUseStyles({
     root: {
         flexGrow: 1,
     },
@@ -97,16 +110,16 @@ export const Header: React.FC = () => {
 
     return (
         <div className={classes.root}>
+            <Title
+                level={2}
+                style={{ marginLeft: 24, textTransform: 'uppercase', letterSpacing: 2 }}
+            >
+                Apollo
+            </Title>
             <ThemeProvider theme={theme}>
                 <AppBar position="static" style={{ background: 'transparent', boxShadow: 'none' }}>
                     <Toolbar>
-                        <Typography
-                            className={classes.title}
-                            variant="h5"
-                            style={{ color: 'black' }}
-                        >
-                            AP
-                        </Typography>
+                        <Title>Apollo</Title>
                         {!!showAuthUserButtons
                             ? renderAuthUserButtons()
                             : renderNonAuthUserButtons()}

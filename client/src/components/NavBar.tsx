@@ -1,5 +1,5 @@
 import React from 'react';
 
-export const Dashboard: React.FC = () => {
+export const NavBar: React.FC = () => {
     return <div></div>;
 };
