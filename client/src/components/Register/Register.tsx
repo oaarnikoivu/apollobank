@@ -75,6 +75,7 @@ export const Register: React.FC<RouteComponentProps> = ({ history }) => {
                                     placeholder="First name"
                                     type="input"
                                 />
+                                <div className={classes.spacer} />
                                 <FormTextField
                                     className={classes.alignedFormField}
                                     name="lastName"
@@ -90,6 +91,7 @@ export const Register: React.FC<RouteComponentProps> = ({ history }) => {
                                         placeholder="Street address"
                                         type="input"
                                     />
+                                    <div className={classes.spacer} />
                                     <FormTextField
                                         className={classes.alignedFormField}
                                         name="postCode"
@@ -104,6 +106,7 @@ export const Register: React.FC<RouteComponentProps> = ({ history }) => {
                                         placeholder="City"
                                         type="input"
                                     />
+                                    <div className={classes.spacer} />
                                     <FormTextField
                                         className={classes.alignedFormField}
                                         name="country"

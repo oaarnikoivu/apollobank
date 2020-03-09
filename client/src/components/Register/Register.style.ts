@@ -1,14 +1,15 @@
 import { makeStyles } from '@material-ui/core/styles';
 
 export const useRegisterStyles = makeStyles({
+    root: {
+        margin: '0 auto',
+        top: '25%',
+        height: '100%',
+        width: '348px',
+    },
     headerText: {
         textAlign: 'center',
-    },
-    root: {
-        display: 'flex',
-        justifyContent: 'center',
-        width: '420px',
-        margin: '0 auto',
+        fontWeight: 'bold',
     },
     alignedFormContent: {
         marginTop: 12,
@@ -17,11 +18,9 @@ export const useRegisterStyles = makeStyles({
     },
     alignedFormField: {
         width: '50%',
-        marginRight: 8,
     },
     formField: {
-        width: '411px',
-        marginRight: 8,
+        width: '100%',
         marginTop: 12,
     },
     formButton: {
@@ -33,5 +32,8 @@ export const useRegisterStyles = makeStyles({
     },
     loginText: {
         margintop: 12,
+    },
+    spacer: {
+        width: 8,
     },
 });
