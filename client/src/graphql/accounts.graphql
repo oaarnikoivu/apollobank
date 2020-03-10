@@ -3,5 +3,7 @@ query Accounts {
         id
         balance
         currency
+        sortCode
+        iban
     }
 }

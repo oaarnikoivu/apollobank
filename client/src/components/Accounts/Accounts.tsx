@@ -9,7 +9,7 @@ import { useAccountsQuery } from '../../generated/graphql';
 import { Loading } from '../Loading/Loading';
 import { useHistory } from 'react-router-dom';
 import { useAccountsStyles } from './styles/Accounts.style';
-import { AccountsCard } from '../Cards/AccountsCard';
+import { AccountsCard, NoAccountsCard } from '../Cards/AccountsCard';
 import { Currency } from '../../utils/currencies';
 
 export const Accounts: React.FC = () => {
@@ -41,6 +41,18 @@ export const Accounts: React.FC = () => {
             pathname: `/accounts/${account.id}`,
             state: account,
         });
+    };
+
+    const renderNoAccountsCard = () => {
+        return (
+            <>
+                <Grid item xs={12} md={4} lg={4}>
+                    <Paper className={accountCardHeightPaper}>
+                        <NoAccountsCard />
+                    </Paper>
+                </Grid>
+            </>
+        );
     };
 
     return (
@@ -81,47 +93,52 @@ export const Accounts: React.FC = () => {
                         </div>
                     </div>
                     <Grid container spacing={3}>
-                        {data.accounts.map(account => {
-                            let svg: any | string;
-                            let currencyIcon: string = '';
-                            let fullCurrencyText: string = '';
+                        {data.accounts.length <= 0 && renderNoAccountsCard()}
+                        {data.accounts.length > 0 &&
+                            data.accounts.map(account => {
+                                let svg: any | string;
+                                let currencyIcon: string = '';
+                                let fullCurrencyText: string = '';
 
-                            switch (account.currency) {
-                                case Currency.EURO:
-                                    svg = <Euro />;
-                                    currencyIcon = '€';
-                                    fullCurrencyText = 'Euro';
-                                    break;
-                                case Currency.DOLLAR:
-                                    svg = <Dollar />;
-                                    currencyIcon = '＄';
-                                    fullCurrencyText = 'US Dollar';
-                                    break;
-                                case Currency.POUND:
-                                    svg = <Pound />;
-                                    currencyIcon = '£';
-                                    fullCurrencyText = 'British Pound';
-                                    break;
-                                case Currency.BITCOIN:
-                                    svg = '';
-                                    currencyIcon = '฿';
-                                    fullCurrencyText = 'Bitcoin';
-                                    break;
-                            }
-                            return (
-                                <Grid key={account.id} item xs={12} md={4} lg={4}>
-                                    <Paper className={accountCardHeightPaper}>
-                                        <AccountsCard
-                                            svg={svg}
-                                            currencyIcon={currencyIcon}
-                                            fullCurrencyText={fullCurrencyText}
-                                            balance={account.balance}
-                                            onAccountClicked={e => handleAccountClicked(e, account)}
-                                        />
-                                    </Paper>
-                                </Grid>
-                            );
-                        })}
+                                switch (account.currency) {
+                                    case Currency.EURO:
+                                        svg = <Euro />;
+                                        currencyIcon = '€';
+                                        fullCurrencyText = 'Euro';
+                                        break;
+                                    case Currency.DOLLAR:
+                                        svg = <Dollar />;
+                                        currencyIcon = '＄';
+                                        fullCurrencyText = 'US Dollar';
+                                        break;
+                                    case Currency.POUND:
+                                        svg = <Pound />;
+                                        currencyIcon = '£';
+                                        fullCurrencyText = 'British Pound';
+                                        break;
+                                    case Currency.BITCOIN:
+                                        svg = '';
+                                        currencyIcon = '฿';
+                                        fullCurrencyText = 'Bitcoin';
+                                        break;
+                                }
+                                return (
+                                    <Grid key={account.id} item xs={12} md={4} lg={4}>
+                                        <Paper className={accountCardHeightPaper}>
+                                            <AccountsCard
+                                                svg={svg}
+                                                currencyIcon={currencyIcon}
+                                                fullCurrencyText={fullCurrencyText}
+                                                balance={account.balance}
+                                                iban={account.iban}
+                                                onAccountClicked={e =>
+                                                    handleAccountClicked(e, account)
+                                                }
+                                            />
+                                        </Paper>
+                                    </Grid>
+                                );
+                            })}
                     </Grid>
                 </Container>
             </main>

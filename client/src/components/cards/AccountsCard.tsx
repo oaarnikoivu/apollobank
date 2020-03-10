@@ -9,6 +9,7 @@ interface AccountsCardProps {
     currencyIcon: string;
     fullCurrencyText: string;
     balance: number;
+    iban: string;
     onAccountClicked(e: MouseEvent<HTMLButtonElement>): void;
 }
 
@@ -17,6 +18,7 @@ export const AccountsCard: React.FC<AccountsCardProps> = ({
     currencyIcon,
     fullCurrencyText,
     balance,
+    iban,
     onAccountClicked,
 }) => {
     return (
@@ -59,8 +61,12 @@ export const AccountsCard: React.FC<AccountsCardProps> = ({
                 }}
                 component="p"
             >
-                XXXX APL0 0099 YYYY ZZZZ 78
+                {!!iban ? iban : 'XXXX APL0 0099 YYYY ZZZZ 78'}
             </Typography>
         </>
     );
+};
+
+export const NoAccountsCard: React.FC = () => {
+    return <div>Create new account</div>;
 };

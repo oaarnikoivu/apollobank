@@ -17,12 +17,12 @@ export class Account extends BaseEntity {
 	owner: User;
 
 	@Field()
-	@Column({ nullable: true })
+	@Column({ default: "00-00-00", nullable: true })
 	sortCode: string;
 
 	@Field()
 	@Column({ nullable: true })
-	accountNumber: string;
+	iban: string;
 
 	@Field()
 	@Column()
