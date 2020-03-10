@@ -1,8 +1,10 @@
+import { createRandomIbanCode } from "./../utils/createRandom";
 import { isAuth } from "./../isAuth";
 import { Query, Resolver, Mutation, Ctx, UseMiddleware, Arg } from "type-graphql";
 import { MyContext } from "../MyContext";
 import { User } from "../entity/User";
 import { Account } from "../entity/Account";
+import { createRandomSortCode } from "../utils/createRandom";
 
 @Resolver()
 export class AccountResolver {
@@ -42,7 +44,9 @@ export class AccountResolver {
 				try {
 					await Account.insert({
 						owner,
-						currency
+						currency,
+						sortCode: currency === "GBP" ? createRandomSortCode() : undefined,
+						accountNumber: createRandomIbanCode()
 					});
 				} catch (err) {
 					console.log(err);

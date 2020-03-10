@@ -12,7 +12,6 @@ import cors from "cors";
 import { User } from "./entity/User";
 import { createAccessToken, createRefreshToken } from "./auth";
 import { sendRefreshToken } from "./sendRefreshToken";
-
 import { createTypeOrmConnection } from "./utils/createTypeOrmConnection";
 import { createConnection } from "typeorm";
 

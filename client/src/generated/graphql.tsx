@@ -14,6 +14,8 @@ export type Scalars = {
 export type Account = {
    __typename?: 'Account',
   id: Scalars['Int'],
+  sortCode: Scalars['String'],
+  accountNumber: Scalars['String'],
   currency: Scalars['String'],
   balance: Scalars['Float'],
 };
@@ -69,6 +71,16 @@ export type Query = {
   users: Array<User>,
   me?: Maybe<User>,
   accounts: Array<Account>,
+  transactions: Scalars['String'],
+};
+
+export type Transaction = {
+   __typename?: 'Transaction',
+  id: Scalars['Int'],
+  title: Scalars['String'],
+  date: Scalars['String'],
+  income: Scalars['Float'],
+  expenses: Scalars['Float'],
 };
 
 export type User = {

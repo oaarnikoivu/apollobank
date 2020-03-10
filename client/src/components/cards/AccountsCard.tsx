@@ -20,7 +20,7 @@ export const AccountsCard: React.FC<AccountsCardProps> = ({
     onAccountClicked,
 }) => {
     return (
-        <div>
+        <>
             <div
                 style={{
                     display: 'flex',
@@ -61,6 +61,6 @@ export const AccountsCard: React.FC<AccountsCardProps> = ({
             >
                 XXXX APL0 0099 YYYY ZZZZ 78
             </Typography>
-        </div>
+        </>
     );
 };

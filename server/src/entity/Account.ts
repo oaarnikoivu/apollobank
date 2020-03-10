@@ -17,6 +17,14 @@ export class Account extends BaseEntity {
 	owner: User;
 
 	@Field()
+	@Column({ nullable: true })
+	sortCode: string;
+
+	@Field()
+	@Column({ nullable: true })
+	accountNumber: string;
+
+	@Field()
 	@Column()
 	currency: string;
 
