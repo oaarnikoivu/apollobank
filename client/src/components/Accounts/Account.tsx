@@ -8,8 +8,8 @@ import { ReactComponent as Euro } from '../../assets/world.svg';
 import { ReactComponent as Dollar } from '../../assets/flag.svg';
 import { ReactComponent as Pound } from '../../assets/uk.svg';
 import { theme } from '../../utils/theme';
-import { TransactionCard } from '../cards/TransactionCard';
-import { useAccountStyles } from './Account.style';
+import { useAccountStyles } from './styles/Account.style';
+import { TransactionCard } from '../Cards/TransactionCard';
 
 interface Transaction {
     date: string;
