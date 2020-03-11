@@ -1,13 +1,21 @@
-const twoDigitRandomNumGenerator = () => {
-	return Math.floor(Math.random() * 90 + 10);
-};
+const createRandomNumber = (n: number): string => {
+	let add = 1,
+		max = 12 - add;
 
-const fourDigitRandomNumGenerator = () => {
-	return Math.floor(Math.random() * 9000 + 1000);
+	if (n > max) {
+		return createRandomNumber(max) + createRandomNumber(n - max);
+	}
+
+	max = Math.pow(10, n + add);
+	let min = max / 10;
+	let randomNumber = Math.floor(Math.random() * (max - min + 1)) + min;
+	return ("" + randomNumber).substring(add);
 };
 
 export const createRandomIbanCode = () => {
-	return `GB${twoDigitRandomNumGenerator()} AP0L ${fourDigitRandomNumGenerator()} ${fourDigitRandomNumGenerator()} ${fourDigitRandomNumGenerator()} ${twoDigitRandomNumGenerator()}`;
+	return `GB${createRandomNumber(2)} AP0L ${createRandomNumber(4)} ${createRandomNumber(
+		4
+	)} ${createRandomNumber(4)} ${createRandomNumber(2)}`;
 };
 
 export const createRandomSortCode = () => {

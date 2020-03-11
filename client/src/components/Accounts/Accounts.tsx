@@ -5,7 +5,7 @@ import { Title } from '../Typography/Title';
 import { ReactComponent as Euro } from '../../assets/world.svg';
 import { ReactComponent as Dollar } from '../../assets/flag.svg';
 import { ReactComponent as Pound } from '../../assets/uk.svg';
-import { useAccountsQuery } from '../../generated/graphql';
+import { useAccountsQuery, AccountsQuery } from '../../generated/graphql';
 import { Loading } from '../Loading/Loading';
 import { useHistory } from 'react-router-dom';
 import { useAccountsStyles } from './styles/Accounts.style';
