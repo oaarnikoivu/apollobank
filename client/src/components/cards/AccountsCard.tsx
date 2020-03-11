@@ -1,8 +1,9 @@
 import React, { MouseEvent } from 'react';
-import { IconButton, Typography, Divider } from '@material-ui/core';
+import { IconButton, Typography, Divider, Button, ThemeProvider } from '@material-ui/core';
 import NavigateNextIcon from '@material-ui/icons/NavigateNext';
+import AddIcon from '@material-ui/icons/Add';
 import { Title } from '../Typography/Title';
-import { ColorScheme } from '../../utils/theme';
+import { ColorScheme, theme } from '../../utils/theme';
 
 interface AccountsCardProps {
     svg: any | string;
@@ -11,6 +12,10 @@ interface AccountsCardProps {
     balance: number;
     iban: string;
     onAccountClicked(e: MouseEvent<HTMLButtonElement>): void;
+}
+
+interface NoAccountCardProps {
+    onCreateNewAccountClicked(e: MouseEvent<HTMLButtonElement>): void;
 }
 
 export const AccountsCard: React.FC<AccountsCardProps> = ({
@@ -67,6 +72,26 @@ export const AccountsCard: React.FC<AccountsCardProps> = ({
     );
 };
 
-export const NoAccountsCard: React.FC = () => {
-    return <div>Create new account</div>;
+export const NoAccountsCard: React.FC<NoAccountCardProps> = ({ onCreateNewAccountClicked }) => {
+    return (
+        <div
+            style={{
+                display: 'flex',
+                marginTop: '62px',
+                justifyContent: 'center',
+            }}
+        >
+            <ThemeProvider theme={theme}>
+                <Button
+                    style={{ fontWeight: 'bold', textTransform: 'none', letterSpacing: 1 }}
+                    color="primary"
+                    variant="contained"
+                    startIcon={<AddIcon />}
+                    onClick={onCreateNewAccountClicked}
+                >
+                    Create new account
+                </Button>
+            </ThemeProvider>
+        </div>
+    );
 };

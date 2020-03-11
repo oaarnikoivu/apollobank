@@ -5,7 +5,11 @@ import { Title } from '../Typography/Title';
 import { ReactComponent as Euro } from '../../assets/world.svg';
 import { ReactComponent as Dollar } from '../../assets/flag.svg';
 import { ReactComponent as Pound } from '../../assets/uk.svg';
-import { useAccountsQuery, AccountsQuery } from '../../generated/graphql';
+import {
+    useAccountsQuery,
+    useCreateAccountMutation,
+    AccountsDocument,
+} from '../../generated/graphql';
 import { Loading } from '../Loading/Loading';
 import { useHistory } from 'react-router-dom';
 import { useAccountsStyles } from './styles/Accounts.style';
@@ -14,6 +18,7 @@ import { Currency } from '../../utils/currencies';
 
 export const Accounts: React.FC = () => {
     const { data, loading } = useAccountsQuery();
+    const [createAccount] = useCreateAccountMutation();
     const [totalBalance, setTotalBalance] = useState(0);
     const history = useHistory();
     const classes = useAccountsStyles();
@@ -35,6 +40,33 @@ export const Accounts: React.FC = () => {
         return <Loading />;
     }
 
+    const handleCreateNewAccountClicked = async (e: MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+
+        const currency: string = 'USD';
+
+        try {
+            const response = await createAccount({
+                variables: {
+                    currency: currency,
+                },
+                refetchQueries: [
+                    {
+                        query: AccountsDocument,
+                        variables: {},
+                    },
+                ],
+            });
+
+            if (response && response.data) {
+                console.log('working...');
+            }
+        } catch (error) {
+            const errorMessage = error.message.split(':')[1];
+            console.log(errorMessage);
+        }
+    };
+
     const handleAccountClicked = (e: MouseEvent<HTMLButtonElement>, account: any) => {
         e.preventDefault();
         history.push({
@@ -48,7 +80,11 @@ export const Accounts: React.FC = () => {
             <>
                 <Grid item xs={12} md={4} lg={4}>
                     <Paper className={accountCardHeightPaper}>
-                        <NoAccountsCard />
+                        <NoAccountsCard
+                            onCreateNewAccountClicked={e => {
+                                handleCreateNewAccountClicked(e);
+                            }}
+                        />
                     </Paper>
                 </Grid>
             </>
@@ -93,7 +129,6 @@ export const Accounts: React.FC = () => {
                         </div>
                     </div>
                     <Grid container spacing={3}>
-                        {data.accounts.length <= 0 && renderNoAccountsCard()}
                         {data.accounts.length > 0 &&
                             data.accounts.map(account => {
                                 let svg: any | string;
@@ -108,7 +143,7 @@ export const Accounts: React.FC = () => {
                                         break;
                                     case Currency.DOLLAR:
                                         svg = <Dollar />;
-                                        currencyIcon = '＄';
+                                        currencyIcon = '$';
                                         fullCurrencyText = 'US Dollar';
                                         break;
                                     case Currency.POUND:
@@ -139,6 +174,7 @@ export const Accounts: React.FC = () => {
                                     </Grid>
                                 );
                             })}
+                        {data.accounts.length <= 2 && renderNoAccountsCard()}
                     </Grid>
                 </Container>
             </main>
