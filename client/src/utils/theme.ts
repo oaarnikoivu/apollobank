@@ -18,6 +18,9 @@ export const theme: Theme = createMuiTheme({
         secondary: {
             main: ColorScheme.ORANGE,
         },
+        info: {
+            main: ColorScheme.MAROON,
+        },
         contrastThreshold: 3,
         tonalOffset: 0.2,
     },

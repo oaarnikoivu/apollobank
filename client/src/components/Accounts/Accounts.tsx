@@ -1,5 +1,5 @@
 import React, { useState, useEffect, MouseEvent } from 'react';
-import { Container, Grid, Paper } from '@material-ui/core';
+import { Container, Grid, Paper, Button, ThemeProvider } from '@material-ui/core';
 import { Chart } from '../Charts/Chart';
 import { Title } from '../Typography/Title';
 import { ReactComponent as Euro } from '../../assets/world.svg';
@@ -15,11 +15,14 @@ import { useHistory } from 'react-router-dom';
 import { useAccountsStyles } from './styles/Accounts.style';
 import { AccountsCard, NoAccountsCard } from '../Cards/AccountsCard';
 import { Currency } from '../../utils/currencies';
+import { theme } from '../../utils/theme';
+import { Dialog } from '../Dialog/Dialog';
 
 export const Accounts: React.FC = () => {
     const { data, loading } = useAccountsQuery();
     const [createAccount] = useCreateAccountMutation();
     const [totalBalance, setTotalBalance] = useState(0);
+    const [openDialog, setOpenDialog] = useState(false);
     const history = useHistory();
     const classes = useAccountsStyles();
 
@@ -40,31 +43,39 @@ export const Accounts: React.FC = () => {
         return <Loading />;
     }
 
+    const renderDialog = () => {
+        return (
+            <Dialog isOpen={openDialog} onClose={() => setOpenDialog(false)}>
+                Hello from the dialog.
+            </Dialog>
+        );
+    };
+
     const handleCreateNewAccountClicked = async (e: MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
 
-        const currency: string = 'USD';
+        setOpenDialog(true);
 
-        try {
-            const response = await createAccount({
-                variables: {
-                    currency: currency,
-                },
-                refetchQueries: [
-                    {
-                        query: AccountsDocument,
-                        variables: {},
-                    },
-                ],
-            });
+        // try {
+        //     const response = await createAccount({
+        //         variables: {
+        //             currency: currency,
+        //         },
+        //         refetchQueries: [
+        //             {
+        //                 query: AccountsDocument,
+        //                 variables: {},
+        //             },
+        //         ],
+        //     });
 
-            if (response && response.data) {
-                console.log('working...');
-            }
-        } catch (error) {
-            const errorMessage = error.message.split(':')[1];
-            console.log(errorMessage);
-        }
+        //     if (response && response.data) {
+        //         console.log('working...');
+        //     }
+        // } catch (error) {
+        //     const errorMessage = error.message.split(':')[1];
+        //     console.log(errorMessage);
+        // }
     };
 
     const handleAccountClicked = (e: MouseEvent<HTMLButtonElement>, account: any) => {
@@ -73,6 +84,10 @@ export const Accounts: React.FC = () => {
             pathname: `/accounts/${account.id}`,
             state: account,
         });
+    };
+
+    const simulate = () => {
+        console.log('Simulating...');
     };
 
     const renderNoAccountsCard = () => {
@@ -93,10 +108,35 @@ export const Accounts: React.FC = () => {
 
     return (
         <div className={classes.root}>
+            {renderDialog()}
             <main className={classes.content}>
                 <Container maxWidth="lg" className={classes.container}>
-                    <div style={{ marginBottom: 12 }}>
-                        <Title title="Stats" fontSize={24} />
+                    <div
+                        style={{
+                            marginBottom: 12,
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                        }}
+                    >
+                        <div>
+                            <Title title="Stats" fontSize={24} />
+                        </div>
+                        <div>
+                            <ThemeProvider theme={theme}>
+                                <Button
+                                    color="secondary"
+                                    variant="contained"
+                                    style={{
+                                        fontWeight: 'bold',
+                                        letterSpacing: 1,
+                                        textTransform: 'none',
+                                    }}
+                                    onClick={() => simulate()}
+                                >
+                                    Simulate
+                                </Button>
+                            </ThemeProvider>
+                        </div>
                     </div>
                     <Grid container spacing={3}>
                         <Grid item xs={12} md={12} lg={12}>

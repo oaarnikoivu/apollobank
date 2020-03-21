@@ -66,7 +66,7 @@ export const Routes: React.FC = () => {
                     <Toolbar drawerClickHandler={drawerToggleClickHandler} />
                     <SideDrawer show={sideDrawerOpen} />
                     {backdrop}
-                    <main style={{ marginTop: 84 }}>
+                    <main style={{ marginTop: 24 }}>
                         <Switch>
                             <Route exact path="/" component={Home} />
                             <LoggedInRoute exact path="/register" component={Register} />
