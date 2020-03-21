@@ -39,7 +39,7 @@ export const Dialog: React.FC<NewAccountDialogProps> = ({ children, isOpen, onCl
             <button style={dialogCloseButtonStyles} onClick={onClose}>
                 x
             </button>
-            Dialog
+            {children}
         </div>
     );
 

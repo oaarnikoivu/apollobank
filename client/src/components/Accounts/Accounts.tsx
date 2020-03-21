@@ -1,5 +1,15 @@
 import React, { useState, useEffect, MouseEvent } from 'react';
-import { Container, Grid, Paper, Button, ThemeProvider } from '@material-ui/core';
+import {
+    Container,
+    Grid,
+    Paper,
+    Button,
+    ThemeProvider,
+    List,
+    ListItemText,
+    ListItem,
+    ListItemIcon,
+} from '@material-ui/core';
 import { Chart } from '../Charts/Chart';
 import { Title } from '../Typography/Title';
 import { ReactComponent as Euro } from '../../assets/world.svg';
@@ -17,6 +27,8 @@ import { AccountsCard, NoAccountsCard } from '../Cards/AccountsCard';
 import { Currency } from '../../utils/currencies';
 import { theme } from '../../utils/theme';
 import { Dialog } from '../Dialog/Dialog';
+
+const currencies = ['EUR', 'USD', 'GBP', 'BTC'];
 
 export const Accounts: React.FC = () => {
     const { data, loading } = useAccountsQuery();
@@ -43,39 +55,67 @@ export const Accounts: React.FC = () => {
         return <Loading />;
     }
 
+    const determineCurrencyIcon = (c: string) => {
+        switch (c) {
+            case 'EUR':
+                return <Euro />;
+            case 'USD':
+                return <Dollar />;
+            case 'GBP':
+                return <Pound />;
+            case 'BTC':
+                return (
+                    <img
+                        src="https://upload.wikimedia.org/wikipedia/commons/4/46/Bitcoin.svg"
+                        alt="..."
+                        style={{ width: 32 }}
+                    />
+                );
+        }
+        return undefined;
+    };
+
     const renderDialog = () => {
         return (
             <Dialog isOpen={openDialog} onClose={() => setOpenDialog(false)}>
-                Hello from the dialog.
+                <List>
+                    {currencies.map(c => (
+                        <ListItem
+                            button
+                            key={c}
+                            onClick={async () => {
+                                try {
+                                    const response = await createAccount({
+                                        variables: {
+                                            currency: c,
+                                        },
+                                        refetchQueries: [
+                                            {
+                                                query: AccountsDocument,
+                                                variables: {},
+                                            },
+                                        ],
+                                    });
+
+                                    if (response && response.data) {
+                                        console.log('Account successfully created!');
+                                        setOpenDialog(false);
+                                    }
+                                } catch (error) {
+                                    const errorMessage = error.message.split(':')[1];
+                                    console.log(errorMessage);
+                                }
+                            }}
+                        >
+                            <ListItemIcon>
+                                <div style={{ width: 32 }}>{determineCurrencyIcon(c)}</div>
+                            </ListItemIcon>
+                            <ListItemText primary={c} />
+                        </ListItem>
+                    ))}
+                </List>
             </Dialog>
         );
-    };
-
-    const handleCreateNewAccountClicked = async (e: MouseEvent<HTMLButtonElement>) => {
-        e.preventDefault();
-
-        setOpenDialog(true);
-
-        // try {
-        //     const response = await createAccount({
-        //         variables: {
-        //             currency: currency,
-        //         },
-        //         refetchQueries: [
-        //             {
-        //                 query: AccountsDocument,
-        //                 variables: {},
-        //             },
-        //         ],
-        //     });
-
-        //     if (response && response.data) {
-        //         console.log('working...');
-        //     }
-        // } catch (error) {
-        //     const errorMessage = error.message.split(':')[1];
-        //     console.log(errorMessage);
-        // }
     };
 
     const handleAccountClicked = (e: MouseEvent<HTMLButtonElement>, account: any) => {
@@ -97,7 +137,8 @@ export const Accounts: React.FC = () => {
                     <Paper className={accountCardHeightPaper}>
                         <NoAccountsCard
                             onCreateNewAccountClicked={e => {
-                                handleCreateNewAccountClicked(e);
+                                e.preventDefault();
+                                setOpenDialog(true);
                             }}
                         />
                     </Paper>
