@@ -1,27 +1,52 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Line } from 'react-chartjs-2';
 import { useTransactionsQuery } from '../../generated/graphql';
 
-export const Chart: React.FC = () => {
+interface ChartProps {
+    currency: string;
+}
+
+export const Chart: React.FC<ChartProps> = ({ currency }) => {
     const { data } = useTransactionsQuery({
-        variables: { currency: 'EUR' },
+        variables: { currency: currency },
     });
+
+    let dates: Date[] = [];
+    let sortedDates: string[] = [];
+
+    useEffect(() => {
+        if (data) {
+            data.transactions.map(transaction => {
+                let parsedDate = Date.parse(transaction.date);
+                dates.push(new Date(parsedDate));
+            });
+        }
+        dates
+            .sort((a, b) => a.getTime() - b.getTime())
+            .forEach(date => {
+                sortedDates.push(date.toLocaleDateString());
+            });
+    }, [data]);
 
     return (
         <div>
             <Line
                 data={{
-                    labels: !!data
-                        ? data.transactions.map((transaction, index) => {
-                              let parsedDate = Date.parse(transaction.date);
-                              let date: Date = new Date(parsedDate);
-                              return date.toLocaleDateString();
-                          })
-                        : [],
+                    labels: !!data ? sortedDates : [],
+                    // labels: !!data
+                    //     ? data.transactions.map((transaction, index) => {
+                    //           let parsedDate = Date.parse(transaction.date);
+
+                    //           if (parsedDate > MIN_DATE) {
+                    //           }
+                    //           let date: Date = new Date(parsedDate);
+                    //           return date.toLocaleDateString();
+                    //       })
+                    //     : [],
                     datasets: [
                         {
                             label: 'All time',
-                            fill: true,
+                            //fill: true,
                             lineTension: 0.1,
                             backgroundColor: 'rgba(75,192,192,0.4)',
                             borderColor: 'rgba(75,192,192,1)',

@@ -20,7 +20,7 @@ export class Transaction extends BaseEntity {
 	transactionType: string;
 
 	@Field()
-	@Column()
+	@Column({ unique: true })
 	date: Date;
 
 	@Field()

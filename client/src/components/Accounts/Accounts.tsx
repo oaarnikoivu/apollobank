@@ -160,7 +160,7 @@ export const Accounts: React.FC = () => {
                     <Grid container spacing={3}>
                         <Grid item xs={12} md={12} lg={12}>
                             <Paper className={chartPaper}>
-                                <Chart />
+                                <Chart currency="EUR" />
                             </Paper>
                         </Grid>
                     </Grid>

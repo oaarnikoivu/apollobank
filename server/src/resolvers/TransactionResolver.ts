@@ -47,7 +47,7 @@ export class TransactionResolver {
 					await Transaction.insert({
 						account,
 						transactionType: faker.finance.transactionType(),
-						date: faker.date.future(),
+						date: faker.date.recent(31),
 						amount: faker.finance.amount()
 					});
 				} catch (err) {
