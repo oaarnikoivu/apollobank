@@ -54,9 +54,11 @@ const Transactions: React.FC<TransactionProps> = ({ data }) => {
 };
 
 export const Account: React.FC = () => {
-    const [createTransaction] = useCreateTransactionMutation();
-    const { data, loading } = useTransactionsQuery();
     const history = useHistory<any>();
+    const [createTransaction] = useCreateTransactionMutation();
+    const { data } = useTransactionsQuery({
+        variables: { currency: history.location.state.currency },
+    });
     const classes = useAccountStyles();
 
     let currencyIcon: string = '';
@@ -99,7 +101,7 @@ export const Account: React.FC = () => {
                 refetchQueries: [
                     {
                         query: TransactionsDocument,
-                        variables: {},
+                        variables: { currency: history.location.state.currency },
                     },
                 ],
             });

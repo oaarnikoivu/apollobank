@@ -10,7 +10,7 @@ import faker from "faker";
 export class TransactionResolver {
 	@Query(() => [Transaction])
 	@UseMiddleware(isAuth)
-	async transactions(@Ctx() { payload }: MyContext) {
+	async transactions(@Arg("currency") currency: string, @Ctx() { payload }: MyContext) {
 		if (!payload) {
 			return null;
 		}
@@ -18,10 +18,10 @@ export class TransactionResolver {
 		const owner = await User.findOne({ where: { id: payload.userId } });
 
 		if (owner) {
-			const account = await Account.findOne({ where: { owner: owner, currency: "EUR" } });
+			const account = await Account.findOne({ where: { owner: owner, currency: currency } });
 
 			if (account) {
-				return await Transaction.find({ where: { account: account } });
+				return Transaction.find({ where: { account: account } });
 			}
 		}
 

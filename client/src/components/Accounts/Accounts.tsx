@@ -17,6 +17,7 @@ import {
     useAccountsQuery,
     useCreateAccountMutation,
     AccountsDocument,
+    useTransactionsQuery,
 } from '../../generated/graphql';
 import { Loading } from '../Loading/Loading';
 import { useHistory } from 'react-router-dom';

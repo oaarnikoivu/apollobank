@@ -82,6 +82,11 @@ export type Query = {
   transactions: Array<Transaction>,
 };
 
+
+export type QueryTransactionsArgs = {
+  currency: Scalars['String']
+};
+
 export type Transaction = {
    __typename?: 'Transaction',
   id: Scalars['Int'],
@@ -200,7 +205,9 @@ export type RegisterMutation = (
   & Pick<Mutation, 'register'>
 );
 
-export type TransactionsQueryVariables = {};
+export type TransactionsQueryVariables = {
+  currency: Scalars['String']
+};
 
 
 export type TransactionsQuery = (
@@ -521,8 +528,8 @@ export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = ApolloReactCommon.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = ApolloReactCommon.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
 export const TransactionsDocument = gql`
-    query Transactions {
-  transactions {
+    query Transactions($currency: String!) {
+  transactions(currency: $currency) {
     id
     transactionType
     date
@@ -543,6 +550,7 @@ export const TransactionsDocument = gql`
  * @example
  * const { data, loading, error } = useTransactionsQuery({
  *   variables: {
+ *      currency: // value for 'currency'
  *   },
  * });
  */
