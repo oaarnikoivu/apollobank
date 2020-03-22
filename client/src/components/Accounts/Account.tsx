@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
-import { ThemeProvider, IconButton } from '@material-ui/core';
+import { ThemeProvider, IconButton, Button } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import SwapVert from '@material-ui/icons/SwapVert';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
@@ -10,79 +10,43 @@ import { ReactComponent as Pound } from '../../assets/uk.svg';
 import { theme } from '../../utils/theme';
 import { useAccountStyles } from './styles/Account.style';
 import { TransactionCard } from '../Cards/TransactionCard';
+import { Loading } from '../Loading/Loading';
+import {
+    useCreateTransactionMutation,
+    useTransactionsQuery,
+    TransactionsDocument,
+    TransactionsQuery,
+} from '../../generated/graphql';
 
-interface Transaction {
-    date: string;
-    title: string;
-    time: string;
-    income: number;
-    expenses: number;
+interface TransactionProps {
+    data: TransactionsQuery | undefined;
 }
 
-let transactions: Transaction[] = [];
-
-transactions.push(
-    {
-        date: 'Today',
-        title: 'Asda Aberdeen Beach Superstore',
-        time: '15:52',
-        income: 0,
-        expenses: 24.28,
-    },
-    {
-        date: 'Today',
-        title: 'Robert Gordon University',
-        time: '12:30',
-        income: 0,
-        expenses: 3.79,
-    },
-    {
-        date: 'Today',
-        title: 'Robert Gordon University',
-        time: '12:30',
-        income: 0,
-        expenses: 3.79,
-    },
-    {
-        date: 'Today',
-        title: 'Robert Gordon University',
-        time: '12:30',
-        income: 0,
-        expenses: 3.79,
-    },
-    {
-        date: 'Today',
-        title: 'Robert Gordon University',
-        time: '12:30',
-        income: 0,
-        expenses: 3.79,
-    },
-);
-
-const Transactions = (): JSX.Element => {
+const Transactions: React.FC<TransactionProps> = ({ data }) => {
     const classes = useAccountStyles();
+
+    if (!data) {
+        return <Loading />;
+    }
 
     return (
         <div>
             <div className={classes.transactions}>
-                <div className={classes.transactionsHeader}>Today</div>
+                <div className={classes.transactionsHeader}></div>
                 <div className={classes.transactionCards}>
-                    {transactions.map((transaction, index) => {
-                        return (
-                            <TransactionCard
-                                key={index}
-                                title={transaction.title}
-                                time={transaction.time}
-                                card={6254}
-                                fee={0}
-                                amount={
-                                    !!transaction.expenses
-                                        ? transaction.expenses
-                                        : transaction.income
-                                }
-                            />
-                        );
-                    })}
+                    {data.transactions.length > 0 &&
+                        data.transactions.map((transaction: any, index: number) => {
+                            return (
+                                <TransactionCard
+                                    key={index}
+                                    title={transaction.transactionType}
+                                    time={'0'}
+                                    card={6254}
+                                    fee={0}
+                                    amount={transaction.amount}
+                                />
+                            );
+                        })}
                 </div>
             </div>
         </div>
@@ -90,12 +54,20 @@ const Transactions = (): JSX.Element => {
 };
 
 export const Account: React.FC = () => {
+    const [createTransaction] = useCreateTransactionMutation();
+    const { data, loading } = useTransactionsQuery();
     const history = useHistory<any>();
     const classes = useAccountStyles();
 
     let currencyIcon: string = '';
     let currencyFullText: string = '';
     let svg: any | string;
+
+    useEffect(() => {
+        if (data) {
+            console.log(data.transactions);
+        }
+    }, [data]);
 
     switch (history.location.state.currency) {
         case 'EUR':
@@ -120,8 +92,45 @@ export const Account: React.FC = () => {
             break;
     }
 
+    const simulate = async () => {
+        try {
+            const response = await createTransaction({
+                variables: { currency: history.location.state.currency },
+                refetchQueries: [
+                    {
+                        query: TransactionsDocument,
+                        variables: {},
+                    },
+                ],
+            });
+
+            if (response && response.data) {
+                console.log(response.data);
+            }
+        } catch (error) {
+            const errorMessage = error.message.split(':')[1];
+            console.log(errorMessage);
+        }
+    };
+
     return (
         <div className={classes.root}>
+            <div style={{ position: 'absolute', right: 20 }}>
+                <ThemeProvider theme={theme}>
+                    <Button
+                        color="secondary"
+                        variant="contained"
+                        style={{
+                            fontWeight: 'bold',
+                            letterSpacing: 1,
+                            textTransform: 'none',
+                        }}
+                        onClick={() => simulate()}
+                    >
+                        Simulate
+                    </Button>
+                </ThemeProvider>
+            </div>
             <div className={classes.accountBalance}>
                 {currencyIcon}
                 {history.location.state.balance}
@@ -141,6 +150,7 @@ export const Account: React.FC = () => {
                 </div>
                 <div>{history.location.state.currency}</div>
             </div>
+
             <div className={classes.accountButtonsSection}>
                 <ThemeProvider theme={theme}>
                     <div>
@@ -164,7 +174,7 @@ export const Account: React.FC = () => {
                 </ThemeProvider>
             </div>
             <hr style={{ width: 480, marginTop: 24, color: '#fcfcfc' }} />
-            <Transactions />
+            <Transactions data={data} />
         </div>
     );
 };

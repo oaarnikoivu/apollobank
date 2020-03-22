@@ -15,7 +15,7 @@ import { useTransactionCardStyles } from '../styles/cards/TransactionCard.style'
 
 interface TransactionCardProps {
     title: string;
-    amount: number;
+    amount: string;
     time: string;
     card?: number;
     fee?: number;

@@ -1,0 +1,8 @@
+query Transactions {
+    transactions {
+        id
+        transactionType
+        date
+        amount
+    }
+}

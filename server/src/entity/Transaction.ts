@@ -9,25 +9,21 @@ export class Transaction extends BaseEntity {
 	@PrimaryGeneratedColumn()
 	id: number;
 
-	@Field()
-	@Column()
-	title: string;
-
-	@Field()
-	@Column()
-	date: string;
-
-	@Field()
-	@Column()
-	income: number;
-
-	@Field()
-	@Column()
-	expenses: number;
-
 	@ManyToOne(
 		() => Account,
 		account => account.transactions
 	)
 	account: Account;
+
+	@Field()
+	@Column()
+	transactionType: string;
+
+	@Field()
+	@Column()
+	date: Date;
+
+	@Field()
+	@Column()
+	amount: string;
 }

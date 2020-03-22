@@ -9,6 +9,7 @@ export type Scalars = {
   Boolean: boolean,
   Int: number,
   Float: number,
+  DateTime: any,
 };
 
 export type Account = {
@@ -19,6 +20,7 @@ export type Account = {
   currency: Scalars['String'],
   balance: Scalars['Float'],
 };
+
 
 export type LoginResponse = {
    __typename?: 'LoginResponse',
@@ -33,6 +35,7 @@ export type Mutation = {
   login: LoginResponse,
   register: Scalars['Boolean'],
   createAccount: Scalars['Boolean'],
+  createTransaction: Scalars['Boolean'],
 };
 
 
@@ -64,6 +67,11 @@ export type MutationCreateAccountArgs = {
   currency: Scalars['String']
 };
 
+
+export type MutationCreateTransactionArgs = {
+  currency: Scalars['String']
+};
+
 export type Query = {
    __typename?: 'Query',
   hello: Scalars['String'],
@@ -71,16 +79,15 @@ export type Query = {
   users: Array<User>,
   me?: Maybe<User>,
   accounts: Array<Account>,
-  transactions: Scalars['String'],
+  transactions: Array<Transaction>,
 };
 
 export type Transaction = {
    __typename?: 'Transaction',
   id: Scalars['Int'],
-  title: Scalars['String'],
-  date: Scalars['String'],
-  income: Scalars['Float'],
-  expenses: Scalars['Float'],
+  transactionType: Scalars['String'],
+  date: Scalars['DateTime'],
+  amount: Scalars['String'],
 };
 
 export type User = {
@@ -118,6 +125,16 @@ export type CreateAccountMutationVariables = {
 export type CreateAccountMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'createAccount'>
+);
+
+export type CreateTransactionMutationVariables = {
+  currency: Scalars['String']
+};
+
+
+export type CreateTransactionMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'createTransaction'>
 );
 
 export type HelloQueryVariables = {};
@@ -181,6 +198,17 @@ export type RegisterMutationVariables = {
 export type RegisterMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'register'>
+);
+
+export type TransactionsQueryVariables = {};
+
+
+export type TransactionsQuery = (
+  { __typename?: 'Query' }
+  & { transactions: Array<(
+    { __typename?: 'Transaction' }
+    & Pick<Transaction, 'id' | 'transactionType' | 'date' | 'amount'>
+  )> }
 );
 
 export type UsersQueryVariables = {};
@@ -291,6 +319,36 @@ export function useCreateAccountMutation(baseOptions?: ApolloReactHooks.Mutation
 export type CreateAccountMutationHookResult = ReturnType<typeof useCreateAccountMutation>;
 export type CreateAccountMutationResult = ApolloReactCommon.MutationResult<CreateAccountMutation>;
 export type CreateAccountMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateAccountMutation, CreateAccountMutationVariables>;
+export const CreateTransactionDocument = gql`
+    mutation CreateTransaction($currency: String!) {
+  createTransaction(currency: $currency)
+}
+    `;
+export type CreateTransactionMutationFn = ApolloReactCommon.MutationFunction<CreateTransactionMutation, CreateTransactionMutationVariables>;
+
+/**
+ * __useCreateTransactionMutation__
+ *
+ * To run a mutation, you first call `useCreateTransactionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateTransactionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createTransactionMutation, { data, loading, error }] = useCreateTransactionMutation({
+ *   variables: {
+ *      currency: // value for 'currency'
+ *   },
+ * });
+ */
+export function useCreateTransactionMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateTransactionMutation, CreateTransactionMutationVariables>) {
+        return ApolloReactHooks.useMutation<CreateTransactionMutation, CreateTransactionMutationVariables>(CreateTransactionDocument, baseOptions);
+      }
+export type CreateTransactionMutationHookResult = ReturnType<typeof useCreateTransactionMutation>;
+export type CreateTransactionMutationResult = ApolloReactCommon.MutationResult<CreateTransactionMutation>;
+export type CreateTransactionMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateTransactionMutation, CreateTransactionMutationVariables>;
 export const HelloDocument = gql`
     query Hello {
   hello
@@ -462,6 +520,41 @@ export function useRegisterMutation(baseOptions?: ApolloReactHooks.MutationHookO
 export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = ApolloReactCommon.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = ApolloReactCommon.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
+export const TransactionsDocument = gql`
+    query Transactions {
+  transactions {
+    id
+    transactionType
+    date
+    amount
+  }
+}
+    `;
+
+/**
+ * __useTransactionsQuery__
+ *
+ * To run a query within a React component, call `useTransactionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useTransactionsQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useTransactionsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useTransactionsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<TransactionsQuery, TransactionsQueryVariables>) {
+        return ApolloReactHooks.useQuery<TransactionsQuery, TransactionsQueryVariables>(TransactionsDocument, baseOptions);
+      }
+export function useTransactionsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<TransactionsQuery, TransactionsQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<TransactionsQuery, TransactionsQueryVariables>(TransactionsDocument, baseOptions);
+        }
+export type TransactionsQueryHookResult = ReturnType<typeof useTransactionsQuery>;
+export type TransactionsLazyQueryHookResult = ReturnType<typeof useTransactionsLazyQuery>;
+export type TransactionsQueryResult = ApolloReactCommon.QueryResult<TransactionsQuery, TransactionsQueryVariables>;
 export const UsersDocument = gql`
     query Users {
   users {

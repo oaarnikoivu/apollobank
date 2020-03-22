@@ -3,8 +3,6 @@ import {
     Container,
     Grid,
     Paper,
-    Button,
-    ThemeProvider,
     List,
     ListItemText,
     ListItem,
@@ -25,7 +23,6 @@ import { useHistory } from 'react-router-dom';
 import { useAccountsStyles } from './styles/Accounts.style';
 import { AccountsCard, NoAccountsCard } from '../Cards/AccountsCard';
 import { Currency } from '../../utils/currencies';
-import { theme } from '../../utils/theme';
 import { Dialog } from '../Dialog/Dialog';
 
 const currencies = ['EUR', 'USD', 'GBP', 'BTC'];
@@ -126,10 +123,6 @@ export const Accounts: React.FC = () => {
         });
     };
 
-    const simulate = () => {
-        console.log('Simulating...');
-    };
-
     const renderNoAccountsCard = () => {
         return (
             <>
@@ -160,23 +153,7 @@ export const Accounts: React.FC = () => {
                         }}
                     >
                         <div>
-                            <Title title="Stats" fontSize={24} />
-                        </div>
-                        <div>
-                            <ThemeProvider theme={theme}>
-                                <Button
-                                    color="secondary"
-                                    variant="contained"
-                                    style={{
-                                        fontWeight: 'bold',
-                                        letterSpacing: 1,
-                                        textTransform: 'none',
-                                    }}
-                                    onClick={() => simulate()}
-                                >
-                                    Simulate
-                                </Button>
-                            </ThemeProvider>
+                            <Title title="Analytics" fontSize={24} />
                         </div>
                     </div>
                     <Grid container spacing={3}>

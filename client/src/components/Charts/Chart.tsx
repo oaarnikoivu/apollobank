@@ -1,14 +1,44 @@
 import React from 'react';
 import { Line } from 'react-chartjs-2';
-import { Typography, ThemeProvider } from '@material-ui/core';
-import { theme, ColorScheme } from '../../utils/theme';
 
 const data = {
-    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+    labels: [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+        24,
+        25,
+        26,
+        27,
+        28,
+        29,
+        30,
+        31,
+    ],
     datasets: [
         {
-            label: 'My First dataset',
-            fill: false,
+            label: 'This month',
+            //fill: false,
             lineTension: 0.1,
             backgroundColor: 'rgba(75,192,192,0.4)',
             borderColor: 'rgba(75,192,192,1)',
@@ -25,24 +55,17 @@ const data = {
             pointHoverBorderWidth: 2,
             pointRadius: 1,
             pointHitRadius: 10,
-            data: [65, 59, 80, 81, 56, 55, 40],
+            data: [22, 22, 25, 12, 32, 60],
+        },
+        {
+            label: 'Estimate',
+            data: [22, 22, 25, 12, 32, 60, 79],
         },
     ],
 };
 export const Chart: React.FC = () => {
     return (
         <div>
-            <ThemeProvider theme={theme}>
-                <Typography
-                    style={{ fontWeight: 'bold', color: ColorScheme.PRIMARY }}
-                    component="h2"
-                    variant="h6"
-                    color="primary"
-                    gutterBottom
-                >
-                    Today
-                </Typography>
-            </ThemeProvider>
             <Line data={data} height={70} />
         </div>
     );
