@@ -17,7 +17,6 @@ import {
     useAccountsQuery,
     useCreateAccountMutation,
     AccountsDocument,
-    useTransactionsQuery,
 } from '../../generated/graphql';
 import { Loading } from '../Loading/Loading';
 import { useHistory } from 'react-router-dom';
@@ -45,6 +44,7 @@ export const Accounts: React.FC = () => {
             data.accounts.forEach(account => {
                 balance += account.balance;
             });
+            console.log(balance);
         }
         setTotalBalance(balance);
     }, [loading, data]);

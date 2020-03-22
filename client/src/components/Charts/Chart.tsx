@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { Line } from 'react-chartjs-2';
+import moment from 'moment';
 import { useTransactionsQuery } from '../../generated/graphql';
 
 interface ChartProps {
@@ -13,10 +14,11 @@ export const Chart: React.FC<ChartProps> = ({ currency }) => {
 
     let dates: Date[] = [];
     let sortedDates: string[] = [];
+    let currentDate = moment();
 
     useEffect(() => {
         if (data) {
-            data.transactions.map(transaction => {
+            data.transactions.forEach(transaction => {
                 let parsedDate = Date.parse(transaction.date);
                 dates.push(new Date(parsedDate));
             });
@@ -24,29 +26,21 @@ export const Chart: React.FC<ChartProps> = ({ currency }) => {
         dates
             .sort((a, b) => a.getTime() - b.getTime())
             .forEach(date => {
-                sortedDates.push(date.toLocaleDateString());
+                if (moment(date).isSame(currentDate, 'month')) {
+                    sortedDates.push(date.toLocaleDateString());
+                }
             });
-    }, [data]);
+    }, [data, currentDate, dates, sortedDates]);
 
     return (
         <div>
             <Line
                 data={{
                     labels: !!data ? sortedDates : [],
-                    // labels: !!data
-                    //     ? data.transactions.map((transaction, index) => {
-                    //           let parsedDate = Date.parse(transaction.date);
-
-                    //           if (parsedDate > MIN_DATE) {
-                    //           }
-                    //           let date: Date = new Date(parsedDate);
-                    //           return date.toLocaleDateString();
-                    //       })
-                    //     : [],
                     datasets: [
                         {
-                            label: 'All time',
-                            //fill: true,
+                            label: 'This month',
+                            fill: true,
                             lineTension: 0.1,
                             backgroundColor: 'rgba(75,192,192,0.4)',
                             borderColor: 'rgba(75,192,192,1)',
@@ -71,7 +65,7 @@ export const Chart: React.FC<ChartProps> = ({ currency }) => {
                         },
                     ],
                 }}
-                height={70}
+                height={80}
             />
         </div>
     );
