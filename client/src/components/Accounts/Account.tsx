@@ -20,9 +20,10 @@ import {
 
 interface TransactionProps {
     data: TransactionsQuery | undefined;
+    currencyIcon?: string;
 }
 
-const Transactions: React.FC<TransactionProps> = ({ data }) => {
+const Transactions: React.FC<TransactionProps> = ({ data, currencyIcon }) => {
     const classes = useAccountStyles();
 
     if (!data) {
@@ -40,10 +41,13 @@ const Transactions: React.FC<TransactionProps> = ({ data }) => {
                                 <TransactionCard
                                     key={index}
                                     title={transaction.transactionType}
-                                    time={'0'}
+                                    time={new Date(
+                                        Date.parse(transaction.date),
+                                    ).toLocaleDateString()}
                                     card={6254}
                                     fee={0}
                                     amount={transaction.amount}
+                                    currencyIcon={currencyIcon}
                                 />
                             );
                         })}
@@ -176,7 +180,7 @@ export const Account: React.FC = () => {
                 </ThemeProvider>
             </div>
             <hr style={{ width: 480, marginTop: 24, color: '#fcfcfc' }} />
-            <Transactions data={data} />
+            <Transactions data={data} currencyIcon={currencyIcon} />
         </div>
     );
 };

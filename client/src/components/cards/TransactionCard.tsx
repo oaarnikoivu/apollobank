@@ -19,6 +19,7 @@ interface TransactionCardProps {
     time: string;
     card?: number;
     fee?: number;
+    currencyIcon?: string;
 }
 
 export const TransactionCard: React.FC<TransactionCardProps> = ({
@@ -27,6 +28,7 @@ export const TransactionCard: React.FC<TransactionCardProps> = ({
     amount,
     card,
     fee,
+    currencyIcon,
 }) => {
     const classes = useTransactionCardStyles();
     const [expanded, setExpanded] = useState(false);
@@ -69,7 +71,11 @@ export const TransactionCard: React.FC<TransactionCardProps> = ({
                             Apollo card: <span style={{ color: 'black' }}>*{card}</span>
                         </div>
                         <div className={classes.expandedText}>
-                            Spent: <span style={{ color: 'black' }}>£{amount}</span>
+                            Amount:{' '}
+                            <span style={{ color: 'black' }}>
+                                {currencyIcon}
+                                {amount}
+                            </span>
                         </div>
                         <div className={classes.expandedText}>
                             Fee: <span style={{ color: 'black' }}>{fee}</span>
