@@ -34,6 +34,7 @@ export type Mutation = {
   revokeRefreshTokensForUser: Scalars['Boolean'],
   login: LoginResponse,
   register: Scalars['Boolean'],
+  addMoney: Scalars['Boolean'],
   createAccount: Scalars['Boolean'],
   createTransaction: Scalars['Boolean'],
 };
@@ -60,6 +61,11 @@ export type MutationRegisterArgs = {
   firsName: Scalars['String'],
   password: Scalars['String'],
   email: Scalars['String']
+};
+
+
+export type MutationAddMoneyArgs = {
+  amount: Scalars['Float']
 };
 
 
@@ -112,6 +118,16 @@ export type AccountsQuery = (
     { __typename?: 'Account' }
     & Pick<Account, 'id' | 'balance' | 'currency' | 'sortCode' | 'iban'>
   )> }
+);
+
+export type AddMoneyMutationVariables = {
+  amount: Scalars['Float']
+};
+
+
+export type AddMoneyMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'addMoney'>
 );
 
 export type ByeQueryVariables = {};
@@ -266,6 +282,36 @@ export function useAccountsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHoo
 export type AccountsQueryHookResult = ReturnType<typeof useAccountsQuery>;
 export type AccountsLazyQueryHookResult = ReturnType<typeof useAccountsLazyQuery>;
 export type AccountsQueryResult = ApolloReactCommon.QueryResult<AccountsQuery, AccountsQueryVariables>;
+export const AddMoneyDocument = gql`
+    mutation AddMoney($amount: Float!) {
+  addMoney(amount: $amount)
+}
+    `;
+export type AddMoneyMutationFn = ApolloReactCommon.MutationFunction<AddMoneyMutation, AddMoneyMutationVariables>;
+
+/**
+ * __useAddMoneyMutation__
+ *
+ * To run a mutation, you first call `useAddMoneyMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddMoneyMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addMoneyMutation, { data, loading, error }] = useAddMoneyMutation({
+ *   variables: {
+ *      amount: // value for 'amount'
+ *   },
+ * });
+ */
+export function useAddMoneyMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<AddMoneyMutation, AddMoneyMutationVariables>) {
+        return ApolloReactHooks.useMutation<AddMoneyMutation, AddMoneyMutationVariables>(AddMoneyDocument, baseOptions);
+      }
+export type AddMoneyMutationHookResult = ReturnType<typeof useAddMoneyMutation>;
+export type AddMoneyMutationResult = ApolloReactCommon.MutationResult<AddMoneyMutation>;
+export type AddMoneyMutationOptions = ApolloReactCommon.BaseMutationOptions<AddMoneyMutation, AddMoneyMutationVariables>;
 export const ByeDocument = gql`
     query Bye {
   bye

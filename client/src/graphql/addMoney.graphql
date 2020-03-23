@@ -1,0 +1,3 @@
+mutation AddMoney($amount: Float!) {
+    addMoney(amount: $amount)
+}

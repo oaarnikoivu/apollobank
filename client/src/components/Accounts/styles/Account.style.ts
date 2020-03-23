@@ -57,4 +57,11 @@ export const useAccountStyles = makeStyles({
     transactionCards: {
         marginTop: 8,
     },
+    dialogButton: {
+        marginTop: 12,
+        textTransform: 'none',
+        fontWeight: 'bold',
+        letterSpacing: 1,
+        textAlign: 'center',
+    },
 });

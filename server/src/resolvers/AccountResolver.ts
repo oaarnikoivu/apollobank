@@ -25,6 +25,30 @@ export class AccountResolver {
 
 	@Mutation(() => Boolean)
 	@UseMiddleware(isAuth)
+	async addMoney(@Arg("amount") amount: number, @Ctx() { payload }: MyContext) {
+		if (!payload) {
+			return false;
+		}
+
+		const owner = await User.findOne({ where: { id: payload.userId } });
+
+		if (owner) {
+			const account = await Account.findOne({ where: { owner: owner } });
+
+			if (account) {
+				try {
+					await Account.update({ id: account.id }, { balance: account.balance + amount });
+				} catch (err) {
+					console.log(err);
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+
+	@Mutation(() => Boolean)
+	@UseMiddleware(isAuth)
 	async createAccount(@Arg("currency") currency: string, @Ctx() { payload }: MyContext) {
 		if (!payload) {
 			return false;

@@ -16,8 +16,12 @@ import {
     useTransactionsQuery,
     TransactionsDocument,
     TransactionsQuery,
+    useAddMoneyMutation,
 } from '../../generated/graphql';
 import { Dialog } from '../Dialog/Dialog';
+import { FormTextField } from '../Forms/FormTextField';
+import { Form, Formik } from 'formik';
+import { Title } from '../Typography/Title';
 
 interface TransactionProps {
     data: TransactionsQuery | undefined;
@@ -61,6 +65,7 @@ const Transactions: React.FC<TransactionProps> = ({ data, currencyIcon }) => {
 export const Account: React.FC = () => {
     const history = useHistory<any>();
     const [createTransaction] = useCreateTransactionMutation();
+    const [addMoney] = useAddMoneyMutation();
     const { data } = useTransactionsQuery({
         variables: { currency: history.location.state.currency },
     });
@@ -128,7 +133,58 @@ export const Account: React.FC = () => {
     const renderAddDialog = () => {
         return (
             <Dialog isOpen={openAddDialog} onClose={() => setOpenAddDialog(false)}>
-                Add
+                <Title title="Add money" fontSize={18} />
+                <div style={{ marginTop: 12 }}>
+                    <Formik
+                        initialValues={{ amount: '' }}
+                        onSubmit={async (data, { setSubmitting, resetForm }) => {
+                            setSubmitting(true);
+
+                            try {
+                                const response = await addMoney({
+                                    variables: {
+                                        amount: parseInt(data.amount),
+                                    },
+                                });
+
+                                if (response && response.data) {
+                                    setSubmitting(false);
+                                    resetForm();
+                                    console.log('Worked!');
+                                }
+                            } catch (error) {
+                                const errorMessage = error.message.split(':')[1];
+                                console.log(errorMessage);
+                                setSubmitting(false);
+                            }
+                        }}
+                    >
+                        {({ isSubmitting }) => (
+                            <div>
+                                <Form>
+                                    <FormTextField
+                                        name="amount"
+                                        placeholder="amount"
+                                        type="number"
+                                    />
+                                    <div>
+                                        <ThemeProvider theme={theme}>
+                                            <Button
+                                                className={classes.dialogButton}
+                                                disabled={isSubmitting}
+                                                variant="contained"
+                                                color="secondary"
+                                                type="submit"
+                                            >
+                                                Add money
+                                            </Button>
+                                        </ThemeProvider>
+                                    </div>
+                                </Form>
+                            </div>
+                        )}
+                    </Formik>
+                </div>
             </Dialog>
         );
     };
@@ -154,6 +210,7 @@ export const Account: React.FC = () => {
             {renderAddDialog()}
             {renderExchangeDialog()}
             {renderDetailsDialog()}
+
             <div style={{ position: 'absolute', right: 20 }}>
                 <ThemeProvider theme={theme}>
                     <Button
@@ -203,7 +260,7 @@ export const Account: React.FC = () => {
                         >
                             <AddIcon />
                         </IconButton>
-                        <div className={classes.accountButtonText}>Add</div>
+                        <div className={classes.accountButtonText}>Add money</div>
                     </div>
                     <div>
                         <IconButton
