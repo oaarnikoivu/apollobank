@@ -25,6 +25,7 @@
 		"faker": "^4.1.0",
 		"graphql": "^14.6.0",
 		"jsonwebtoken": "^8.5.1",
+		"moment": "^2.24.0",
 		"pg": "^7.18.2",
 		"reflect-metadata": "^0.1.13",
 		"type-graphql": "^0.17.6",

@@ -43,13 +43,43 @@ export class TransactionResolver {
 			});
 
 			if (account) {
+				let transactionType = faker.finance.transactionType();
+				let amount = parseInt(faker.finance.amount());
+				let date = faker.date.recent(31);
+				let balance = account.balance;
+
+				if (balance <= 0) {
+					throw new Error("You do not have the sufficient funds.");
+				}
+
+				switch (transactionType) {
+					case "withdrawal":
+						balance -= amount;
+						break;
+					case "deposit":
+						balance += amount;
+						break;
+					case "payment":
+						balance -= amount;
+						break;
+					case "invoice":
+						balance += amount;
+						break;
+				}
+
 				try {
 					await Transaction.insert({
 						account,
-						transactionType: faker.finance.transactionType(),
-						date: faker.date.recent(31),
-						amount: faker.finance.amount()
+						transactionType: transactionType,
+						date: date,
+						amount: amount.toString()
 					});
+					await Account.update(
+						{
+							id: account.id
+						},
+						{ balance: balance }
+					);
 				} catch (err) {
 					console.log(err);
 					return false;

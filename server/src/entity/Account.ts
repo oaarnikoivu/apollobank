@@ -29,7 +29,7 @@ export class Account extends BaseEntity {
 	currency: string;
 
 	@Field()
-	@Column({ default: 0 })
+	@Column({ default: 1000 })
 	balance: number;
 
 	@OneToMany(
