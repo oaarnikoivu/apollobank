@@ -30,7 +30,6 @@ export const useAccountStyles = makeStyles({
     accountButton: {
         backgroundColor: ColorScheme.PRIMARY,
         color: ColorScheme.WHITE,
-
         width: 32,
         height: 32,
     },

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { ThemeProvider, IconButton, Button } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
@@ -17,6 +17,7 @@ import {
     TransactionsDocument,
     TransactionsQuery,
 } from '../../generated/graphql';
+import { Dialog } from '../Dialog/Dialog';
 
 interface TransactionProps {
     data: TransactionsQuery | undefined;
@@ -63,6 +64,11 @@ export const Account: React.FC = () => {
     const { data } = useTransactionsQuery({
         variables: { currency: history.location.state.currency },
     });
+
+    const [openAddDialog, setOpenAddDialog] = useState(false);
+    const [openExchangeDialog, setOpenExchangeDialog] = useState(false);
+    const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
+
     const classes = useAccountStyles();
 
     let currencyIcon: string = '';
@@ -119,8 +125,35 @@ export const Account: React.FC = () => {
         }
     };
 
+    const renderAddDialog = () => {
+        return (
+            <Dialog isOpen={openAddDialog} onClose={() => setOpenAddDialog(false)}>
+                Add
+            </Dialog>
+        );
+    };
+
+    const renderExchangeDialog = () => {
+        return (
+            <Dialog isOpen={openExchangeDialog} onClose={() => setOpenExchangeDialog(false)}>
+                Exchange
+            </Dialog>
+        );
+    };
+
+    const renderDetailsDialog = () => {
+        return (
+            <Dialog isOpen={openDetailsDialog} onClose={() => setOpenDetailsDialog(false)}>
+                Details
+            </Dialog>
+        );
+    };
+
     return (
         <div className={classes.root}>
+            {renderAddDialog()}
+            {renderExchangeDialog()}
+            {renderDetailsDialog()}
             <div style={{ position: 'absolute', right: 20 }}>
                 <ThemeProvider theme={theme}>
                     <Button
@@ -160,19 +193,40 @@ export const Account: React.FC = () => {
             <div className={classes.accountButtonsSection}>
                 <ThemeProvider theme={theme}>
                     <div>
-                        <IconButton className={classes.accountButton} aria-label="Add">
+                        <IconButton
+                            className={classes.accountButton}
+                            aria-label="Add"
+                            onClick={e => {
+                                e.preventDefault();
+                                setOpenAddDialog(true);
+                            }}
+                        >
                             <AddIcon />
                         </IconButton>
                         <div className={classes.accountButtonText}>Add</div>
                     </div>
                     <div>
-                        <IconButton className={classes.accountButton} aria-label="Exchange">
+                        <IconButton
+                            className={classes.accountButton}
+                            aria-label="Exchange"
+                            onClick={e => {
+                                e.preventDefault();
+                                setOpenExchangeDialog(true);
+                            }}
+                        >
                             <SwapVert />
                         </IconButton>
                         <div className={classes.accountButtonText}>Exchange</div>
                     </div>
                     <div>
-                        <IconButton className={classes.accountButton} aria-label="Details">
+                        <IconButton
+                            className={classes.accountButton}
+                            aria-label="Details"
+                            onClick={e => {
+                                e.preventDefault();
+                                setOpenDetailsDialog(true);
+                            }}
+                        >
                             <InfoOutlinedIcon />
                         </IconButton>
                         <div className={classes.accountButtonText}>Details</div>
