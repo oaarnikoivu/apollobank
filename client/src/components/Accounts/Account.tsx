@@ -70,6 +70,8 @@ export const Account: React.FC = () => {
         variables: { currency: history.location.state.currency },
     });
 
+    const [accountBalance, setAccountBalance] = useState(0);
+
     const [openAddDialog, setOpenAddDialog] = useState(false);
     const [openExchangeDialog, setOpenExchangeDialog] = useState(false);
     const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
@@ -85,6 +87,10 @@ export const Account: React.FC = () => {
             console.log(data.transactions);
         }
     }, [data]);
+
+    useEffect(() => {
+        setAccountBalance(history.location.state.balance);
+    }, [history]);
 
     switch (history.location.state.currency) {
         case 'EUR':
@@ -144,13 +150,15 @@ export const Account: React.FC = () => {
                                 const response = await addMoney({
                                     variables: {
                                         amount: parseInt(data.amount),
+                                        currency: history.location.state.currency,
                                     },
                                 });
 
                                 if (response && response.data) {
                                     setSubmitting(false);
+                                    setAccountBalance(response.data.addMoney);
+                                    setOpenAddDialog(false);
                                     resetForm();
-                                    console.log('Worked!');
                                 }
                             } catch (error) {
                                 const errorMessage = error.message.split(':')[1];
@@ -229,7 +237,7 @@ export const Account: React.FC = () => {
             </div>
             <div className={classes.accountBalance}>
                 {currencyIcon}
-                {history.location.state.balance}
+                {accountBalance}
             </div>
             <div className={classes.accountInfo}>
                 <div>{currencyFullText}</div>

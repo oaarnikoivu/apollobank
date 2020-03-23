@@ -34,7 +34,7 @@ export type Mutation = {
   revokeRefreshTokensForUser: Scalars['Boolean'],
   login: LoginResponse,
   register: Scalars['Boolean'],
-  addMoney: Scalars['Boolean'],
+  addMoney: Scalars['Float'],
   createAccount: Scalars['Boolean'],
   createTransaction: Scalars['Boolean'],
 };
@@ -65,6 +65,7 @@ export type MutationRegisterArgs = {
 
 
 export type MutationAddMoneyArgs = {
+  currency: Scalars['String'],
   amount: Scalars['Float']
 };
 
@@ -121,7 +122,8 @@ export type AccountsQuery = (
 );
 
 export type AddMoneyMutationVariables = {
-  amount: Scalars['Float']
+  amount: Scalars['Float'],
+  currency: Scalars['String']
 };
 
 
@@ -283,8 +285,8 @@ export type AccountsQueryHookResult = ReturnType<typeof useAccountsQuery>;
 export type AccountsLazyQueryHookResult = ReturnType<typeof useAccountsLazyQuery>;
 export type AccountsQueryResult = ApolloReactCommon.QueryResult<AccountsQuery, AccountsQueryVariables>;
 export const AddMoneyDocument = gql`
-    mutation AddMoney($amount: Float!) {
-  addMoney(amount: $amount)
+    mutation AddMoney($amount: Float!, $currency: String!) {
+  addMoney(amount: $amount, currency: $currency)
 }
     `;
 export type AddMoneyMutationFn = ApolloReactCommon.MutationFunction<AddMoneyMutation, AddMoneyMutationVariables>;
@@ -303,6 +305,7 @@ export type AddMoneyMutationFn = ApolloReactCommon.MutationFunction<AddMoneyMuta
  * const [addMoneyMutation, { data, loading, error }] = useAddMoneyMutation({
  *   variables: {
  *      amount: // value for 'amount'
+ *      currency: // value for 'currency'
  *   },
  * });
  */

@@ -1,5 +1,5 @@
 import { isAuth } from "./../isAuth";
-import { Query, Resolver, Mutation, Ctx, UseMiddleware, Arg } from "type-graphql";
+import { Query, Resolver, Mutation, Ctx, UseMiddleware, Arg, Float } from "type-graphql";
 import { MyContext } from "../MyContext";
 import { User } from "../entity/User";
 import { Account } from "../entity/Account";
@@ -23,9 +23,13 @@ export class AccountResolver {
 		return null;
 	}
 
-	@Mutation(() => Boolean)
+	@Mutation(() => Float)
 	@UseMiddleware(isAuth)
-	async addMoney(@Arg("amount") amount: number, @Ctx() { payload }: MyContext) {
+	async addMoney(
+		@Arg("amount") amount: number,
+		@Arg("currency") currency: string,
+		@Ctx() { payload }: MyContext
+	) {
 		if (!payload) {
 			return false;
 		}
@@ -33,18 +37,25 @@ export class AccountResolver {
 		const owner = await User.findOne({ where: { id: payload.userId } });
 
 		if (owner) {
-			const account = await Account.findOne({ where: { owner: owner } });
+			const account = await Account.findOne({ where: { owner: owner, currency: currency } });
 
 			if (account) {
 				try {
 					await Account.update({ id: account.id }, { balance: account.balance + amount });
 				} catch (err) {
 					console.log(err);
-					return false;
+					throw new Error("Something went wrong");
 				}
 			}
 		}
-		return true;
+
+		const updatedAccount = await Account.findOne({ where: { owner: owner, currency: currency } });
+
+		if (updatedAccount) {
+			return updatedAccount.balance;
+		}
+
+		return 0;
 	}
 
 	@Mutation(() => Boolean)
