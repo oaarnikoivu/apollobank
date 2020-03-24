@@ -18,6 +18,10 @@ export const createRandomIbanCode = () => {
 	)} ${createRandomNumber(4)} ${createRandomNumber(2)}`;
 };
 
+export const createRandomBicCode = () => {
+	return `AP0LGB${createRandomNumber(2)}`;
+};
+
 export const createRandomSortCode = () => {
 	let randomNumber = Math.floor(Math.random() * 899999 + 100000);
 	return randomNumber

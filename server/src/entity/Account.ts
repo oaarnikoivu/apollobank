@@ -25,6 +25,10 @@ export class Account extends BaseEntity {
 	iban: string;
 
 	@Field()
+	@Column({ nullable: true })
+	bic: string;
+
+	@Field()
 	@Column()
 	currency: string;
 

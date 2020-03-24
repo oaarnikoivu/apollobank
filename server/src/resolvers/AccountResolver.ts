@@ -1,3 +1,4 @@
+import { createRandomBicCode } from "./../utils/createRandom";
 import { isAuth } from "./../isAuth";
 import { Query, Resolver, Mutation, Ctx, UseMiddleware, Arg, Float } from "type-graphql";
 import { MyContext } from "../MyContext";
@@ -80,7 +81,8 @@ export class AccountResolver {
 						owner,
 						currency,
 						sortCode: currency === "GBP" ? createRandomSortCode() : "00-00-00",
-						iban: createRandomIbanCode()
+						iban: createRandomIbanCode(),
+						bic: createRandomBicCode()
 					});
 				} catch (err) {
 					console.log(err);

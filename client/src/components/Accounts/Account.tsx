@@ -204,7 +204,9 @@ export const Account: React.FC = () => {
         if (user && user.data && user.data.me) {
             return (
                 <Dialog isOpen={openDetailsDialog} onClose={() => setOpenDetailsDialog(false)}>
-                    Beneficiary: {user.data.me.firstName} {user.data.me.lastName}
+                    Beneficiary: {user.data.me.firstName} {user.data.me.lastName} <br />
+                    IBAN: {history.location.state.iban} <br />
+                    BIC: {history.location.state.bic}
                 </Dialog>
             );
         }

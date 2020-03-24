@@ -17,6 +17,7 @@ export type Account = {
   id: Scalars['Int'],
   sortCode: Scalars['String'],
   iban: Scalars['String'],
+  bic: Scalars['String'],
   currency: Scalars['String'],
   balance: Scalars['Float'],
 };
@@ -117,7 +118,7 @@ export type AccountsQuery = (
   { __typename?: 'Query' }
   & { accounts: Array<(
     { __typename?: 'Account' }
-    & Pick<Account, 'id' | 'balance' | 'currency' | 'sortCode' | 'iban'>
+    & Pick<Account, 'id' | 'balance' | 'currency' | 'sortCode' | 'iban' | 'bic'>
   )> }
 );
 
@@ -256,6 +257,7 @@ export const AccountsDocument = gql`
     currency
     sortCode
     iban
+    bic
   }
 }
     `;
