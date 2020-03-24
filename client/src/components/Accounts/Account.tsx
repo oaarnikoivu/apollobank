@@ -17,6 +17,7 @@ import {
     TransactionsDocument,
     TransactionsQuery,
     useAddMoneyMutation,
+    useMeQuery,
 } from '../../generated/graphql';
 import { Dialog } from '../Dialog/Dialog';
 import { FormTextField } from '../Forms/FormTextField';
@@ -69,9 +70,9 @@ export const Account: React.FC = () => {
     const { data } = useTransactionsQuery({
         variables: { currency: history.location.state.currency },
     });
+    const user = useMeQuery();
 
     const [accountBalance, setAccountBalance] = useState(0);
-
     const [openAddDialog, setOpenAddDialog] = useState(false);
     const [openExchangeDialog, setOpenExchangeDialog] = useState(false);
     const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
@@ -81,12 +82,6 @@ export const Account: React.FC = () => {
     let currencyIcon: string = '';
     let currencyFullText: string = '';
     let svg: any | string;
-
-    useEffect(() => {
-        if (data) {
-            console.log(data.transactions);
-        }
-    }, [data]);
 
     useEffect(() => {
         setAccountBalance(history.location.state.balance);
@@ -206,11 +201,13 @@ export const Account: React.FC = () => {
     };
 
     const renderDetailsDialog = () => {
-        return (
-            <Dialog isOpen={openDetailsDialog} onClose={() => setOpenDetailsDialog(false)}>
-                Details
-            </Dialog>
-        );
+        if (user && user.data && user.data.me) {
+            return (
+                <Dialog isOpen={openDetailsDialog} onClose={() => setOpenDetailsDialog(false)}>
+                    Beneficiary: {user.data.me.firstName} {user.data.me.lastName}
+                </Dialog>
+            );
+        }
     };
 
     return (
