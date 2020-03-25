@@ -1,9 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, MouseEvent } from 'react';
 import { useToolbarStyles } from './Toolbar.style';
 import { DrawerToggleButton } from '../SideDrawer/DrawerToggleButton';
-import { useMeQuery, useLogoutMutation } from '../../generated/graphql';
+import {
+    useMeQuery,
+    useLogoutMutation,
+    MeQueryResult,
+    LogoutMutation,
+    LogoutMutationVariables,
+} from '../../generated/graphql';
 import { useHistory } from 'react-router-dom';
 import { setAccessToken } from '../../utils/accessToken';
+import { MutationTuple } from '@apollo/react-hooks';
 
 interface ToolbarProps {
     drawerClickHandler(): void;
@@ -12,9 +19,13 @@ interface ToolbarProps {
 const navigationItems: string[] = ['Accounts', 'Insights'];
 
 export const Toolbar: React.FC<ToolbarProps> = (props: ToolbarProps) => {
-    const { data, loading } = useMeQuery();
-    const [logout, { client }] = useLogoutMutation();
-    const [showAuthUserButtons, setShowAuthUserButtons] = useState(false);
+    const { data, loading }: MeQueryResult = useMeQuery();
+    const [logout, { client }]: MutationTuple<
+        LogoutMutation,
+        LogoutMutationVariables
+    > = useLogoutMutation();
+    const [showAuthUserButtons, setShowAuthUserButtons] = useState<boolean>(false);
+
     const history = useHistory();
     const classes = useToolbarStyles();
 
@@ -26,10 +37,10 @@ export const Toolbar: React.FC<ToolbarProps> = (props: ToolbarProps) => {
         }
     }, [data, loading]);
 
-    const renderAuthUserButtons = () => {
+    const renderAuthUserButtons = (): JSX.Element => {
         return (
             <>
-                {navigationItems.map(item => {
+                {navigationItems.map((item: string) => {
                     let routeTo: string = '/';
 
                     switch (item) {
@@ -61,7 +72,7 @@ export const Toolbar: React.FC<ToolbarProps> = (props: ToolbarProps) => {
         );
     };
 
-    const renderNonAuthUserButtons = () => {
+    const renderNonAuthUserButtons = (): JSX.Element => {
         return (
             <>
                 <button
@@ -75,7 +86,7 @@ export const Toolbar: React.FC<ToolbarProps> = (props: ToolbarProps) => {
                 </button>
                 <button
                     className={classes.navButton}
-                    onClick={e => {
+                    onClick={(e: MouseEvent<HTMLButtonElement>) => {
                         e.preventDefault();
                         history.push('/register');
                     }}

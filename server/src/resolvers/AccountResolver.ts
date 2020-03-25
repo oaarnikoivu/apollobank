@@ -15,7 +15,7 @@ export class AccountResolver {
 			return null;
 		}
 
-		const owner = await User.findOne({ where: { id: payload.userId } });
+		const owner: User | undefined = await User.findOne({ where: { id: payload.userId } });
 
 		if (owner) {
 			return Account.find({ where: { owner: owner } });
@@ -35,10 +35,12 @@ export class AccountResolver {
 			return false;
 		}
 
-		const owner = await User.findOne({ where: { id: payload.userId } });
+		const owner: User | undefined = await User.findOne({ where: { id: payload.userId } });
 
 		if (owner) {
-			const account = await Account.findOne({ where: { owner: owner, currency: currency } });
+			const account: Account | undefined = await Account.findOne({
+				where: { owner: owner, currency: currency }
+			});
 
 			if (account) {
 				try {
@@ -50,7 +52,9 @@ export class AccountResolver {
 			}
 		}
 
-		const updatedAccount = await Account.findOne({ where: { owner: owner, currency: currency } });
+		const updatedAccount: Account | undefined = await Account.findOne({
+			where: { owner: owner, currency: currency }
+		});
 
 		if (updatedAccount) {
 			return updatedAccount.balance;
@@ -66,10 +70,10 @@ export class AccountResolver {
 			return false;
 		}
 
-		const owner = await User.findOne({ where: { id: payload.userId } });
+		const owner: User | undefined = await User.findOne({ where: { id: payload.userId } });
 
 		if (owner) {
-			const account = await Account.findOne({
+			const account: Account | undefined = await Account.findOne({
 				where: { owner: owner, currency: currency }
 			});
 

@@ -15,10 +15,10 @@ export class CardResolver {
 			return null;
 		}
 
-		const owner = await User.findOne({ where: { id: payload.userId } });
+		const owner: User | undefined = await User.findOne({ where: { id: payload.userId } });
 
 		if (owner) {
-			const account = await Account.findOne({ where: { owner: owner } });
+			const account: Account | undefined = await Account.findOne({ where: { owner: owner } });
 
 			if (account) {
 				return Card.find({ where: { account: account } });
@@ -34,10 +34,10 @@ export class CardResolver {
 			return false;
 		}
 
-		const owner = await User.findOne({ where: { id: payload.userId } });
+		const owner: User | undefined = await User.findOne({ where: { id: payload.userId } });
 
 		if (owner) {
-			const account = await Account.findOne({
+			const account: Account | undefined = await Account.findOne({
 				where: { owner: owner }
 			});
 

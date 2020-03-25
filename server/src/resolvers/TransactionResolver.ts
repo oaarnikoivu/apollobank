@@ -15,10 +15,12 @@ export class TransactionResolver {
 			return null;
 		}
 
-		const owner = await User.findOne({ where: { id: payload.userId } });
+		const owner: User | undefined = await User.findOne({ where: { id: payload.userId } });
 
 		if (owner) {
-			const account = await Account.findOne({ where: { owner: owner, currency: currency } });
+			const account: Account | undefined = await Account.findOne({
+				where: { owner: owner, currency: currency }
+			});
 
 			if (account) {
 				return Transaction.find({ where: { account: account } });
@@ -35,18 +37,18 @@ export class TransactionResolver {
 			return false;
 		}
 
-		const owner = await User.findOne({ where: { id: payload.userId } });
+		const owner: User | undefined = await User.findOne({ where: { id: payload.userId } });
 
 		if (owner) {
-			const account = await Account.findOne({
+			const account: Account | undefined = await Account.findOne({
 				where: { owner: owner, currency: currency }
 			});
 
 			if (account) {
-				let transactionType = faker.finance.transactionType();
-				let amount = parseInt(faker.finance.amount());
-				let date = faker.date.recent(31);
-				let balance = account.balance;
+				let transactionType: string = faker.finance.transactionType();
+				let amount: number = parseInt(faker.finance.amount());
+				let date: Date = faker.date.recent(31);
+				let balance: number = account.balance;
 
 				if (balance <= 0) {
 					throw new Error("You do not have the sufficient funds.");

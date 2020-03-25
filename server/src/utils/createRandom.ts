@@ -12,17 +12,17 @@ export const createRandomNumber = (n: number): string => {
 	return ("" + randomNumber).substring(add);
 };
 
-export const createRandomIbanCode = () => {
+export const createRandomIbanCode = (): string => {
 	return `GB${createRandomNumber(2)} AP0L ${createRandomNumber(4)} ${createRandomNumber(
 		4
 	)} ${createRandomNumber(4)} ${createRandomNumber(2)}`;
 };
 
-export const createRandomBicCode = () => {
+export const createRandomBicCode = (): string => {
 	return `AP0LGB${createRandomNumber(2)}`;
 };
 
-export const createRandomSortCode = () => {
+export const createRandomSortCode = (): string | undefined => {
 	let randomNumber = Math.floor(Math.random() * 899999 + 100000);
 	return randomNumber
 		.toString()
@@ -30,7 +30,7 @@ export const createRandomSortCode = () => {
 		?.join("-");
 };
 
-export const createRandomCardNumber = () => {
+export const createRandomCardNumber = (): string => {
 	return `${createRandomNumber(4)} ${createRandomNumber(4)} ${createRandomNumber(
 		4
 	)} ${createRandomNumber(4)}`;

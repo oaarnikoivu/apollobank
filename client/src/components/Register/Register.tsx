@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { Formik, Form } from 'formik';
-import { useRegisterMutation } from '../../generated/graphql';
+import {
+    useRegisterMutation,
+    RegisterMutationVariables,
+    RegisterMutation,
+} from '../../generated/graphql';
 import { RouteComponentProps } from 'react-router-dom';
 import { Button, ThemeProvider } from '@material-ui/core';
 import { theme } from '../../utils/theme';
@@ -8,10 +12,14 @@ import { registerValidationSchema } from '../../schemas /registerValidationSchem
 import { FormTextField } from '../Forms/FormTextField';
 import { AlertMessage } from '../Alerts/AlertMessage';
 import { useRegisterStyles } from './Register.style';
+import { MutationTuple } from '@apollo/react-hooks';
 
 export const Register: React.FC<RouteComponentProps> = ({ history }) => {
-    const [register] = useRegisterMutation();
-    const [alertMessage, setAlertMessage] = useState('');
+    const [register]: MutationTuple<
+        RegisterMutation,
+        RegisterMutationVariables
+    > = useRegisterMutation();
+    const [alertMessage, setAlertMessage] = useState<string>('');
     const classes = useRegisterStyles();
 
     return (

@@ -47,14 +47,14 @@ export class UserResolver {
 
 	@Query(() => User, { nullable: true })
 	me(@Ctx() context: MyContext) {
-		const authorization = context.req.headers["authorization"];
+		const authorization: string | undefined = context.req.headers["authorization"];
 
 		if (!authorization) {
 			return null;
 		}
 
 		try {
-			const token = authorization.split(" ")[1];
+			const token: string = authorization.split(" ")[1];
 			const payload: any = verify(token, process.env.ACCESS_TOKEN_SECRET!);
 			context.payload = payload as any;
 			return User.findOne(payload.userId);
@@ -85,13 +85,13 @@ export class UserResolver {
 		@Arg("password") password: string,
 		@Ctx() { res }: MyContext
 	): Promise<LoginResponse> {
-		const user = await User.findOne({ where: { email } });
+		const user: User | undefined = await User.findOne({ where: { email } });
 
 		if (!user) {
 			throw new Error("Invalid login");
 		}
 
-		const valid = await compare(password, user.password);
+		const valid: boolean = await compare(password, user.password);
 
 		if (!valid) {
 			throw new Error("Invalid password");
@@ -119,7 +119,7 @@ export class UserResolver {
 		@Arg("city") city: string,
 		@Arg("country") country: string
 	) {
-		const hashedPassword = await hash(password, 12);
+		const hashedPassword: string = await hash(password, 12);
 
 		try {
 			await User.insert({

@@ -1,8 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, MouseEvent } from 'react';
 import { useSideDrawerStyles } from './SideDrawer.style';
-import { useMeQuery, useLogoutMutation } from '../../generated/graphql';
+import {
+    useMeQuery,
+    useLogoutMutation,
+    MeQueryResult,
+    LogoutMutationVariables,
+    LogoutMutation,
+} from '../../generated/graphql';
 import { useHistory } from 'react-router-dom';
 import { setAccessToken } from '../../utils/accessToken';
+import { MutationTuple } from '@apollo/react-hooks';
 
 const authUserNavigationItems: string[] = ['Accounts', 'Insights', 'Logout'];
 const nonAuthUserNavigationItems: string[] = ['Login', 'Sign Up'];
@@ -12,9 +19,13 @@ interface SideDrawerProps {
 }
 
 export const SideDrawer: React.FC<SideDrawerProps> = (props: SideDrawerProps) => {
-    const { data, loading } = useMeQuery();
-    const [logout, { client }] = useLogoutMutation();
-    const [showAuthUserNavigationItems, setShowAuthUserNavigationItems] = useState(false);
+    const { data, loading }: MeQueryResult = useMeQuery();
+    const [logout, { client }]: MutationTuple<
+        LogoutMutation,
+        LogoutMutationVariables
+    > = useLogoutMutation();
+    const [showAuthUserNavigationItems, setShowAuthUserNavigationItems] = useState<boolean>(false);
+
     const history = useHistory();
     const classes = useSideDrawerStyles();
 
@@ -26,13 +37,13 @@ export const SideDrawer: React.FC<SideDrawerProps> = (props: SideDrawerProps) =>
         }
     }, [data, loading]);
 
-    let drawerClasses = classes.siderDrawer;
+    let drawerClasses: string = classes.siderDrawer;
 
     if (props.show) {
         drawerClasses = classes.siderDrawer + ' ' + classes.open;
     }
 
-    const renderAuthUserNavigationItems = () => {
+    const renderAuthUserNavigationItems = (): JSX.Element => {
         return (
             <>
                 {authUserNavigationItems.map(item => {
@@ -55,7 +66,7 @@ export const SideDrawer: React.FC<SideDrawerProps> = (props: SideDrawerProps) =>
                         <li key={item}>
                             <a
                                 href="/whatevs"
-                                onClick={async e => {
+                                onClick={async (e: MouseEvent<Element, globalThis.MouseEvent>) => {
                                     e.preventDefault();
                                     if (logOutClicked) {
                                         await logout().then(() => history.push('/'));
@@ -74,10 +85,10 @@ export const SideDrawer: React.FC<SideDrawerProps> = (props: SideDrawerProps) =>
         );
     };
 
-    const renderNonAuthUserNavigationItems = () => {
+    const renderNonAuthUserNavigationItems = (): JSX.Element => {
         return (
             <>
-                {nonAuthUserNavigationItems.map(item => {
+                {nonAuthUserNavigationItems.map((item: string) => {
                     let routeTo: string = '/';
 
                     switch (item) {
@@ -93,7 +104,9 @@ export const SideDrawer: React.FC<SideDrawerProps> = (props: SideDrawerProps) =>
                         <li key={item}>
                             <a
                                 href="/whatevs"
-                                onClick={e => {
+                                onClick={(
+                                    e: MouseEvent<HTMLAnchorElement, globalThis.MouseEvent>,
+                                ) => {
                                     e.preventDefault();
                                     history.push(routeTo);
                                 }}

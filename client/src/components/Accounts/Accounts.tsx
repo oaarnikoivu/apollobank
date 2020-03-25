@@ -20,6 +20,13 @@ import {
     useCreateCardMutation,
     useCardsQuery,
     CardsDocument,
+    AccountsQueryResult,
+    CardsQueryResult,
+    CreateAccountMutation,
+    CreateAccountMutationVariables,
+    CreateCardMutation,
+    CreateCardMutationVariables,
+    Account,
 } from '../../generated/graphql';
 import { Loading } from '../Loading/Loading';
 import { useHistory } from 'react-router-dom';
@@ -28,17 +35,28 @@ import { AccountsCard, NoAccountsCard } from '../cards/AccountsCard';
 import { Currency } from '../../utils/currencies';
 import { Dialog } from '../Dialog/Dialog';
 import { NoApolloCard, ApolloCard } from '../cards/ApolloCard';
+import { MutationTuple } from '@apollo/react-hooks';
+import { ExecutionResult } from 'graphql';
 
-const currencies = ['EUR', 'USD', 'GBP', 'BTC'];
+const currencies: string[] = ['EUR', 'USD', 'GBP', 'BTC'];
 
 export const Accounts: React.FC = () => {
-    const { data, loading } = useAccountsQuery();
-    const cards = useCardsQuery();
-    const [createAccount] = useCreateAccountMutation();
-    const [createCard] = useCreateCardMutation();
-    const [totalBalance, setTotalBalance] = useState(0);
-    const [openDialog, setOpenDialog] = useState(false);
+    const { data, loading }: AccountsQueryResult = useAccountsQuery();
+    const cards: CardsQueryResult = useCardsQuery();
+    const [createAccount]: MutationTuple<
+        CreateAccountMutation,
+        CreateAccountMutationVariables
+    > = useCreateAccountMutation();
+    const [createCard]: MutationTuple<
+        CreateCardMutation,
+        CreateCardMutationVariables
+    > = useCreateCardMutation();
+
+    const [totalBalance, setTotalBalance] = useState<number>(0);
+    const [openDialog, setOpenDialog] = useState<boolean>(false);
+
     const history = useHistory();
+
     const classes = useAccountsStyles();
 
     const accountCardHeightPaper = classes.paper + ' ' + classes.accountCardHeight;
@@ -47,10 +65,9 @@ export const Accounts: React.FC = () => {
     useEffect(() => {
         let balance = 0;
         if (data) {
-            data.accounts.forEach(account => {
+            data.accounts.forEach((account: Account) => {
                 balance += account.balance;
             });
-            console.log(balance);
         }
         setTotalBalance(balance);
     }, [loading, data]);
@@ -59,7 +76,7 @@ export const Accounts: React.FC = () => {
         return <Loading />;
     }
 
-    const determineCurrencyIcon = (c: string) => {
+    const determineCurrencyIcon = (c: string): JSX.Element | undefined => {
         switch (c) {
             case 'EUR':
                 return <Euro />;
@@ -79,46 +96,48 @@ export const Accounts: React.FC = () => {
         return undefined;
     };
 
-    const renderDialog = () => {
+    const renderDialog = (): JSX.Element => {
         return (
             <Dialog isOpen={openDialog} onClose={() => setOpenDialog(false)}>
                 <List>
-                    {currencies.map(c => (
+                    {currencies.map((currency: string) => (
                         <ListItem
                             button
-                            key={c}
+                            key={currency}
                             onClick={async () => {
                                 try {
-                                    const response = await createAccount({
-                                        variables: {
-                                            currency: c,
+                                    const response: ExecutionResult<CreateAccountMutation> = await createAccount(
+                                        {
+                                            variables: {
+                                                currency: currency,
+                                            },
+                                            refetchQueries: [
+                                                {
+                                                    query: AccountsDocument,
+                                                    variables: {},
+                                                },
+                                                {
+                                                    query: CardsDocument,
+                                                    variables: {},
+                                                },
+                                            ],
                                         },
-                                        refetchQueries: [
-                                            {
-                                                query: AccountsDocument,
-                                                variables: {},
-                                            },
-                                            {
-                                                query: CardsDocument,
-                                                variables: {},
-                                            },
-                                        ],
-                                    });
+                                    );
 
                                     if (response && response.data) {
                                         console.log('Account successfully created!');
                                         setOpenDialog(false);
                                     }
                                 } catch (error) {
-                                    const errorMessage = error.message.split(':')[1];
+                                    const errorMessage: string = error.message.split(':')[1];
                                     console.log(errorMessage);
                                 }
                             }}
                         >
                             <ListItemIcon>
-                                <div style={{ width: 32 }}>{determineCurrencyIcon(c)}</div>
+                                <div style={{ width: 32 }}>{determineCurrencyIcon(currency)}</div>
                             </ListItemIcon>
-                            <ListItemText primary={c} />
+                            <ListItemText primary={currency} />
                         </ListItem>
                     ))}
                 </List>
@@ -126,7 +145,7 @@ export const Accounts: React.FC = () => {
         );
     };
 
-    const handleAccountClicked = (e: MouseEvent<HTMLButtonElement>, account: any) => {
+    const handleAccountClicked = (e: MouseEvent<HTMLButtonElement>, account: Account): void => {
         e.preventDefault();
         history.push({
             pathname: `/accounts/${account.id}`,
@@ -134,11 +153,11 @@ export const Accounts: React.FC = () => {
         });
     };
 
-    const handleCreateNewCardClicked = async (e: MouseEvent<HTMLButtonElement>) => {
+    const handleCreateNewCardClicked = async (e: MouseEvent<HTMLButtonElement>): Promise<void> => {
         e.preventDefault();
 
         try {
-            const response = await createCard({
+            const response: ExecutionResult<CreateCardMutation> = await createCard({
                 variables: {},
                 refetchQueries: [
                     {
@@ -152,12 +171,12 @@ export const Accounts: React.FC = () => {
                 console.log('Card successfully created!');
             }
         } catch (error) {
-            const errorMessage = error.message.split(':')[1];
+            const errorMessage: string = error.message.split(':')[1];
             console.log(errorMessage);
         }
     };
 
-    const renderNoAccountsCard = () => {
+    const renderNoAccountsCard = (): JSX.Element => {
         return (
             <>
                 <Grid item xs={12} md={4} lg={4}>
@@ -174,7 +193,7 @@ export const Accounts: React.FC = () => {
         );
     };
 
-    const renderNoApolloCard = () => {
+    const renderNoApolloCard = (): JSX.Element => {
         return (
             <>
                 <Grid item xs={12} md={4} lg={4}>

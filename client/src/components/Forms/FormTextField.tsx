@@ -10,7 +10,7 @@ export const FormTextField: React.FC<FieldAttributes<{}>> = ({
     ...props
 }) => {
     const [field, meta] = useField<{}>(props);
-    const errorText = meta.error && meta.touched ? meta.error : '';
+    const errorText: string = meta.error && meta.touched ? meta.error : '';
 
     return (
         <ThemeProvider theme={theme}>

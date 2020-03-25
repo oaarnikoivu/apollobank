@@ -47,7 +47,9 @@ let AccountResolver = class AccountResolver {
             }
             const owner = yield User_1.User.findOne({ where: { id: payload.userId } });
             if (owner) {
-                const account = yield Account_1.Account.findOne({ where: { owner: owner, currency: currency } });
+                const account = yield Account_1.Account.findOne({
+                    where: { owner: owner, currency: currency }
+                });
                 if (account) {
                     try {
                         yield Account_1.Account.update({ id: account.id }, { balance: account.balance + amount });
@@ -58,7 +60,9 @@ let AccountResolver = class AccountResolver {
                     }
                 }
             }
-            const updatedAccount = yield Account_1.Account.findOne({ where: { owner: owner, currency: currency } });
+            const updatedAccount = yield Account_1.Account.findOne({
+                where: { owner: owner, currency: currency }
+            });
             if (updatedAccount) {
                 return updatedAccount.balance;
             }

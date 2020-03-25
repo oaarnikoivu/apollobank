@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, MouseEvent } from 'react';
 import { useHistory } from 'react-router-dom';
 import { ThemeProvider, IconButton, Button } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
@@ -20,11 +20,21 @@ import {
     useMeQuery,
     Transaction,
     useCardsQuery,
+    CardsQueryResult,
+    CreateTransactionMutation,
+    CreateTransactionMutationVariables,
+    AddMoneyMutation,
+    AddMoneyMutationVariables,
+    TransactionsQueryResult,
+    MeQueryResult,
 } from '../../generated/graphql';
 import { Dialog } from '../Dialog/Dialog';
 import { FormTextField } from '../Forms/FormTextField';
 import { Form, Formik } from 'formik';
 import { Title } from '../Typography/Title';
+import { MutationTuple } from '@apollo/react-hooks';
+import { ExecutionResult } from 'graphql';
+import { ExecutionResultDataDefault } from 'graphql/execution/execute';
 
 interface TransactionProps {
     account: TransactionsQuery | undefined;
@@ -32,7 +42,7 @@ interface TransactionProps {
 }
 
 const Transactions: React.FC<TransactionProps> = ({ account, currencyIcon }) => {
-    const { data } = useCardsQuery();
+    const { data }: CardsQueryResult = useCardsQuery();
     const classes = useAccountStyles();
 
     if (!account) {
@@ -68,17 +78,23 @@ const Transactions: React.FC<TransactionProps> = ({ account, currencyIcon }) => 
 
 export const Account: React.FC = () => {
     const history = useHistory<any>();
-    const [createTransaction] = useCreateTransactionMutation();
-    const [addMoney] = useAddMoneyMutation();
-    const { data } = useTransactionsQuery({
+    const [createTransaction]: MutationTuple<
+        CreateTransactionMutation,
+        CreateTransactionMutationVariables
+    > = useCreateTransactionMutation();
+    const [addMoney]: MutationTuple<
+        AddMoneyMutation,
+        AddMoneyMutationVariables
+    > = useAddMoneyMutation();
+    const { data }: TransactionsQueryResult = useTransactionsQuery({
         variables: { currency: history.location.state.currency },
     });
-    const user = useMeQuery();
+    const user: MeQueryResult = useMeQuery();
 
-    const [accountBalance, setAccountBalance] = useState(0);
-    const [openAddDialog, setOpenAddDialog] = useState(false);
-    const [openExchangeDialog, setOpenExchangeDialog] = useState(false);
-    const [openDetailsDialog, setOpenDetailsDialog] = useState(false);
+    const [accountBalance, setAccountBalance] = useState<number>(0);
+    const [openAddDialog, setOpenAddDialog] = useState<boolean>(false);
+    const [openExchangeDialog, setOpenExchangeDialog] = useState<boolean>(false);
+    const [openDetailsDialog, setOpenDetailsDialog] = useState<boolean>(false);
 
     const classes = useAccountStyles();
 
@@ -113,9 +129,9 @@ export const Account: React.FC = () => {
             break;
     }
 
-    const simulate = async () => {
+    const simulate = async (): Promise<void> => {
         try {
-            const response = await createTransaction({
+            const response: ExecutionResult<ExecutionResultDataDefault> = await createTransaction({
                 variables: { currency: history.location.state.currency },
                 refetchQueries: [
                     {
@@ -129,7 +145,7 @@ export const Account: React.FC = () => {
                 console.log(response.data);
             }
         } catch (error) {
-            const errorMessage = error.message.split(':')[1];
+            const errorMessage: string = error.message.split(':')[1];
             console.log(errorMessage);
         }
     };
@@ -195,7 +211,7 @@ export const Account: React.FC = () => {
         );
     };
 
-    const renderExchangeDialog = () => {
+    const renderExchangeDialog = (): JSX.Element => {
         return (
             <Dialog isOpen={openExchangeDialog} onClose={() => setOpenExchangeDialog(false)}>
                 Exchange
@@ -203,7 +219,7 @@ export const Account: React.FC = () => {
         );
     };
 
-    const renderDetailsDialog = () => {
+    const renderDetailsDialog = (): JSX.Element | undefined => {
         if (user && user.data && user.data.me) {
             return (
                 <Dialog isOpen={openDetailsDialog} onClose={() => setOpenDetailsDialog(false)}>
@@ -276,7 +292,7 @@ export const Account: React.FC = () => {
                         <IconButton
                             className={classes.accountButton}
                             aria-label="Exchange"
-                            onClick={e => {
+                            onClick={(e: MouseEvent<HTMLButtonElement>) => {
                                 e.preventDefault();
                                 setOpenExchangeDialog(true);
                             }}
@@ -289,7 +305,7 @@ export const Account: React.FC = () => {
                         <IconButton
                             className={classes.accountButton}
                             aria-label="Details"
-                            onClick={e => {
+                            onClick={(e: MouseEvent<HTMLButtonElement>) => {
                                 e.preventDefault();
                                 setOpenDetailsDialog(true);
                             }}

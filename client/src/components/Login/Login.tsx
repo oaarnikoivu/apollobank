@@ -1,6 +1,12 @@
 import React, { useState } from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-import { useLoginMutation, MeDocument, MeQuery } from '../../generated/graphql';
+import {
+    useLoginMutation,
+    MeDocument,
+    MeQuery,
+    LoginMutationVariables,
+    LoginMutation,
+} from '../../generated/graphql';
 import { setAccessToken } from '../../utils/accessToken';
 import { Formik, Form } from 'formik';
 import { FormTextField } from '../Forms/FormTextField';
@@ -9,10 +15,12 @@ import { theme } from '../../utils/theme';
 import { loginValidationSchema } from '../../schemas /loginValidationSchema';
 import { AlertMessage } from '../Alerts/AlertMessage';
 import { useLoginStyles } from './Login.style';
+import { MutationTuple } from '@apollo/react-hooks';
+import { ExecutionResult } from 'graphql';
 
 export const Login: React.FC<RouteComponentProps> = ({ history }) => {
-    const [login] = useLoginMutation();
-    const [alertMessage, setAlertMessage] = useState('');
+    const [login]: MutationTuple<LoginMutation, LoginMutationVariables> = useLoginMutation();
+    const [alertMessage, setAlertMessage] = useState<string>('');
     const classes = useLoginStyles();
 
     return (
@@ -32,7 +40,7 @@ export const Login: React.FC<RouteComponentProps> = ({ history }) => {
                     setSubmitting(true);
 
                     try {
-                        const response = await login({
+                        const response: ExecutionResult<LoginMutation> = await login({
                             variables: {
                                 email: data.email,
                                 password: data.password,
@@ -57,7 +65,7 @@ export const Login: React.FC<RouteComponentProps> = ({ history }) => {
                             resetForm();
                         }
                     } catch (error) {
-                        const errorMessage = error.message.split(':')[1];
+                        const errorMessage: string = error.message.split(':')[1];
                         setAlertMessage(errorMessage);
                         setSubmitting(false);
                     }

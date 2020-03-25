@@ -1,14 +1,18 @@
 import React, { useEffect } from 'react';
 import { Line } from 'react-chartjs-2';
 import moment from 'moment';
-import { useTransactionsQuery } from '../../generated/graphql';
+import {
+    useTransactionsQuery,
+    TransactionsQueryResult,
+    Transaction,
+} from '../../generated/graphql';
 
 interface ChartProps {
     currency: string;
 }
 
 export const Chart: React.FC<ChartProps> = ({ currency }) => {
-    const { data } = useTransactionsQuery({
+    const { data }: TransactionsQueryResult = useTransactionsQuery({
         variables: { currency: currency },
     });
 
@@ -18,14 +22,14 @@ export const Chart: React.FC<ChartProps> = ({ currency }) => {
 
     useEffect(() => {
         if (data) {
-            data.transactions.forEach(transaction => {
-                let parsedDate = Date.parse(transaction.date);
+            data.transactions.forEach((transaction: Transaction) => {
+                let parsedDate: number = Date.parse(transaction.date);
                 dates.push(new Date(parsedDate));
             });
         }
         dates
-            .sort((a, b) => a.getTime() - b.getTime())
-            .forEach(date => {
+            .sort((a: Date, b: Date) => a.getTime() - b.getTime())
+            .forEach((date: Date) => {
                 if (moment(date).isSame(currentDate, 'month')) {
                     sortedDates.push(date.toLocaleDateString());
                 }
@@ -58,7 +62,7 @@ export const Chart: React.FC<ChartProps> = ({ currency }) => {
                             pointRadius: 1,
                             pointHitRadius: 10,
                             data: !!data
-                                ? data.transactions.map(transaction => {
+                                ? data.transactions.map((transaction: Transaction) => {
                                       return transaction.amount;
                                   })
                                 : [],

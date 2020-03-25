@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import { ApolloServer } from "apollo-server-express";
 import { buildSchema } from "type-graphql";
 import { UserResolver } from "./resolvers/UserResolver";
@@ -30,11 +30,11 @@ import { CardResolver } from "./resolvers/CardResolver";
 		})
 	);
 
-	app.get("/", (_req, res) => {
+	app.get("/", (_req: Request, res: Response) => {
 		res.send("🚀 Server is running");
 	});
 
-	app.post("/refresh_token", async (req, res) => {
+	app.post("/refresh_token", async (req: Request, res: Response) => {
 		const token = req.cookies.jid;
 		if (!token) {
 			return res.send({ ok: false, accessToken: "" });
@@ -50,7 +50,7 @@ import { CardResolver } from "./resolvers/CardResolver";
 		}
 
 		// token is valid and can send back access token
-		const user = await User.findOne({ id: payload.userId });
+		const user: User | undefined = await User.findOne({ id: payload.userId });
 
 		if (!user) {
 			return res.send({ ok: false, accessToken: "" });
@@ -69,7 +69,7 @@ import { CardResolver } from "./resolvers/CardResolver";
 		? await createTypeOrmConnection()
 		: await createConnection();
 
-	const appolloServer = new ApolloServer({
+	const appolloServer: ApolloServer = new ApolloServer({
 		schema: await buildSchema({
 			resolvers: [UserResolver, AccountResolver, TransactionResolver, CardResolver]
 		}),

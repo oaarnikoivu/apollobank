@@ -1,11 +1,11 @@
-import { getConnectionOptions, createConnection } from "typeorm";
+import { getConnectionOptions, createConnection, Connection, ConnectionOptions } from "typeorm";
 import { Account } from "../entity/Account";
 import { User } from "../entity/User";
 import { Transaction } from "../entity/Transaction";
 import { Card } from "../entity/Card";
 
-export const createTypeOrmConnection = async () => {
-	const connectionOptions = await getConnectionOptions(process.env.NODE_ENV);
+export const createTypeOrmConnection = async (): Promise<Connection> => {
+	const connectionOptions: ConnectionOptions = await getConnectionOptions(process.env.NODE_ENV);
 	return process.env.NODE_ENV === "production"
 		? createConnection({
 				...connectionOptions,
