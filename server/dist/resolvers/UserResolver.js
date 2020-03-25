@@ -21,12 +21,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const auth_1 = require("../auth");
+const auth_1 = require("../utils/auth");
 const type_graphql_1 = require("type-graphql");
 const bcryptjs_1 = require("bcryptjs");
 const User_1 = require("../entity/User");
-const isAuth_1 = require("../isAuth");
-const sendRefreshToken_1 = require("../sendRefreshToken");
+const middleware_1 = require("../middleware");
+const sendRefreshToken_1 = require("../utils/sendRefreshToken");
 const typeorm_1 = require("typeorm");
 const jsonwebtoken_1 = require("jsonwebtoken");
 let LoginResponse = class LoginResponse {
@@ -132,7 +132,7 @@ __decorate([
 ], UserResolver.prototype, "hello", null);
 __decorate([
     type_graphql_1.Query(() => String),
-    type_graphql_1.UseMiddleware(isAuth_1.isAuth),
+    type_graphql_1.UseMiddleware(middleware_1.isAuth),
     __param(0, type_graphql_1.Ctx()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),

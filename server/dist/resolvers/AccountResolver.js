@@ -22,7 +22,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const createRandom_1 = require("./../utils/createRandom");
-const isAuth_1 = require("./../isAuth");
+const middleware_1 = require("../middleware");
 const type_graphql_1 = require("type-graphql");
 const User_1 = require("../entity/User");
 const Account_1 = require("../entity/Account");
@@ -100,7 +100,7 @@ let AccountResolver = class AccountResolver {
 };
 __decorate([
     type_graphql_1.Query(() => [Account_1.Account]),
-    type_graphql_1.UseMiddleware(isAuth_1.isAuth),
+    type_graphql_1.UseMiddleware(middleware_1.isAuth),
     __param(0, type_graphql_1.Ctx()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
@@ -108,7 +108,7 @@ __decorate([
 ], AccountResolver.prototype, "accounts", null);
 __decorate([
     type_graphql_1.Mutation(() => type_graphql_1.Float),
-    type_graphql_1.UseMiddleware(isAuth_1.isAuth),
+    type_graphql_1.UseMiddleware(middleware_1.isAuth),
     __param(0, type_graphql_1.Arg("amount")),
     __param(1, type_graphql_1.Arg("currency")),
     __param(2, type_graphql_1.Ctx()),
@@ -118,7 +118,7 @@ __decorate([
 ], AccountResolver.prototype, "addMoney", null);
 __decorate([
     type_graphql_1.Mutation(() => Boolean),
-    type_graphql_1.UseMiddleware(isAuth_1.isAuth),
+    type_graphql_1.UseMiddleware(middleware_1.isAuth),
     __param(0, type_graphql_1.Arg("currency")), __param(1, type_graphql_1.Ctx()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, Object]),
