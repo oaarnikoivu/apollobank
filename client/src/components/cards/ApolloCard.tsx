@@ -1,6 +1,6 @@
-import React, { MouseEvent } from 'react';
-import { ThemeProvider, Button } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
+import React, { MouseEvent } from './node_modules/react';
+import { ThemeProvider, Button } from './node_modules/@material-ui/core';
+import AddIcon from './node_modules/@material-ui/icons/Add';
 import { theme } from '../../utils/theme';
 import { ReactComponent as MasterCard } from '../../assets/mc_symbol.svg';
 

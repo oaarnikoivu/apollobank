@@ -9,7 +9,7 @@ import { ReactComponent as Dollar } from '../../assets/flag.svg';
 import { ReactComponent as Pound } from '../../assets/uk.svg';
 import { theme } from '../../utils/theme';
 import { useAccountStyles } from './styles/Account.style';
-import { TransactionCard } from '../Cards/TransactionCard';
+import { TransactionCard } from '../cards/TransactionCard';
 import { Loading } from '../Loading/Loading';
 import {
     useCreateTransactionMutation,
