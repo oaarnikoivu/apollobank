@@ -1,13 +1,7 @@
-import React, { MouseEvent } from './node_modules/react';
-import {
-    IconButton,
-    Typography,
-    Divider,
-    Button,
-    ThemeProvider,
-} from './node_modules/@material-ui/core';
-import NavigateNextIcon from './node_modules/@material-ui/icons/NavigateNext';
-import AddIcon from './node_modules/@material-ui/icons/Add';
+import React, { MouseEvent } from 'react';
+import { IconButton, Typography, Divider, Button, ThemeProvider } from '@material-ui/core';
+import NavigateNextIcon from '@material-ui/icons/NavigateNext';
+import AddIcon from '@material-ui/icons/Add';
 import { Title } from '../Typography/Title';
 import { ColorScheme, theme } from '../../utils/theme';
 

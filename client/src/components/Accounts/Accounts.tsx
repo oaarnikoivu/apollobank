@@ -24,10 +24,10 @@ import {
 import { Loading } from '../Loading/Loading';
 import { useHistory } from 'react-router-dom';
 import { useAccountsStyles } from './styles/Accounts.style';
-import { AccountsCard, NoAccountsCard } from '../cards/AccountsCard';
+import { AccountsCard, NoAccountsCard } from '../Cards/AccountsCard';
 import { Currency } from '../../utils/currencies';
 import { Dialog } from '../Dialog/Dialog';
-import { NoApolloCard, ApolloCard } from '../cards/ApolloCard';
+import { NoApolloCard, ApolloCard } from '../Cards/ApolloCard';
 
 const currencies = ['EUR', 'USD', 'GBP', 'BTC'];
 
@@ -163,7 +163,7 @@ export const Accounts: React.FC = () => {
                 <Grid item xs={12} md={4} lg={4}>
                     <Paper className={accountCardHeightPaper}>
                         <NoAccountsCard
-                            onCreateNewAccountClicked={e => {
+                            onCreateNewAccountClicked={(e: MouseEvent<HTMLButtonElement>) => {
                                 e.preventDefault();
                                 setOpenDialog(true);
                             }}
@@ -180,7 +180,7 @@ export const Accounts: React.FC = () => {
                 <Grid item xs={12} md={4} lg={4}>
                     <Paper className={accountCardHeightPaper}>
                         <NoApolloCard
-                            onCreateNewCardClicked={e => {
+                            onCreateNewCardClicked={(e: MouseEvent<HTMLButtonElement>) => {
                                 handleCreateNewCardClicked(e);
                             }}
                         />
@@ -274,9 +274,9 @@ export const Accounts: React.FC = () => {
                                                 fullCurrencyText={fullCurrencyText}
                                                 balance={account.balance}
                                                 iban={account.iban}
-                                                onAccountClicked={e =>
-                                                    handleAccountClicked(e, account)
-                                                }
+                                                onAccountClicked={(
+                                                    e: MouseEvent<HTMLButtonElement>,
+                                                ) => handleAccountClicked(e, account)}
                                             />
                                         </Paper>
                                     </Grid>
