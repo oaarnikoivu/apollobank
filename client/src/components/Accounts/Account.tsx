@@ -19,6 +19,7 @@ import {
     useAddMoneyMutation,
     useMeQuery,
     Transaction,
+    useCardsQuery,
 } from '../../generated/graphql';
 import { Dialog } from '../Dialog/Dialog';
 import { FormTextField } from '../Forms/FormTextField';
@@ -26,14 +27,15 @@ import { Form, Formik } from 'formik';
 import { Title } from '../Typography/Title';
 
 interface TransactionProps {
-    data: TransactionsQuery | undefined;
+    account: TransactionsQuery | undefined;
     currencyIcon?: string;
 }
 
-const Transactions: React.FC<TransactionProps> = ({ data, currencyIcon }) => {
+const Transactions: React.FC<TransactionProps> = ({ account, currencyIcon }) => {
+    const { data } = useCardsQuery();
     const classes = useAccountStyles();
 
-    if (!data) {
+    if (!account) {
         return <Loading />;
     }
 
@@ -42,8 +44,8 @@ const Transactions: React.FC<TransactionProps> = ({ data, currencyIcon }) => {
             <div className={classes.transactions}>
                 <div className={classes.transactionsHeader}></div>
                 <div className={classes.transactionCards}>
-                    {data.transactions.length > 0 &&
-                        data.transactions.map((transaction: Transaction, index: number) => {
+                    {account.transactions.length > 0 &&
+                        account.transactions.map((transaction: Transaction, index: number) => {
                             return (
                                 <TransactionCard
                                     key={index}
@@ -51,7 +53,7 @@ const Transactions: React.FC<TransactionProps> = ({ data, currencyIcon }) => {
                                     time={new Date(
                                         Date.parse(transaction.date),
                                     ).toLocaleDateString()}
-                                    card={6254}
+                                    card={data && data.cards[0].cardNumber}
                                     fee={0}
                                     amount={transaction.amount}
                                     currencyIcon={currencyIcon}
@@ -299,7 +301,7 @@ export const Account: React.FC = () => {
                 </ThemeProvider>
             </div>
             <hr style={{ width: 480, marginTop: 24, color: '#fcfcfc' }} />
-            <Transactions data={data} currencyIcon={currencyIcon} />
+            <Transactions account={data} currencyIcon={currencyIcon} />
         </div>
     );
 };

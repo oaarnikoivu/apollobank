@@ -17,7 +17,7 @@ interface TransactionCardProps {
     title: string;
     amount: string;
     time: string;
-    card?: number;
+    card?: string;
     fee?: number;
     currencyIcon?: string;
 }
@@ -68,7 +68,7 @@ export const TransactionCard: React.FC<TransactionCardProps> = ({
                             }}
                         />
                         <div className={classes.expandedText} style={{ marginTop: 12 }}>
-                            Apollo card: <span style={{ color: 'black' }}>*{card}</span>
+                            Apollo card: <span style={{ color: 'black' }}>{card}</span>
                         </div>
                         <div className={classes.expandedText}>
                             Amount:{' '}

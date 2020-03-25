@@ -286,7 +286,7 @@ export const Accounts: React.FC = () => {
                     </Grid>
                 </Container>
                 <Container maxWidth="lg" className={classes.container}>
-                    <div>
+                    <div style={{ marginBottom: 12 }}>
                         <Title title="Cards" fontSize={24} />
                     </div>
                     <Grid container spacing={3}>
@@ -299,7 +299,16 @@ export const Accounts: React.FC = () => {
                                         <Paper className={accountCardHeightPaper}>
                                             <ApolloCard
                                                 cardNumber={card.cardNumber}
-                                                validThru={card.expiresIn}
+                                                validThru={
+                                                    new Date(
+                                                        Date.parse(card.expiresIn),
+                                                    ).getMonth() +
+                                                    '/' +
+                                                    new Date(Date.parse(card.expiresIn))
+                                                        .getFullYear()
+                                                        .toString()
+                                                        .substr(-2)
+                                                }
                                                 cvv={card.cvv}
                                             />
                                         </Paper>

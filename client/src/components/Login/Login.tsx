@@ -52,7 +52,7 @@ export const Login: React.FC<RouteComponentProps> = ({ history }) => {
 
                         if (response && response.data) {
                             setAccessToken(response.data.login.accessToken);
-                            history.push('/dashboard');
+                            history.push('/accounts');
                             setSubmitting(false);
                             resetForm();
                         }
