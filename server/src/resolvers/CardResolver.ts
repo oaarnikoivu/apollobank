@@ -1,6 +1,6 @@
 import { createRandomCardNumber, createRandomNumber } from "./../utils/createRandom";
 import { MyContext } from "./../MyContext";
-import { isAuth } from "./../isAuth";
+import { isAuth } from "../middleware";
 import { Resolver, Mutation, UseMiddleware, Ctx, Query } from "type-graphql";
 import { User } from "../entity/User";
 import { Account } from "../entity/Account";

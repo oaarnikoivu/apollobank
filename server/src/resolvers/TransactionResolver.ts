@@ -2,7 +2,7 @@ import { Account } from "./../entity/Account";
 import { Transaction } from "./../entity/Transaction";
 import { User } from "./../entity/User";
 import { MyContext } from "./../MyContext";
-import { isAuth } from "./../isAuth";
+import { isAuth } from "../middleware";
 import { Resolver, Query, UseMiddleware, Ctx, Mutation, Arg } from "type-graphql";
 import faker from "faker";
 

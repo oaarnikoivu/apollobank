@@ -1,5 +1,5 @@
 import { createRandomBicCode } from "./../utils/createRandom";
-import { isAuth } from "./../isAuth";
+import { isAuth } from "../middleware";
 import { Query, Resolver, Mutation, Ctx, UseMiddleware, Arg, Float } from "type-graphql";
 import { MyContext } from "../MyContext";
 import { User } from "../entity/User";
