@@ -24,10 +24,10 @@ import {
 import { Loading } from '../Loading/Loading';
 import { useHistory } from 'react-router-dom';
 import { useAccountsStyles } from './styles/Accounts.style';
-import { AccountsCard, NoAccountsCard } from '../Cards/AccountsCard';
+import { AccountsCard, NoAccountsCard } from '../cards/AccountsCard';
 import { Currency } from '../../utils/currencies';
 import { Dialog } from '../Dialog/Dialog';
-import { NoApolloCard, ApolloCard } from '../Cards/ApolloCard';
+import { NoApolloCard, ApolloCard } from '../cards/ApolloCard';
 
 const currencies = ['EUR', 'USD', 'GBP', 'BTC'];
 
