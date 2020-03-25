@@ -12,22 +12,23 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const TransactionResolver_1 = require("./resolvers/TransactionResolver");
-require("dotenv/config");
-require("reflect-metadata");
 const express_1 = __importDefault(require("express"));
 const apollo_server_express_1 = require("apollo-server-express");
 const type_graphql_1 = require("type-graphql");
 const UserResolver_1 = require("./resolvers/UserResolver");
+const AccountResolver_1 = require("./resolvers/AccountResolver");
+const TransactionResolver_1 = require("./resolvers/TransactionResolver");
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const jsonwebtoken_1 = require("jsonwebtoken");
 const cors_1 = __importDefault(require("cors"));
 const User_1 = require("./entity/User");
 const auth_1 = require("./auth");
 const sendRefreshToken_1 = require("./sendRefreshToken");
-const AccountResolver_1 = require("./resolvers/AccountResolver");
 const createTypeOrmConnection_1 = require("./utils/createTypeOrmConnection");
 const typeorm_1 = require("typeorm");
+require("dotenv/config");
+require("reflect-metadata");
+const CardResolver_1 = require("./resolvers/CardResolver");
 (() => __awaiter(void 0, void 0, void 0, function* () {
     const app = express_1.default();
     app.use(cookie_parser_1.default());
@@ -68,7 +69,7 @@ const typeorm_1 = require("typeorm");
         : yield typeorm_1.createConnection();
     const appolloServer = new apollo_server_express_1.ApolloServer({
         schema: yield type_graphql_1.buildSchema({
-            resolvers: [UserResolver_1.UserResolver, AccountResolver_1.AccountResolver, TransactionResolver_1.TransactionResolver]
+            resolvers: [UserResolver_1.UserResolver, AccountResolver_1.AccountResolver, TransactionResolver_1.TransactionResolver, CardResolver_1.CardResolver]
         }),
         introspection: true,
         playground: true,

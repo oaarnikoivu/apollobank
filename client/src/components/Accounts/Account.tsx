@@ -18,6 +18,7 @@ import {
     TransactionsQuery,
     useAddMoneyMutation,
     useMeQuery,
+    Transaction,
 } from '../../generated/graphql';
 import { Dialog } from '../Dialog/Dialog';
 import { FormTextField } from '../Forms/FormTextField';
@@ -42,7 +43,7 @@ const Transactions: React.FC<TransactionProps> = ({ data, currencyIcon }) => {
                 <div className={classes.transactionsHeader}></div>
                 <div className={classes.transactionCards}>
                     {data.transactions.length > 0 &&
-                        data.transactions.map((transaction: any, index: number) => {
+                        data.transactions.map((transaction: Transaction, index: number) => {
                             return (
                                 <TransactionCard
                                     key={index}

@@ -2,6 +2,7 @@ import { ObjectType, Field, Int } from "type-graphql";
 import { BaseEntity, PrimaryGeneratedColumn, Entity, Column, ManyToOne, OneToMany } from "typeorm";
 import { User } from "./User";
 import { Transaction } from "./Transaction";
+import { Card } from "./Card";
 
 @ObjectType()
 @Entity("accounts")
@@ -41,4 +42,10 @@ export class Account extends BaseEntity {
 		transaction => transaction.account
 	)
 	transactions: Transaction[];
+
+	@OneToMany(
+		() => Card,
+		card => card.account
+	)
+	cards: Card[];
 }

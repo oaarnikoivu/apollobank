@@ -22,6 +22,16 @@ export type Account = {
   balance: Scalars['Float'],
 };
 
+export type Card = {
+   __typename?: 'Card',
+  id: Scalars['Int'],
+  cardNumber: Scalars['String'],
+  pin: Scalars['Float'],
+  expiresIn: Scalars['DateTime'],
+  cvv: Scalars['Float'],
+  monthlySpendingLimit: Scalars['Float'],
+};
+
 
 export type LoginResponse = {
    __typename?: 'LoginResponse',
@@ -38,6 +48,7 @@ export type Mutation = {
   addMoney: Scalars['Float'],
   createAccount: Scalars['Boolean'],
   createTransaction: Scalars['Boolean'],
+  createCard: Scalars['Boolean'],
 };
 
 
@@ -88,6 +99,7 @@ export type Query = {
   me?: Maybe<User>,
   accounts: Array<Account>,
   transactions: Array<Transaction>,
+  cards: Array<Card>,
 };
 
 
@@ -141,6 +153,17 @@ export type ByeQuery = (
   & Pick<Query, 'bye'>
 );
 
+export type CardsQueryVariables = {};
+
+
+export type CardsQuery = (
+  { __typename?: 'Query' }
+  & { cards: Array<(
+    { __typename?: 'Card' }
+    & Pick<Card, 'id' | 'cardNumber' | 'pin' | 'expiresIn' | 'cvv' | 'monthlySpendingLimit'>
+  )> }
+);
+
 export type CreateAccountMutationVariables = {
   currency: Scalars['String']
 };
@@ -149,6 +172,14 @@ export type CreateAccountMutationVariables = {
 export type CreateAccountMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'createAccount'>
+);
+
+export type CreateCardMutationVariables = {};
+
+
+export type CreateCardMutation = (
+  { __typename?: 'Mutation' }
+  & Pick<Mutation, 'createCard'>
 );
 
 export type CreateTransactionMutationVariables = {
@@ -347,6 +378,43 @@ export function useByeLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOpti
 export type ByeQueryHookResult = ReturnType<typeof useByeQuery>;
 export type ByeLazyQueryHookResult = ReturnType<typeof useByeLazyQuery>;
 export type ByeQueryResult = ApolloReactCommon.QueryResult<ByeQuery, ByeQueryVariables>;
+export const CardsDocument = gql`
+    query Cards {
+  cards {
+    id
+    cardNumber
+    pin
+    expiresIn
+    cvv
+    monthlySpendingLimit
+  }
+}
+    `;
+
+/**
+ * __useCardsQuery__
+ *
+ * To run a query within a React component, call `useCardsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCardsQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCardsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useCardsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<CardsQuery, CardsQueryVariables>) {
+        return ApolloReactHooks.useQuery<CardsQuery, CardsQueryVariables>(CardsDocument, baseOptions);
+      }
+export function useCardsLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<CardsQuery, CardsQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<CardsQuery, CardsQueryVariables>(CardsDocument, baseOptions);
+        }
+export type CardsQueryHookResult = ReturnType<typeof useCardsQuery>;
+export type CardsLazyQueryHookResult = ReturnType<typeof useCardsLazyQuery>;
+export type CardsQueryResult = ApolloReactCommon.QueryResult<CardsQuery, CardsQueryVariables>;
 export const CreateAccountDocument = gql`
     mutation CreateAccount($currency: String!) {
   createAccount(currency: $currency)
@@ -377,6 +445,35 @@ export function useCreateAccountMutation(baseOptions?: ApolloReactHooks.Mutation
 export type CreateAccountMutationHookResult = ReturnType<typeof useCreateAccountMutation>;
 export type CreateAccountMutationResult = ApolloReactCommon.MutationResult<CreateAccountMutation>;
 export type CreateAccountMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateAccountMutation, CreateAccountMutationVariables>;
+export const CreateCardDocument = gql`
+    mutation createCard {
+  createCard
+}
+    `;
+export type CreateCardMutationFn = ApolloReactCommon.MutationFunction<CreateCardMutation, CreateCardMutationVariables>;
+
+/**
+ * __useCreateCardMutation__
+ *
+ * To run a mutation, you first call `useCreateCardMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateCardMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createCardMutation, { data, loading, error }] = useCreateCardMutation({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useCreateCardMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<CreateCardMutation, CreateCardMutationVariables>) {
+        return ApolloReactHooks.useMutation<CreateCardMutation, CreateCardMutationVariables>(CreateCardDocument, baseOptions);
+      }
+export type CreateCardMutationHookResult = ReturnType<typeof useCreateCardMutation>;
+export type CreateCardMutationResult = ApolloReactCommon.MutationResult<CreateCardMutation>;
+export type CreateCardMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateCardMutation, CreateCardMutationVariables>;
 export const CreateTransactionDocument = gql`
     mutation CreateTransaction($currency: String!) {
   createTransaction(currency: $currency)

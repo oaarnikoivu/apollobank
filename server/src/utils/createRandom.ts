@@ -1,4 +1,4 @@
-const createRandomNumber = (n: number): string => {
+export const createRandomNumber = (n: number): string => {
 	let add = 1,
 		max = 12 - add;
 
@@ -28,4 +28,10 @@ export const createRandomSortCode = () => {
 		.toString()
 		.match(/.{1,2}/g)
 		?.join("-");
+};
+
+export const createRandomCardNumber = () => {
+	return `${createRandomNumber(4)} ${createRandomNumber(4)} ${createRandomNumber(
+		4
+	)} ${createRandomNumber(4)}`;
 };

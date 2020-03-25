@@ -21,10 +21,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const createRandom_1 = require("./../utils/createRandom");
 const isAuth_1 = require("./../isAuth");
 const type_graphql_1 = require("type-graphql");
 const User_1 = require("../entity/User");
 const Account_1 = require("../entity/Account");
+const createRandom_2 = require("../utils/createRandom");
 let AccountResolver = class AccountResolver {
     accounts({ payload }) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -36,6 +38,31 @@ let AccountResolver = class AccountResolver {
                 return Account_1.Account.find({ where: { owner: owner } });
             }
             return null;
+        });
+    }
+    addMoney(amount, currency, { payload }) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!payload) {
+                return false;
+            }
+            const owner = yield User_1.User.findOne({ where: { id: payload.userId } });
+            if (owner) {
+                const account = yield Account_1.Account.findOne({ where: { owner: owner, currency: currency } });
+                if (account) {
+                    try {
+                        yield Account_1.Account.update({ id: account.id }, { balance: account.balance + amount });
+                    }
+                    catch (err) {
+                        console.log(err);
+                        throw new Error("Something went wrong");
+                    }
+                }
+            }
+            const updatedAccount = yield Account_1.Account.findOne({ where: { owner: owner, currency: currency } });
+            if (updatedAccount) {
+                return updatedAccount.balance;
+            }
+            return 0;
         });
     }
     createAccount(currency, { payload }) {
@@ -55,7 +82,10 @@ let AccountResolver = class AccountResolver {
                     try {
                         yield Account_1.Account.insert({
                             owner,
-                            currency
+                            currency,
+                            sortCode: currency === "GBP" ? createRandom_2.createRandomSortCode() : "00-00-00",
+                            iban: createRandom_2.createRandomIbanCode(),
+                            bic: createRandom_1.createRandomBicCode()
                         });
                     }
                     catch (err) {
@@ -76,6 +106,16 @@ __decorate([
     __metadata("design:paramtypes", [Object]),
     __metadata("design:returntype", Promise)
 ], AccountResolver.prototype, "accounts", null);
+__decorate([
+    type_graphql_1.Mutation(() => type_graphql_1.Float),
+    type_graphql_1.UseMiddleware(isAuth_1.isAuth),
+    __param(0, type_graphql_1.Arg("amount")),
+    __param(1, type_graphql_1.Arg("currency")),
+    __param(2, type_graphql_1.Ctx()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number, String, Object]),
+    __metadata("design:returntype", Promise)
+], AccountResolver.prototype, "addMoney", null);
 __decorate([
     type_graphql_1.Mutation(() => Boolean),
     type_graphql_1.UseMiddleware(isAuth_1.isAuth),

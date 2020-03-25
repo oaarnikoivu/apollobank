@@ -1,6 +1,7 @@
 import { ObjectType, Field, Int } from "type-graphql";
 import { Entity, BaseEntity, PrimaryGeneratedColumn, ManyToOne, Column } from "typeorm";
 import { Account } from "./Account";
+import { Card } from "./Card";
 
 @ObjectType()
 @Entity("transactions")
@@ -14,6 +15,12 @@ export class Transaction extends BaseEntity {
 		account => account.transactions
 	)
 	account: Account;
+
+	@ManyToOne(
+		() => Card,
+		card => card.transactions
+	)
+	card: Card;
 
 	@Field()
 	@Column()

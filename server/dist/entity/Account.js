@@ -13,6 +13,7 @@ const type_graphql_1 = require("type-graphql");
 const typeorm_1 = require("typeorm");
 const User_1 = require("./User");
 const Transaction_1 = require("./Transaction");
+const Card_1 = require("./Card");
 let Account = class Account extends typeorm_1.BaseEntity {
 };
 __decorate([
@@ -26,18 +27,37 @@ __decorate([
 ], Account.prototype, "owner", void 0);
 __decorate([
     type_graphql_1.Field(),
+    typeorm_1.Column({ default: "00-00-00", nullable: true }),
+    __metadata("design:type", String)
+], Account.prototype, "sortCode", void 0);
+__decorate([
+    type_graphql_1.Field(),
+    typeorm_1.Column({ nullable: true }),
+    __metadata("design:type", String)
+], Account.prototype, "iban", void 0);
+__decorate([
+    type_graphql_1.Field(),
+    typeorm_1.Column({ nullable: true }),
+    __metadata("design:type", String)
+], Account.prototype, "bic", void 0);
+__decorate([
+    type_graphql_1.Field(),
     typeorm_1.Column(),
     __metadata("design:type", String)
 ], Account.prototype, "currency", void 0);
 __decorate([
     type_graphql_1.Field(),
-    typeorm_1.Column({ default: 0 }),
+    typeorm_1.Column({ default: 1000 }),
     __metadata("design:type", Number)
 ], Account.prototype, "balance", void 0);
 __decorate([
     typeorm_1.OneToMany(() => Transaction_1.Transaction, transaction => transaction.account),
     __metadata("design:type", Array)
 ], Account.prototype, "transactions", void 0);
+__decorate([
+    typeorm_1.OneToMany(() => Card_1.Card, card => card.account),
+    __metadata("design:type", Array)
+], Account.prototype, "cards", void 0);
 Account = __decorate([
     type_graphql_1.ObjectType(),
     typeorm_1.Entity("accounts")

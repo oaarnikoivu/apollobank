@@ -17,6 +17,9 @@ import {
     useAccountsQuery,
     useCreateAccountMutation,
     AccountsDocument,
+    useCreateCardMutation,
+    useCardsQuery,
+    CardsDocument,
 } from '../../generated/graphql';
 import { Loading } from '../Loading/Loading';
 import { useHistory } from 'react-router-dom';
@@ -24,12 +27,15 @@ import { useAccountsStyles } from './styles/Accounts.style';
 import { AccountsCard, NoAccountsCard } from '../Cards/AccountsCard';
 import { Currency } from '../../utils/currencies';
 import { Dialog } from '../Dialog/Dialog';
+import { NoApolloCard, ApolloCard } from '../Cards/ApolloCard';
 
 const currencies = ['EUR', 'USD', 'GBP', 'BTC'];
 
 export const Accounts: React.FC = () => {
     const { data, loading } = useAccountsQuery();
+    const cards = useCardsQuery();
     const [createAccount] = useCreateAccountMutation();
+    const [createCard] = useCreateCardMutation();
     const [totalBalance, setTotalBalance] = useState(0);
     const [openDialog, setOpenDialog] = useState(false);
     const history = useHistory();
@@ -92,6 +98,10 @@ export const Accounts: React.FC = () => {
                                                 query: AccountsDocument,
                                                 variables: {},
                                             },
+                                            {
+                                                query: CardsDocument,
+                                                variables: {},
+                                            },
                                         ],
                                     });
 
@@ -124,6 +134,29 @@ export const Accounts: React.FC = () => {
         });
     };
 
+    const handleCreateNewCardClicked = async (e: MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+
+        try {
+            const response = await createCard({
+                variables: {},
+                refetchQueries: [
+                    {
+                        query: CardsDocument,
+                        variables: {},
+                    },
+                ],
+            });
+
+            if (response && response.data) {
+                console.log('Card successfully created!');
+            }
+        } catch (error) {
+            const errorMessage = error.message.split(':')[1];
+            console.log(errorMessage);
+        }
+    };
+
     const renderNoAccountsCard = () => {
         return (
             <>
@@ -133,6 +166,22 @@ export const Accounts: React.FC = () => {
                             onCreateNewAccountClicked={e => {
                                 e.preventDefault();
                                 setOpenDialog(true);
+                            }}
+                        />
+                    </Paper>
+                </Grid>
+            </>
+        );
+    };
+
+    const renderNoApolloCard = () => {
+        return (
+            <>
+                <Grid item xs={12} md={4} lg={4}>
+                    <Paper className={accountCardHeightPaper}>
+                        <NoApolloCard
+                            onCreateNewCardClicked={e => {
+                                handleCreateNewCardClicked(e);
                             }}
                         />
                     </Paper>
@@ -234,6 +283,30 @@ export const Accounts: React.FC = () => {
                                 );
                             })}
                         {data.accounts.length <= 2 && renderNoAccountsCard()}
+                    </Grid>
+                </Container>
+                <Container maxWidth="lg" className={classes.container}>
+                    <div>
+                        <Title title="Cards" fontSize={24} />
+                    </div>
+                    <Grid container spacing={3}>
+                        {cards.data &&
+                            cards.data.cards &&
+                            cards.data.cards.length > 0 &&
+                            cards.data.cards.map(card => {
+                                return (
+                                    <Grid key={card.id} item xs={12} md={4} lg={4}>
+                                        <Paper className={accountCardHeightPaper}>
+                                            <ApolloCard
+                                                cardNumber={card.cardNumber}
+                                                validThru={card.expiresIn}
+                                                cvv={card.cvv}
+                                            />
+                                        </Paper>
+                                    </Grid>
+                                );
+                            })}
+                        {cards.data && cards.data.cards.length <= 2 && renderNoApolloCard()}
                     </Grid>
                 </Container>
             </main>
