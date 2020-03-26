@@ -98,14 +98,8 @@ export type Query = {
   users: Array<User>,
   me?: Maybe<User>,
   accounts: Array<Account>,
-  account: Account,
   transactions: Array<Transaction>,
   cards: Array<Card>,
-};
-
-
-export type QueryAccountArgs = {
-  transactionId: Scalars['Float']
 };
 
 
@@ -128,19 +122,6 @@ export type User = {
   firstName: Scalars['String'],
   lastName: Scalars['String'],
 };
-
-export type AccountQueryVariables = {
-  transactionId: Scalars['Float']
-};
-
-
-export type AccountQuery = (
-  { __typename?: 'Query' }
-  & { account: (
-    { __typename?: 'Account' }
-    & Pick<Account, 'id' | 'balance'>
-  ) }
-);
 
 export type AccountsQueryVariables = {};
 
@@ -299,40 +280,6 @@ export type UsersQuery = (
 );
 
 
-export const AccountDocument = gql`
-    query Account($transactionId: Float!) {
-  account(transactionId: $transactionId) {
-    id
-    balance
-  }
-}
-    `;
-
-/**
- * __useAccountQuery__
- *
- * To run a query within a React component, call `useAccountQuery` and pass it any options that fit your needs.
- * When your component renders, `useAccountQuery` returns an object from Apollo Client that contains loading, error, and data properties 
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useAccountQuery({
- *   variables: {
- *      transactionId: // value for 'transactionId'
- *   },
- * });
- */
-export function useAccountQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<AccountQuery, AccountQueryVariables>) {
-        return ApolloReactHooks.useQuery<AccountQuery, AccountQueryVariables>(AccountDocument, baseOptions);
-      }
-export function useAccountLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<AccountQuery, AccountQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<AccountQuery, AccountQueryVariables>(AccountDocument, baseOptions);
-        }
-export type AccountQueryHookResult = ReturnType<typeof useAccountQuery>;
-export type AccountLazyQueryHookResult = ReturnType<typeof useAccountLazyQuery>;
-export type AccountQueryResult = ApolloReactCommon.QueryResult<AccountQuery, AccountQueryVariables>;
 export const AccountsDocument = gql`
     query Accounts {
   accounts {
