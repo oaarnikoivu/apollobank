@@ -1,0 +1,6 @@
+query Account($transactionId: Float!) {
+    account(transactionId: $transactionId) {
+        id
+        balance
+    }
+}

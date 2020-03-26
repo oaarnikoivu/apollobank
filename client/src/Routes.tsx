@@ -42,6 +42,7 @@ const LoggedInRoute = ({ component: Component, ...rest }: AuthenticatedRouteProp
 
 export const Routes: React.FC = () => {
     const [sideDrawerOpen, setSideDrawerOpen] = useState(false);
+
     let backdrop: any;
 
     const drawerToggleClickHandler = () => {

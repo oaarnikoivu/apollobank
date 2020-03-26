@@ -1,5 +1,5 @@
-import React, { useEffect, useState, MouseEvent } from 'react';
-import { useHistory } from 'react-router-dom';
+import React, { useState, MouseEvent, useEffect } from 'react';
+import { useLocation, useHistory } from 'react-router-dom';
 import { ThemeProvider, IconButton, Button } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import SwapVert from '@material-ui/icons/SwapVert';
@@ -9,18 +9,12 @@ import { ReactComponent as Dollar } from '../../assets/flag.svg';
 import { ReactComponent as Pound } from '../../assets/uk.svg';
 import { theme } from '../../utils/theme';
 import { useAccountStyles } from './styles/Account.style';
-import { TransactionCard } from '../cards/TransactionCard';
-import { Loading } from '../Loading/Loading';
 import {
     useCreateTransactionMutation,
     useTransactionsQuery,
     TransactionsDocument,
-    TransactionsQuery,
     useAddMoneyMutation,
     useMeQuery,
-    Transaction,
-    useCardsQuery,
-    CardsQueryResult,
     CreateTransactionMutation,
     CreateTransactionMutationVariables,
     AddMoneyMutation,
@@ -35,49 +29,11 @@ import { Title } from '../Typography/Title';
 import { MutationTuple } from '@apollo/react-hooks';
 import { ExecutionResult } from 'graphql';
 import { ExecutionResultDataDefault } from 'graphql/execution/execute';
-
-interface TransactionProps {
-    account: TransactionsQuery | undefined;
-    currencyIcon?: string;
-}
-
-const Transactions: React.FC<TransactionProps> = ({ account, currencyIcon }) => {
-    const { data }: CardsQueryResult = useCardsQuery();
-    const classes = useAccountStyles();
-
-    if (!account) {
-        return <Loading />;
-    }
-
-    return (
-        <div>
-            <div className={classes.transactions}>
-                <div className={classes.transactionsHeader}></div>
-                <div className={classes.transactionCards}>
-                    {account.transactions.length > 0 &&
-                        account.transactions.map((transaction: Transaction, index: number) => {
-                            return (
-                                <TransactionCard
-                                    key={index}
-                                    title={transaction.transactionType}
-                                    time={new Date(
-                                        Date.parse(transaction.date),
-                                    ).toLocaleDateString()}
-                                    card={data && data.cards[0].cardNumber}
-                                    fee={0}
-                                    amount={transaction.amount}
-                                    currencyIcon={currencyIcon}
-                                />
-                            );
-                        })}
-                </div>
-            </div>
-        </div>
-    );
-};
+import { Transactions } from '../Transactions/Transactions';
 
 export const Account: React.FC = () => {
     const history = useHistory<any>();
+    const location = useLocation<any>();
     const [createTransaction]: MutationTuple<
         CreateTransactionMutation,
         CreateTransactionMutationVariables
@@ -86,10 +42,12 @@ export const Account: React.FC = () => {
         AddMoneyMutation,
         AddMoneyMutationVariables
     > = useAddMoneyMutation();
-    const { data }: TransactionsQueryResult = useTransactionsQuery({
-        variables: { currency: history.location.state.currency },
-    });
+
     const user: MeQueryResult = useMeQuery();
+
+    const { data }: TransactionsQueryResult = useTransactionsQuery({
+        variables: { currency: location.state.currency },
+    });
 
     const [accountBalance, setAccountBalance] = useState<number>(0);
     const [openAddDialog, setOpenAddDialog] = useState<boolean>(false);
@@ -99,14 +57,17 @@ export const Account: React.FC = () => {
     const classes = useAccountStyles();
 
     let currencyIcon: string = '';
+
     let currencyFullText: string = '';
     let svg: any | string;
 
     useEffect(() => {
-        setAccountBalance(history.location.state.balance);
-    }, [history]);
+        if (location.state.balance) {
+            setAccountBalance(location.state.balance);
+        }
+    }, [location]);
 
-    switch (history.location.state.currency) {
+    switch (location.state.currency) {
         case 'EUR':
             currencyIcon = '€';
             currencyFullText = 'Euro';
@@ -132,17 +93,26 @@ export const Account: React.FC = () => {
     const simulate = async (): Promise<void> => {
         try {
             const response: ExecutionResult<ExecutionResultDataDefault> = await createTransaction({
-                variables: { currency: history.location.state.currency },
+                variables: {
+                    currency: location.state.currency,
+                },
                 refetchQueries: [
                     {
                         query: TransactionsDocument,
-                        variables: { currency: history.location.state.currency },
+                        variables: {
+                            currency: location.state.currency,
+                        },
                     },
                 ],
             });
-
             if (response && response.data) {
-                console.log(response.data);
+                // Update the account balance
+                history.replace({
+                    state: {
+                        currency: location.state.currency,
+                        balance: response.data.createTransaction,
+                    },
+                });
             }
         } catch (error) {
             const errorMessage: string = error.message.split(':')[1];
@@ -164,7 +134,7 @@ export const Account: React.FC = () => {
                                 const response = await addMoney({
                                     variables: {
                                         amount: parseInt(data.amount),
-                                        currency: history.location.state.currency,
+                                        currency: location.state.currency,
                                     },
                                 });
 
@@ -224,8 +194,8 @@ export const Account: React.FC = () => {
             return (
                 <Dialog isOpen={openDetailsDialog} onClose={() => setOpenDetailsDialog(false)}>
                     Beneficiary: {user.data.me.firstName} {user.data.me.lastName} <br />
-                    IBAN: {history.location.state.iban} <br />
-                    BIC: {history.location.state.bic}
+                    IBAN: {location.state.iban} <br />
+                    BIC: {location.state.bic}
                 </Dialog>
             );
         }
@@ -270,7 +240,7 @@ export const Account: React.FC = () => {
                         />
                     )}
                 </div>
-                <div>{history.location.state.currency}</div>
+                <div>{location.state.currency}</div>
             </div>
 
             <div className={classes.accountButtonsSection}>

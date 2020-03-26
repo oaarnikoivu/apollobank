@@ -24,6 +24,22 @@ export class AccountResolver {
 		return null;
 	}
 
+	@Query(() => Account)
+	@UseMiddleware(isAuth)
+	async account(@Arg("transactionId") transactionId: number, @Ctx() { payload }: MyContext) {
+		if (!payload) {
+			return null;
+		}
+
+		const owner: User | undefined = await User.findOne({ where: { id: payload.userId } });
+
+		if (owner) {
+			return Account.findOne({ where: { owner: owner, transactions: [{ id: transactionId }] } });
+		}
+
+		return null;
+	}
+
 	@Mutation(() => Float)
 	@UseMiddleware(isAuth)
 	async addMoney(
@@ -57,7 +73,7 @@ export class AccountResolver {
 		});
 
 		if (updatedAccount) {
-			return updatedAccount.balance;
+			return [updatedAccount.balance];
 		}
 
 		return 0;

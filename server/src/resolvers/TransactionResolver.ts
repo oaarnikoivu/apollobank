@@ -3,7 +3,7 @@ import { Transaction } from "./../entity/Transaction";
 import { User } from "./../entity/User";
 import { MyContext } from "./../MyContext";
 import { isAuth } from "../middleware";
-import { Resolver, Query, UseMiddleware, Ctx, Mutation, Arg } from "type-graphql";
+import { Resolver, Query, UseMiddleware, Ctx, Mutation, Arg, Float } from "type-graphql";
 import faker from "faker";
 
 @Resolver()
@@ -30,7 +30,7 @@ export class TransactionResolver {
 		return null;
 	}
 
-	@Mutation(() => Boolean)
+	@Mutation(() => Float)
 	@UseMiddleware(isAuth)
 	async createTransaction(@Arg("currency") currency: string, @Ctx() { payload }: MyContext) {
 		if (!payload) {
@@ -84,10 +84,18 @@ export class TransactionResolver {
 					);
 				} catch (err) {
 					console.log(err);
-					return false;
+					return null;
 				}
 			}
 		}
-		return true;
+
+		// In order to update the total account balance, return the above updated Accounts balance
+		const updatedAccount = await Account.findOne({ where: { owner: owner, currency: currency } });
+
+		if (updatedAccount) {
+			return updatedAccount.balance;
+		}
+
+		return null;
 	}
 }
