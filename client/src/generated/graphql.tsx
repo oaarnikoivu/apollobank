@@ -22,6 +22,11 @@ export type Account = {
   balance: Scalars['Float'],
 };
 
+export type AccountResponse = {
+   __typename?: 'AccountResponse',
+  account: Account,
+};
+
 export type Card = {
    __typename?: 'Card',
   id: Scalars['Int'],
@@ -45,7 +50,7 @@ export type Mutation = {
   revokeRefreshTokensForUser: Scalars['Boolean'],
   login: LoginResponse,
   register: Scalars['Boolean'],
-  addMoney: Scalars['Float'],
+  addMoney: AccountResponse,
   createAccount: Scalars['Boolean'],
   createTransaction: Scalars['Float'],
   createCard: Scalars['Boolean'],
@@ -98,8 +103,14 @@ export type Query = {
   users: Array<User>,
   me?: Maybe<User>,
   accounts: Array<Account>,
+  account: Account,
   transactions: Array<Transaction>,
   cards: Array<Card>,
+};
+
+
+export type QueryAccountArgs = {
+  currency: Scalars['String']
 };
 
 
@@ -123,6 +134,19 @@ export type User = {
   lastName: Scalars['String'],
 };
 
+export type AccountQueryVariables = {
+  currency: Scalars['String']
+};
+
+
+export type AccountQuery = (
+  { __typename?: 'Query' }
+  & { account: (
+    { __typename?: 'Account' }
+    & Pick<Account, 'id' | 'balance'>
+  ) }
+);
+
 export type AccountsQueryVariables = {};
 
 
@@ -142,7 +166,13 @@ export type AddMoneyMutationVariables = {
 
 export type AddMoneyMutation = (
   { __typename?: 'Mutation' }
-  & Pick<Mutation, 'addMoney'>
+  & { addMoney: (
+    { __typename?: 'AccountResponse' }
+    & { account: (
+      { __typename?: 'Account' }
+      & Pick<Account, 'id' | 'balance'>
+    ) }
+  ) }
 );
 
 export type ByeQueryVariables = {};
@@ -280,6 +310,40 @@ export type UsersQuery = (
 );
 
 
+export const AccountDocument = gql`
+    query Account($currency: String!) {
+  account(currency: $currency) {
+    id
+    balance
+  }
+}
+    `;
+
+/**
+ * __useAccountQuery__
+ *
+ * To run a query within a React component, call `useAccountQuery` and pass it any options that fit your needs.
+ * When your component renders, `useAccountQuery` returns an object from Apollo Client that contains loading, error, and data properties 
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useAccountQuery({
+ *   variables: {
+ *      currency: // value for 'currency'
+ *   },
+ * });
+ */
+export function useAccountQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<AccountQuery, AccountQueryVariables>) {
+        return ApolloReactHooks.useQuery<AccountQuery, AccountQueryVariables>(AccountDocument, baseOptions);
+      }
+export function useAccountLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<AccountQuery, AccountQueryVariables>) {
+          return ApolloReactHooks.useLazyQuery<AccountQuery, AccountQueryVariables>(AccountDocument, baseOptions);
+        }
+export type AccountQueryHookResult = ReturnType<typeof useAccountQuery>;
+export type AccountLazyQueryHookResult = ReturnType<typeof useAccountLazyQuery>;
+export type AccountQueryResult = ApolloReactCommon.QueryResult<AccountQuery, AccountQueryVariables>;
 export const AccountsDocument = gql`
     query Accounts {
   accounts {
@@ -319,7 +383,12 @@ export type AccountsLazyQueryHookResult = ReturnType<typeof useAccountsLazyQuery
 export type AccountsQueryResult = ApolloReactCommon.QueryResult<AccountsQuery, AccountsQueryVariables>;
 export const AddMoneyDocument = gql`
     mutation AddMoney($amount: Float!, $currency: String!) {
-  addMoney(amount: $amount, currency: $currency)
+  addMoney(amount: $amount, currency: $currency) {
+    account {
+      id
+      balance
+    }
+  }
 }
     `;
 export type AddMoneyMutationFn = ApolloReactCommon.MutationFunction<AddMoneyMutation, AddMoneyMutationVariables>;

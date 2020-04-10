@@ -1,5 +1,5 @@
 import React, { useState, MouseEvent, useEffect } from 'react';
-import { useLocation, useHistory } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { ThemeProvider, IconButton, Button } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import SwapVert from '@material-ui/icons/SwapVert';
@@ -21,6 +21,7 @@ import {
     AddMoneyMutationVariables,
     TransactionsQueryResult,
     MeQueryResult,
+    useAccountQuery,
 } from '../../generated/graphql';
 import { Dialog } from '../Dialog/Dialog';
 import { FormTextField } from '../Forms/FormTextField';
@@ -32,7 +33,6 @@ import { ExecutionResultDataDefault } from 'graphql/execution/execute';
 import { Transactions } from '../Transactions/Transactions';
 
 export const Account: React.FC = () => {
-    const history = useHistory<any>();
     const location = useLocation<any>();
     const [createTransaction]: MutationTuple<
         CreateTransactionMutation,
@@ -44,6 +44,10 @@ export const Account: React.FC = () => {
     > = useAddMoneyMutation();
 
     const user: MeQueryResult = useMeQuery();
+
+    const account = useAccountQuery({
+        variables: { currency: location.state.currency },
+    });
 
     const { data }: TransactionsQueryResult = useTransactionsQuery({
         variables: { currency: location.state.currency },
@@ -57,15 +61,16 @@ export const Account: React.FC = () => {
     const classes = useAccountStyles();
 
     let currencyIcon: string = '';
-
     let currencyFullText: string = '';
     let svg: any | string;
 
     useEffect(() => {
-        if (location.state.balance) {
+        if (account.data) {
+            setAccountBalance(account.data.account.balance);
+        } else {
             setAccountBalance(location.state.balance);
         }
-    }, [location]);
+    }, [account, location]);
 
     switch (location.state.currency) {
         case 'EUR':
@@ -107,12 +112,7 @@ export const Account: React.FC = () => {
             });
             if (response && response.data) {
                 // Update the account balance
-                history.replace({
-                    state: {
-                        currency: location.state.currency,
-                        balance: response.data.createTransaction,
-                    },
-                });
+                setAccountBalance(response.data.createTransaction);
             }
         } catch (error) {
             const errorMessage: string = error.message.split(':')[1];
@@ -140,7 +140,6 @@ export const Account: React.FC = () => {
 
                                 if (response && response.data) {
                                     setSubmitting(false);
-                                    setAccountBalance(response.data.addMoney);
                                     setOpenAddDialog(false);
                                     resetForm();
                                 }

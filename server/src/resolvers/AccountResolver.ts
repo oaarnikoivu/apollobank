@@ -1,6 +1,6 @@
 import { createRandomBicCode } from "./../utils/createRandom";
 import { isAuth } from "../middleware";
-import { Query, Resolver, Mutation, Ctx, UseMiddleware, Arg, Float } from "type-graphql";
+import { Query, Resolver, Mutation, Ctx, UseMiddleware, Arg } from "type-graphql";
 import { MyContext } from "../MyContext";
 import { User } from "../entity/User";
 import { Account } from "../entity/Account";
@@ -24,22 +24,45 @@ export class AccountResolver {
 		return null;
 	}
 
-	@Mutation(() => Float)
+	@Query(() => Account)
+	@UseMiddleware(isAuth)
+	async account(
+		@Arg("currency") currency: string,
+		@Ctx() { payload }: MyContext
+	): Promise<Account | undefined> {
+		if (!payload) {
+			throw new Error("");
+		}
+
+		const owner: User | undefined = await User.findOne({ where: { id: payload.userId } });
+
+		if (owner) {
+			const account = Account.findOne({ where: { owner: owner, currency: currency } });
+
+			if (account) {
+				return account;
+			}
+		}
+
+		return undefined;
+	}
+
+	@Mutation(() => Account)
 	@UseMiddleware(isAuth)
 	async addMoney(
 		@Arg("amount") amount: number,
 		@Arg("currency") currency: string,
 		@Ctx() { payload }: MyContext
-	) {
+	): Promise<Account | null> {
 		if (!payload) {
-			return false;
+			throw new Error("");
 		}
 
 		const owner: User | undefined = await User.findOne({ where: { id: payload.userId } });
 
 		if (owner) {
 			const account: Account | undefined = await Account.findOne({
-				where: { owner: owner, currency: currency }
+				where: { owner: owner, currency: currency },
 			});
 
 			if (account) {
@@ -53,14 +76,14 @@ export class AccountResolver {
 		}
 
 		const updatedAccount: Account | undefined = await Account.findOne({
-			where: { owner: owner, currency: currency }
+			where: { owner: owner, currency: currency },
 		});
 
 		if (updatedAccount) {
-			return [updatedAccount.balance];
+			return updatedAccount;
 		}
 
-		return 0;
+		return null;
 	}
 
 	@Mutation(() => Boolean)
@@ -74,7 +97,7 @@ export class AccountResolver {
 
 		if (owner) {
 			const account: Account | undefined = await Account.findOne({
-				where: { owner: owner, currency: currency }
+				where: { owner: owner, currency: currency },
 			});
 
 			if (account) {
@@ -86,7 +109,7 @@ export class AccountResolver {
 						currency,
 						sortCode: currency === "GBP" ? createRandomSortCode() : "00-00-00",
 						iban: createRandomIbanCode(),
-						bic: createRandomBicCode()
+						bic: createRandomBicCode(),
 					});
 				} catch (err) {
 					console.log(err);

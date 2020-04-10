@@ -68,13 +68,6 @@ export const Chart: React.FC<ChartProps> = ({ currency }) => {
                                 : [],
                         },
                     ],
-                    options: {
-                        legend: { display: false },
-                        title: {
-                            display: true,
-                            text: 'Predicted world population (millions) in 2050',
-                        },
-                    },
                 }}
                 height={80}
             />
