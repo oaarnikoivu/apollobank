@@ -40,7 +40,7 @@ export const Chart: React.FC<ChartProps> = ({ currency }) => {
         <div>
             <Line
                 data={{
-                    labels: !!sortedDates ? sortedDates : [],
+                    labels: sortedDates,
                     datasets: [
                         {
                             label: 'Spending (this month)',

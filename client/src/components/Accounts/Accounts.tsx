@@ -1,4 +1,4 @@
-import React, { useState, useEffect, MouseEvent } from 'react';
+import React, { useState, useEffect, MouseEvent, ChangeEvent } from 'react';
 import {
     Container,
     Grid,
@@ -7,6 +7,10 @@ import {
     ListItemText,
     ListItem,
     ListItemIcon,
+    FormControl,
+    InputLabel,
+    Select,
+    MenuItem,
 } from '@material-ui/core';
 import { Chart } from '../Charts/Chart';
 import { Title } from '../Typography/Title';
@@ -52,6 +56,7 @@ export const Accounts: React.FC = () => {
         CreateCardMutationVariables
     > = useCreateCardMutation();
 
+    const [analyticsAccount, setAnalyticsAccount] = useState<string>('EUR');
     const [totalBalance, setTotalBalance] = useState<number>(0);
     const [openDialog, setOpenDialog] = useState<boolean>(false);
 
@@ -225,10 +230,29 @@ export const Accounts: React.FC = () => {
                             <Title title="Analytics" fontSize={24} />
                         </div>
                     </div>
+                    <FormControl>
+                        <InputLabel id="select-filled-label">Account</InputLabel>
+                        <Select
+                            labelId="select-filled-label"
+                            id="select-filled"
+                            value={analyticsAccount}
+                            onChange={(event: ChangeEvent<{ value: unknown }>) =>
+                                setAnalyticsAccount(event.target.value as string)
+                            }
+                            label="Account"
+                        >
+                            <MenuItem value="">
+                                <em>None</em>
+                            </MenuItem>
+                            {currencies.map(currency => {
+                                return <MenuItem value={currency}>{currency}</MenuItem>;
+                            })}
+                        </Select>
+                    </FormControl>
                     <Grid container spacing={3}>
                         <Grid item xs={12} md={12} lg={12}>
                             <Paper className={chartPaper}>
-                                <Chart currency="EUR" />
+                                <Chart currency={!!analyticsAccount ? analyticsAccount : 'EUR'} />
                             </Paper>
                         </Grid>
                     </Grid>
