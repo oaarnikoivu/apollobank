@@ -247,6 +247,7 @@ export type ExchangeMutation = (
   { __typename?: 'Mutation' }
   & { exchange: (
     { __typename?: 'ExchangeResponse' }
+    & Pick<ExchangeResponse, 'success'>
     & { account: (
       { __typename?: 'Account' }
       & Pick<Account, 'id' | 'balance'>
@@ -612,6 +613,7 @@ export const ExchangeDocument = gql`
       id
       balance
     }
+    success
   }
 }
     `;

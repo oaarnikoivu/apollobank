@@ -1,6 +1,14 @@
-import React, { useState, MouseEvent, useEffect } from 'react';
+import React, { useState, MouseEvent, useEffect, ChangeEvent } from 'react';
 import { useLocation } from 'react-router-dom';
-import { ThemeProvider, IconButton, Button } from '@material-ui/core';
+import {
+    ThemeProvider,
+    IconButton,
+    Button,
+    InputLabel,
+    FormControl,
+    Select,
+    MenuItem,
+} from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import SwapVert from '@material-ui/icons/SwapVert';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
@@ -25,6 +33,7 @@ import {
     ExchangeMutation,
     ExchangeMutationVariables,
     useExchangeMutation,
+    AccountQueryResult,
 } from '../../generated/graphql';
 import { Dialog } from '../Dialog/Dialog';
 import { FormTextField } from '../Forms/FormTextField';
@@ -35,8 +44,17 @@ import { ExecutionResult } from 'graphql';
 import { ExecutionResultDataDefault } from 'graphql/execution/execute';
 import { Transactions } from '../Transactions/Transactions';
 
+const currencies: string[] = ['EUR', 'USD', 'GBP'];
+
 export const Account: React.FC = () => {
     const location = useLocation<any>();
+    const [toAccountCurrency, setToAccountCurrency] = useState<string>('');
+    const [accountBalance, setAccountBalance] = useState<number>(0);
+    const [openAddDialog, setOpenAddDialog] = useState<boolean>(false);
+    const [openExchangeDialog, setOpenExchangeDialog] = useState<boolean>(false);
+    const [openDetailsDialog, setOpenDetailsDialog] = useState<boolean>(false);
+
+    // GraphQL Mutations
     const [createTransaction]: MutationTuple<
         CreateTransactionMutation,
         CreateTransactionMutationVariables
@@ -50,20 +68,14 @@ export const Account: React.FC = () => {
         ExchangeMutationVariables
     > = useExchangeMutation();
 
+    // GraphQL Queries
     const user: MeQueryResult = useMeQuery();
-
-    const account = useAccountQuery({
+    const account: AccountQueryResult = useAccountQuery({
         variables: { currency: location.state.currency },
     });
-
     const { data }: TransactionsQueryResult = useTransactionsQuery({
         variables: { currency: location.state.currency },
     });
-
-    const [accountBalance, setAccountBalance] = useState<number>(0);
-    const [openAddDialog, setOpenAddDialog] = useState<boolean>(false);
-    const [openExchangeDialog, setOpenExchangeDialog] = useState<boolean>(false);
-    const [openDetailsDialog, setOpenDetailsDialog] = useState<boolean>(false);
 
     const classes = useAccountStyles();
 
@@ -71,6 +83,7 @@ export const Account: React.FC = () => {
     let currencyFullText: string = '';
     let svg: any | string;
 
+    // On component mounts fetch the account balance
     useEffect(() => {
         if (account.data) {
             setAccountBalance(account.data.account.balance);
@@ -193,7 +206,7 @@ export const Account: React.FC = () => {
                 <Title title="Exchange" fontSize={18} />
                 <div style={{ marginTop: 12 }}>
                     <Formik
-                        initialValues={{ amount: '', toAccountCurrency: 'USD' }}
+                        initialValues={{ amount: '' }}
                         onSubmit={async (data, { setSubmitting, resetForm }) => {
                             setSubmitting(true);
 
@@ -201,16 +214,18 @@ export const Account: React.FC = () => {
                                 const response = await exchange({
                                     variables: {
                                         selectedAccountCurrency: location.state.currency,
-                                        toAccountCurrency: data.toAccountCurrency,
+                                        toAccountCurrency: toAccountCurrency,
                                         amount: parseInt(data.amount),
                                     },
                                 });
 
                                 if (response && response.data) {
-                                    setSubmitting(false);
-                                    setOpenExchangeDialog(false);
-                                    resetForm();
-                                    console.log('Success!');
+                                    // if the exchange was a success update the account balance and render a success message
+                                    if (response.data.exchange.success) {
+                                        setSubmitting(false);
+                                        setOpenExchangeDialog(false);
+                                        resetForm();
+                                    }
                                 }
                             } catch (error) {
                                 const errorMessage = error.message.split('')[1];
@@ -227,6 +242,33 @@ export const Account: React.FC = () => {
                                         placeholder="amount"
                                         type="Number"
                                     />
+                                    <FormControl style={{ marginLeft: 8 }} variant="outlined">
+                                        <InputLabel id="select-filled-label">To</InputLabel>
+                                        <Select
+                                            labelId="select-filled-label"
+                                            id="select-filled"
+                                            value={toAccountCurrency}
+                                            onChange={(event: ChangeEvent<{ value: unknown }>) => {
+                                                setToAccountCurrency(event.target.value as string);
+                                            }}
+                                            label="To"
+                                        >
+                                            <MenuItem value="">
+                                                <em>None</em>
+                                            </MenuItem>
+                                            {currencies
+                                                .filter(currency => {
+                                                    return currency !== location.state.currency;
+                                                })
+                                                .map(currency => {
+                                                    return (
+                                                        <MenuItem value={currency}>
+                                                            {currency}
+                                                        </MenuItem>
+                                                    );
+                                                })}
+                                        </Select>
+                                    </FormControl>
                                     <div>
                                         <ThemeProvider theme={theme}>
                                             <Button
