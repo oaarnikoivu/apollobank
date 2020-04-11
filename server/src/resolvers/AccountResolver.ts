@@ -1,10 +1,34 @@
 import { createRandomBicCode } from "./../utils/createRandom";
 import { isAuth } from "../middleware";
-import { Query, Resolver, Mutation, Ctx, UseMiddleware, Arg } from "type-graphql";
+import {
+	Query,
+	Resolver,
+	Mutation,
+	Ctx,
+	UseMiddleware,
+	Arg,
+	ObjectType,
+	Field,
+} from "type-graphql";
 import { MyContext } from "../MyContext";
 import { User } from "../entity/User";
 import { Account } from "../entity/Account";
 import { createRandomSortCode, createRandomIbanCode } from "../utils/createRandom";
+
+@ObjectType()
+class AccountResponse {
+	@Field(() => Account)
+	account: Account;
+}
+
+@ObjectType()
+class ExchangeResponse {
+	@Field(() => Account)
+	account: Account | undefined;
+
+	@Field(() => Boolean)
+	success: boolean;
+}
 
 @Resolver()
 export class AccountResolver {
@@ -47,15 +71,15 @@ export class AccountResolver {
 		return undefined;
 	}
 
-	@Mutation(() => Account)
+	@Mutation(() => AccountResponse)
 	@UseMiddleware(isAuth)
 	async addMoney(
 		@Arg("amount") amount: number,
 		@Arg("currency") currency: string,
 		@Ctx() { payload }: MyContext
-	): Promise<Account | null> {
+	): Promise<AccountResponse | null> {
 		if (!payload) {
-			throw new Error("");
+			return null;
 		}
 
 		const owner: User | undefined = await User.findOne({ where: { id: payload.userId } });
@@ -80,10 +104,76 @@ export class AccountResolver {
 		});
 
 		if (updatedAccount) {
-			return updatedAccount;
+			return {
+				account: updatedAccount,
+			};
 		}
 
 		return null;
+	}
+
+	@Mutation(() => ExchangeResponse)
+	@UseMiddleware(isAuth)
+	async exchange(
+		@Arg("selectedAccountCurrency") selectedAccountCurrency: string,
+		@Arg("toAccountCurrency") toAccountCurrency: string,
+		@Arg("amount") amount: number,
+		@Ctx() { payload }: MyContext
+	): Promise<ExchangeResponse | null> {
+		if (!payload) {
+			return null;
+		}
+
+		const owner: User | undefined = await User.findOne({ where: { id: payload.userId } });
+
+		if (owner) {
+			const currentAccount: Account | undefined = await Account.findOne({
+				where: { owner: owner, currency: selectedAccountCurrency },
+			});
+
+			if (currentAccount) {
+				if (currentAccount.balance >= amount) {
+					// Exchange the amount to the other account
+					const toAccount: Account | undefined = await Account.findOne({
+						where: {
+							owner: owner,
+							currency: toAccountCurrency,
+						},
+					});
+
+					if (toAccount) {
+						try {
+							await Account.update({ id: toAccount.id }, { balance: toAccount.balance + amount });
+							await Account.update(
+								{ id: currentAccount.id },
+								{ balance: currentAccount.balance - amount }
+							);
+						} catch (err) {
+							console.log(err);
+							return null;
+						}
+					}
+				} else {
+					throw new Error("You do not have the sufficient funds to make this exchange!");
+				}
+			}
+		}
+
+		const updatedAccount = await Account.findOne({
+			where: { owner: owner, currency: selectedAccountCurrency },
+		});
+
+		if (updatedAccount) {
+			return {
+				account: updatedAccount,
+				success: true,
+			};
+		}
+
+		return {
+			account: undefined,
+			success: false,
+		};
 	}
 
 	@Mutation(() => Boolean)

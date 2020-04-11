@@ -22,6 +22,9 @@ import {
     TransactionsQueryResult,
     MeQueryResult,
     useAccountQuery,
+    ExchangeMutation,
+    ExchangeMutationVariables,
+    useExchangeMutation,
 } from '../../generated/graphql';
 import { Dialog } from '../Dialog/Dialog';
 import { FormTextField } from '../Forms/FormTextField';
@@ -42,6 +45,10 @@ export const Account: React.FC = () => {
         AddMoneyMutation,
         AddMoneyMutationVariables
     > = useAddMoneyMutation();
+    const [exchange]: MutationTuple<
+        ExchangeMutation,
+        ExchangeMutationVariables
+    > = useExchangeMutation();
 
     const user: MeQueryResult = useMeQuery();
 
@@ -183,7 +190,61 @@ export const Account: React.FC = () => {
     const renderExchangeDialog = (): JSX.Element => {
         return (
             <Dialog isOpen={openExchangeDialog} onClose={() => setOpenExchangeDialog(false)}>
-                Exchange
+                <Title title="Exchange" fontSize={18} />
+                <div style={{ marginTop: 12 }}>
+                    <Formik
+                        initialValues={{ amount: '', toAccountCurrency: 'USD' }}
+                        onSubmit={async (data, { setSubmitting, resetForm }) => {
+                            setSubmitting(true);
+
+                            try {
+                                const response = await exchange({
+                                    variables: {
+                                        selectedAccountCurrency: location.state.currency,
+                                        toAccountCurrency: data.toAccountCurrency,
+                                        amount: parseInt(data.amount),
+                                    },
+                                });
+
+                                if (response && response.data) {
+                                    setSubmitting(false);
+                                    setOpenExchangeDialog(false);
+                                    resetForm();
+                                    console.log('Success!');
+                                }
+                            } catch (error) {
+                                const errorMessage = error.message.split('')[1];
+                                console.log(errorMessage);
+                                setSubmitting(false);
+                            }
+                        }}
+                    >
+                        {({ isSubmitting }) => (
+                            <div>
+                                <Form>
+                                    <FormTextField
+                                        name="amount"
+                                        placeholder="amount"
+                                        type="Number"
+                                    />
+                                    <div>
+                                        <ThemeProvider theme={theme}>
+                                            <Button
+                                                className={classes.dialogButton}
+                                                disabled={isSubmitting}
+                                                variant="contained"
+                                                color="secondary"
+                                                type="submit"
+                                            >
+                                                Exchange
+                                            </Button>
+                                        </ThemeProvider>
+                                    </div>
+                                </Form>
+                            </div>
+                        )}
+                    </Formik>
+                </div>
             </Dialog>
         );
     };

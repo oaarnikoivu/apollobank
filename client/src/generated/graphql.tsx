@@ -38,6 +38,12 @@ export type Card = {
 };
 
 
+export type ExchangeResponse = {
+   __typename?: 'ExchangeResponse',
+  account: Account,
+  success: Scalars['Boolean'],
+};
+
 export type LoginResponse = {
    __typename?: 'LoginResponse',
   accessToken: Scalars['String'],
@@ -51,6 +57,7 @@ export type Mutation = {
   login: LoginResponse,
   register: Scalars['Boolean'],
   addMoney: AccountResponse,
+  exchange: ExchangeResponse,
   createAccount: Scalars['Boolean'],
   createTransaction: Scalars['Float'],
   createCard: Scalars['Boolean'],
@@ -84,6 +91,13 @@ export type MutationRegisterArgs = {
 export type MutationAddMoneyArgs = {
   currency: Scalars['String'],
   amount: Scalars['Float']
+};
+
+
+export type MutationExchangeArgs = {
+  amount: Scalars['Float'],
+  toAccountCurrency: Scalars['String'],
+  selectedAccountCurrency: Scalars['String']
 };
 
 
@@ -220,6 +234,24 @@ export type CreateTransactionMutationVariables = {
 export type CreateTransactionMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'createTransaction'>
+);
+
+export type ExchangeMutationVariables = {
+  selectedAccountCurrency: Scalars['String'],
+  toAccountCurrency: Scalars['String'],
+  amount: Scalars['Float']
+};
+
+
+export type ExchangeMutation = (
+  { __typename?: 'Mutation' }
+  & { exchange: (
+    { __typename?: 'ExchangeResponse' }
+    & { account: (
+      { __typename?: 'Account' }
+      & Pick<Account, 'id' | 'balance'>
+    ) }
+  ) }
 );
 
 export type HelloQueryVariables = {};
@@ -573,6 +605,43 @@ export function useCreateTransactionMutation(baseOptions?: ApolloReactHooks.Muta
 export type CreateTransactionMutationHookResult = ReturnType<typeof useCreateTransactionMutation>;
 export type CreateTransactionMutationResult = ApolloReactCommon.MutationResult<CreateTransactionMutation>;
 export type CreateTransactionMutationOptions = ApolloReactCommon.BaseMutationOptions<CreateTransactionMutation, CreateTransactionMutationVariables>;
+export const ExchangeDocument = gql`
+    mutation Exchange($selectedAccountCurrency: String!, $toAccountCurrency: String!, $amount: Float!) {
+  exchange(selectedAccountCurrency: $selectedAccountCurrency, toAccountCurrency: $toAccountCurrency, amount: $amount) {
+    account {
+      id
+      balance
+    }
+  }
+}
+    `;
+export type ExchangeMutationFn = ApolloReactCommon.MutationFunction<ExchangeMutation, ExchangeMutationVariables>;
+
+/**
+ * __useExchangeMutation__
+ *
+ * To run a mutation, you first call `useExchangeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useExchangeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [exchangeMutation, { data, loading, error }] = useExchangeMutation({
+ *   variables: {
+ *      selectedAccountCurrency: // value for 'selectedAccountCurrency'
+ *      toAccountCurrency: // value for 'toAccountCurrency'
+ *      amount: // value for 'amount'
+ *   },
+ * });
+ */
+export function useExchangeMutation(baseOptions?: ApolloReactHooks.MutationHookOptions<ExchangeMutation, ExchangeMutationVariables>) {
+        return ApolloReactHooks.useMutation<ExchangeMutation, ExchangeMutationVariables>(ExchangeDocument, baseOptions);
+      }
+export type ExchangeMutationHookResult = ReturnType<typeof useExchangeMutation>;
+export type ExchangeMutationResult = ApolloReactCommon.MutationResult<ExchangeMutation>;
+export type ExchangeMutationOptions = ApolloReactCommon.BaseMutationOptions<ExchangeMutation, ExchangeMutationVariables>;
 export const HelloDocument = gql`
     query Hello {
   hello
