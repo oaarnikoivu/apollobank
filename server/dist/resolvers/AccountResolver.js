@@ -27,6 +27,28 @@ const type_graphql_1 = require("type-graphql");
 const User_1 = require("../entity/User");
 const Account_1 = require("../entity/Account");
 const createRandom_2 = require("../utils/createRandom");
+let AccountResponse = class AccountResponse {
+};
+__decorate([
+    type_graphql_1.Field(() => Account_1.Account),
+    __metadata("design:type", Account_1.Account)
+], AccountResponse.prototype, "account", void 0);
+AccountResponse = __decorate([
+    type_graphql_1.ObjectType()
+], AccountResponse);
+let ExchangeResponse = class ExchangeResponse {
+};
+__decorate([
+    type_graphql_1.Field(() => Account_1.Account),
+    __metadata("design:type", Object)
+], ExchangeResponse.prototype, "account", void 0);
+__decorate([
+    type_graphql_1.Field(() => Boolean),
+    __metadata("design:type", Boolean)
+], ExchangeResponse.prototype, "success", void 0);
+ExchangeResponse = __decorate([
+    type_graphql_1.ObjectType()
+], ExchangeResponse);
 let AccountResolver = class AccountResolver {
     accounts({ payload }) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -40,15 +62,30 @@ let AccountResolver = class AccountResolver {
             return null;
         });
     }
+    account(currency, { payload }) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!payload) {
+                throw new Error("");
+            }
+            const owner = yield User_1.User.findOne({ where: { id: payload.userId } });
+            if (owner) {
+                const account = Account_1.Account.findOne({ where: { owner: owner, currency: currency } });
+                if (account) {
+                    return account;
+                }
+            }
+            return undefined;
+        });
+    }
     addMoney(amount, currency, { payload }) {
         return __awaiter(this, void 0, void 0, function* () {
             if (!payload) {
-                return false;
+                return null;
             }
             const owner = yield User_1.User.findOne({ where: { id: payload.userId } });
             if (owner) {
                 const account = yield Account_1.Account.findOne({
-                    where: { owner: owner, currency: currency }
+                    where: { owner: owner, currency: currency },
                 });
                 if (account) {
                     try {
@@ -61,12 +98,63 @@ let AccountResolver = class AccountResolver {
                 }
             }
             const updatedAccount = yield Account_1.Account.findOne({
-                where: { owner: owner, currency: currency }
+                where: { owner: owner, currency: currency },
             });
             if (updatedAccount) {
-                return updatedAccount.balance;
+                return {
+                    account: updatedAccount,
+                };
             }
-            return 0;
+            return null;
+        });
+    }
+    exchange(selectedAccountCurrency, toAccountCurrency, amount, { payload }) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!payload) {
+                return null;
+            }
+            const owner = yield User_1.User.findOne({ where: { id: payload.userId } });
+            if (owner) {
+                const currentAccount = yield Account_1.Account.findOne({
+                    where: { owner: owner, currency: selectedAccountCurrency },
+                });
+                if (currentAccount) {
+                    if (currentAccount.balance >= amount) {
+                        const toAccount = yield Account_1.Account.findOne({
+                            where: {
+                                owner: owner,
+                                currency: toAccountCurrency,
+                            },
+                        });
+                        if (toAccount) {
+                            try {
+                                yield Account_1.Account.update({ id: toAccount.id }, { balance: toAccount.balance + amount });
+                                yield Account_1.Account.update({ id: currentAccount.id }, { balance: currentAccount.balance - amount });
+                            }
+                            catch (err) {
+                                console.log(err);
+                                return null;
+                            }
+                        }
+                    }
+                    else {
+                        throw new Error("You do not have the sufficient funds to make this exchange!");
+                    }
+                }
+            }
+            const updatedAccount = yield Account_1.Account.findOne({
+                where: { owner: owner, currency: selectedAccountCurrency },
+            });
+            if (updatedAccount) {
+                return {
+                    account: updatedAccount,
+                    success: true,
+                };
+            }
+            return {
+                account: undefined,
+                success: false,
+            };
         });
     }
     createAccount(currency, { payload }) {
@@ -77,7 +165,7 @@ let AccountResolver = class AccountResolver {
             const owner = yield User_1.User.findOne({ where: { id: payload.userId } });
             if (owner) {
                 const account = yield Account_1.Account.findOne({
-                    where: { owner: owner, currency: currency }
+                    where: { owner: owner, currency: currency },
                 });
                 if (account) {
                     throw new Error(`You already have a ${currency} account`);
@@ -89,7 +177,7 @@ let AccountResolver = class AccountResolver {
                             currency,
                             sortCode: currency === "GBP" ? createRandom_2.createRandomSortCode() : "00-00-00",
                             iban: createRandom_2.createRandomIbanCode(),
-                            bic: createRandom_1.createRandomBicCode()
+                            bic: createRandom_1.createRandomBicCode(),
                         });
                     }
                     catch (err) {
@@ -111,7 +199,16 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], AccountResolver.prototype, "accounts", null);
 __decorate([
-    type_graphql_1.Mutation(() => type_graphql_1.Float),
+    type_graphql_1.Query(() => Account_1.Account),
+    type_graphql_1.UseMiddleware(middleware_1.isAuth),
+    __param(0, type_graphql_1.Arg("currency")),
+    __param(1, type_graphql_1.Ctx()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:returntype", Promise)
+], AccountResolver.prototype, "account", null);
+__decorate([
+    type_graphql_1.Mutation(() => AccountResponse),
     type_graphql_1.UseMiddleware(middleware_1.isAuth),
     __param(0, type_graphql_1.Arg("amount")),
     __param(1, type_graphql_1.Arg("currency")),
@@ -120,6 +217,17 @@ __decorate([
     __metadata("design:paramtypes", [Number, String, Object]),
     __metadata("design:returntype", Promise)
 ], AccountResolver.prototype, "addMoney", null);
+__decorate([
+    type_graphql_1.Mutation(() => ExchangeResponse),
+    type_graphql_1.UseMiddleware(middleware_1.isAuth),
+    __param(0, type_graphql_1.Arg("selectedAccountCurrency")),
+    __param(1, type_graphql_1.Arg("toAccountCurrency")),
+    __param(2, type_graphql_1.Arg("amount")),
+    __param(3, type_graphql_1.Ctx()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String, Number, Object]),
+    __metadata("design:returntype", Promise)
+], AccountResolver.prototype, "exchange", null);
 __decorate([
     type_graphql_1.Mutation(() => Boolean),
     type_graphql_1.UseMiddleware(middleware_1.isAuth),
