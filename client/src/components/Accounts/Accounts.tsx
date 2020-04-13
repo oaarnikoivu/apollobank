@@ -44,6 +44,8 @@ import { MutationTuple } from '@apollo/react-hooks';
 import { ExecutionResult } from 'graphql';
 import { theme } from '../../utils/theme';
 
+const GLOBAL_CURRENCIES: string[] = ['EUR', 'USD', 'GBP'];
+
 export const Accounts: React.FC = () => {
     const { data, loading }: AccountsQueryResult = useAccountsQuery();
     const cards: CardsQueryResult = useCardsQuery();
@@ -115,7 +117,7 @@ export const Accounts: React.FC = () => {
         return (
             <Dialog isOpen={openDialog} onClose={() => setOpenDialog(false)}>
                 <List>
-                    {currencies.map((currency: string, index: number) => (
+                    {GLOBAL_CURRENCIES.map((currency: string, index: number) => (
                         <ListItem
                             button
                             key={currency}
