@@ -13,14 +13,14 @@ import { FormTextField } from '../Forms/FormTextField';
 import { Button, ThemeProvider } from '@material-ui/core';
 import { theme } from '../../utils/theme';
 import { loginValidationSchema } from '../../schemas /loginValidationSchema';
-import { AlertMessage } from '../Alerts/AlertMessage';
+import { ErrorMessage } from '../Alerts/AlertMessage';
 import { useLoginStyles } from './Login.style';
 import { MutationTuple } from '@apollo/react-hooks';
 import { ExecutionResult } from 'graphql';
 
 export const Login: React.FC<RouteComponentProps> = ({ history }) => {
     const [login]: MutationTuple<LoginMutation, LoginMutationVariables> = useLoginMutation();
-    const [alertMessage, setAlertMessage] = useState<string>('');
+    const [errorMessage, setErrorMessage] = useState<string>('');
     const classes = useLoginStyles();
 
     return (
@@ -28,9 +28,9 @@ export const Login: React.FC<RouteComponentProps> = ({ history }) => {
             <div>
                 <h1 className={classes.headerText}>Login</h1>
             </div>
-            {alertMessage.length > 0 && (
+            {errorMessage.length > 0 && (
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
-                    <AlertMessage message={alertMessage} />
+                    <ErrorMessage message={errorMessage} />
                 </div>
             )}
             <Formik
@@ -66,7 +66,7 @@ export const Login: React.FC<RouteComponentProps> = ({ history }) => {
                         }
                     } catch (error) {
                         const errorMessage: string = error.message.split(':')[1];
-                        setAlertMessage(errorMessage);
+                        setErrorMessage(errorMessage);
                         setSubmitting(false);
                     }
                 }}

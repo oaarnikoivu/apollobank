@@ -1,11 +1,15 @@
-import React, { useEffect } from 'react';
-import { Line } from 'react-chartjs-2';
-import moment from 'moment';
+import React from 'react';
 import {
-    useTransactionsQuery,
-    TransactionsQueryResult,
-    Transaction,
-} from '../../generated/graphql';
+    ResponsiveContainer,
+    AreaChart,
+    Area,
+    XAxis,
+    YAxis,
+    CartesianGrid,
+    Tooltip,
+    Legend,
+} from 'recharts';
+import { useTransactionsQuery, TransactionsQueryResult } from '../../generated/graphql';
 
 interface ChartProps {
     currency: string;
@@ -16,61 +20,44 @@ export const Chart: React.FC<ChartProps> = ({ currency }) => {
         variables: { currency: currency },
     });
 
-    let dates: Date[] = [];
-    let sortedDates: string[] = [];
-    let currentDate = moment();
-
-    useEffect(() => {
-        if (data) {
-            data.transactions.forEach((transaction: Transaction) => {
-                let parsedDate: number = Date.parse(transaction.date);
-                dates.push(new Date(parsedDate));
-            });
-        }
-        dates
-            .sort((a: Date, b: Date) => a.getTime() - b.getTime())
-            .forEach((date: Date) => {
-                if (moment(date).isSame(currentDate, 'month')) {
-                    sortedDates.push(date.toLocaleDateString());
-                }
-            });
-    }, [data, currentDate, dates, sortedDates]);
-
     return (
-        <div>
-            <Line
-                data={{
-                    labels: sortedDates,
-                    datasets: [
-                        {
-                            label: 'Spending (this month)',
-                            fill: true,
-                            lineTension: 0.1,
-                            backgroundColor: 'rgba(75,192,192,0.4)',
-                            borderColor: 'rgba(75,192,192,1)',
-                            borderCapStyle: 'butt',
-                            borderDash: [],
-                            borderDashOffset: 0.0,
-                            borderJoinStyle: 'miter',
-                            pointBorderColor: 'rgba(75,192,192,1)',
-                            pointBackgroundColor: '#fff',
-                            pointBorderWidth: 1,
-                            pointHoverRadius: 5,
-                            pointHoverBackgroundColor: 'rgba(75,192,192,1)',
-                            pointHoverBorderColor: 'rgba(220,220,220,1)',
-                            pointHoverBorderWidth: 2,
-                            pointRadius: 1,
-                            pointHitRadius: 10,
-                            data: !!data
-                                ? data.transactions.map((transaction: Transaction) => {
-                                      return transaction.amount;
+        <>
+            <div style={{ width: '100%', height: '320px' }}>
+                <div style={{ display: 'flex', justifyContent: 'center' }}>
+                    Spending (this month)
+                </div>
+                <ResponsiveContainer width="100%">
+                    <AreaChart
+                        data={
+                            !!data
+                                ? data.transactions.map(transaction => {
+                                      return {
+                                          date: new Date(
+                                              Date.parse(transaction.date),
+                                          ).toLocaleDateString(),
+                                          type: transaction.transactionType,
+                                          amount: transaction.amount,
+                                      };
                                   })
-                                : [],
-                        },
-                    ],
-                }}
-                height={80}
-            />
-        </div>
+                                : []
+                        }
+                        margin={{
+                            top: 24,
+                            right: 30,
+                            left: 20,
+                            bottom: 5,
+                        }}
+                    >
+                        <CartesianGrid strokeDasharray="3 3" />
+                        <XAxis dataKey="date" />
+                        <YAxis />
+                        <Tooltip />
+                        <Legend />
+                        <Area type="monotone" dataKey="amount" stroke="#29AABB" fill="#29AABB" />
+                        <Area type="monotone" dataKey="type" stroke="#F15742" />
+                    </AreaChart>
+                </ResponsiveContainer>
+            </div>
+        </>
     );
 };

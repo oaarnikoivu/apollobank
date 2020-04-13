@@ -10,7 +10,7 @@ import { Button, ThemeProvider } from '@material-ui/core';
 import { theme } from '../../utils/theme';
 import { registerValidationSchema } from '../../schemas /registerValidationSchema';
 import { FormTextField } from '../Forms/FormTextField';
-import { AlertMessage } from '../Alerts/AlertMessage';
+import { ErrorMessage } from '../Alerts/AlertMessage';
 import { useRegisterStyles } from './Register.style';
 import { MutationTuple } from '@apollo/react-hooks';
 
@@ -19,7 +19,7 @@ export const Register: React.FC<RouteComponentProps> = ({ history }) => {
         RegisterMutation,
         RegisterMutationVariables
     > = useRegisterMutation();
-    const [alertMessage, setAlertMessage] = useState<string>('');
+    const [errorMessage, setErrorMessage] = useState<string>('');
     const classes = useRegisterStyles();
 
     return (
@@ -27,9 +27,9 @@ export const Register: React.FC<RouteComponentProps> = ({ history }) => {
             <div>
                 <h1 className={classes.headerText}>Sign Up</h1>
             </div>
-            {alertMessage.length > 0 && (
+            {errorMessage.length > 0 && (
                 <div style={{ display: 'flex', justifyContent: 'center' }}>
-                    <AlertMessage message={alertMessage} />
+                    <ErrorMessage message={errorMessage} />
                 </div>
             )}
             <Formik
@@ -68,14 +68,14 @@ export const Register: React.FC<RouteComponentProps> = ({ history }) => {
                         setSubmitting(false);
                         resetForm();
                     } else {
-                        setAlertMessage('User with that email already exists.');
+                        setErrorMessage('User with that email already exists.');
                         setSubmitting(false);
                     }
                 }}
             >
                 {({ isSubmitting }) => (
                     <div className={classes.root}>
-                        <Form onChange={() => setAlertMessage('')}>
+                        <Form onChange={() => setErrorMessage('')}>
                             <div className={classes.alignedFormContent}>
                                 <FormTextField
                                     className={classes.alignedFormField}

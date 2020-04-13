@@ -43,6 +43,8 @@ import { MutationTuple } from '@apollo/react-hooks';
 import { ExecutionResult } from 'graphql';
 import { ExecutionResultDataDefault } from 'graphql/execution/execute';
 import { Transactions } from '../Transactions/Transactions';
+import { ErrorMessage, SuccessMessage } from '../Alerts/AlertMessage';
+import { addMoneyValidationSchema } from '../../schemas /addMoneyValidationSchema';
 
 const currencies: string[] = ['EUR', 'USD', 'GBP'];
 
@@ -53,6 +55,8 @@ export const Account: React.FC = () => {
     const [openAddDialog, setOpenAddDialog] = useState<boolean>(false);
     const [openExchangeDialog, setOpenExchangeDialog] = useState<boolean>(false);
     const [openDetailsDialog, setOpenDetailsDialog] = useState<boolean>(false);
+    const [successMessage, setSuccessMessage] = useState<string>('');
+    const [errorMessage, setErrorMessage] = useState<string>('');
 
     // GraphQL Mutations
     const [createTransaction]: MutationTuple<
@@ -146,26 +150,28 @@ export const Account: React.FC = () => {
                 <Title title="Add money" fontSize={18} />
                 <div style={{ marginTop: 12 }}>
                     <Formik
-                        initialValues={{ amount: '' }}
+                        initialValues={{ amount: 10 }}
+                        validationSchema={addMoneyValidationSchema}
                         onSubmit={async (data, { setSubmitting, resetForm }) => {
                             setSubmitting(true);
 
                             try {
                                 const response = await addMoney({
                                     variables: {
-                                        amount: parseInt(data.amount),
+                                        amount: data.amount,
                                         currency: location.state.currency,
                                     },
                                 });
 
                                 if (response && response.data) {
                                     setSubmitting(false);
+                                    setSuccessMessage('Successfully topped up your account');
                                     setOpenAddDialog(false);
                                     resetForm();
                                 }
                             } catch (error) {
                                 const errorMessage = error.message.split(':')[1];
-                                console.log(errorMessage);
+                                setErrorMessage(errorMessage);
                                 setSubmitting(false);
                             }
                         }}
@@ -206,7 +212,7 @@ export const Account: React.FC = () => {
                 <Title title="Exchange" fontSize={18} />
                 <div style={{ marginTop: 12 }}>
                     <Formik
-                        initialValues={{ amount: '' }}
+                        initialValues={{ amount: 10 }}
                         onSubmit={async (data, { setSubmitting, resetForm }) => {
                             setSubmitting(true);
 
@@ -215,7 +221,7 @@ export const Account: React.FC = () => {
                                     variables: {
                                         selectedAccountCurrency: location.state.currency,
                                         toAccountCurrency: toAccountCurrency,
-                                        amount: parseInt(data.amount),
+                                        amount: data.amount,
                                     },
                                 });
 
@@ -223,13 +229,15 @@ export const Account: React.FC = () => {
                                     // if the exchange was a success update the account balance and render a success message
                                     if (response.data.exchange.success) {
                                         setSubmitting(false);
+                                        setSuccessMessage('The exchange was successfully executed');
                                         setOpenExchangeDialog(false);
                                         resetForm();
                                     }
                                 }
                             } catch (error) {
                                 const errorMessage = error.message.split('')[1];
-                                console.log(errorMessage);
+                                setErrorMessage(errorMessage);
+
                                 setSubmitting(false);
                             }
                         }}
@@ -240,7 +248,7 @@ export const Account: React.FC = () => {
                                     <FormTextField
                                         name="amount"
                                         placeholder="amount"
-                                        type="Number"
+                                        type="number"
                                     />
                                     <FormControl style={{ marginLeft: 8 }} variant="outlined">
                                         <InputLabel id="select-filled-label">To</InputLabel>
@@ -303,11 +311,28 @@ export const Account: React.FC = () => {
         }
     };
 
+    const renderAlertMessage = (): JSX.Element | undefined => {
+        if (successMessage.length > 0) {
+            return (
+                <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 12 }}>
+                    <SuccessMessage message={successMessage} />
+                </div>
+            );
+        } else if (errorMessage.length > 0) {
+            return (
+                <div>
+                    <ErrorMessage message={errorMessage} />
+                </div>
+            );
+        }
+    };
+
     return (
         <div className={classes.root}>
             {renderAddDialog()}
             {renderExchangeDialog()}
             {renderDetailsDialog()}
+            {renderAlertMessage()}
 
             <div style={{ position: 'absolute', right: 20 }}>
                 <ThemeProvider theme={theme}>

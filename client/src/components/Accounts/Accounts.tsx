@@ -73,6 +73,7 @@ export const Accounts: React.FC = () => {
             data.accounts.forEach((account: Account) => {
                 balance += account.balance;
             });
+            setAnalyticsAccount(data.accounts[0].currency);
         }
         setTotalBalance(balance);
     }, [loading, data]);
@@ -105,7 +106,7 @@ export const Accounts: React.FC = () => {
         return (
             <Dialog isOpen={openDialog} onClose={() => setOpenDialog(false)}>
                 <List>
-                    {currencies.map((currency: string) => (
+                    {currencies.map((currency: string, index: number) => (
                         <ListItem
                             button
                             key={currency}
@@ -130,7 +131,7 @@ export const Accounts: React.FC = () => {
                                     );
 
                                     if (response && response.data) {
-                                        console.log('Account successfully created!');
+                                        setAnalyticsAccount(currency);
                                         setOpenDialog(false);
                                     }
                                 } catch (error) {
@@ -245,7 +246,11 @@ export const Accounts: React.FC = () => {
                                 <em>None</em>
                             </MenuItem>
                             {currencies.map(currency => {
-                                return <MenuItem value={currency}>{currency}</MenuItem>;
+                                return (
+                                    <MenuItem key={currency} value={currency}>
+                                        {currency}
+                                    </MenuItem>
+                                );
                             })}
                         </Select>
                     </FormControl>
