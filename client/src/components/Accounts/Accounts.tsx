@@ -44,8 +44,6 @@ import { MutationTuple } from '@apollo/react-hooks';
 import { ExecutionResult } from 'graphql';
 import { theme } from '../../utils/theme';
 
-const currencies: string[] = ['EUR', 'USD', 'GBP'];
-
 export const Accounts: React.FC = () => {
     const { data, loading }: AccountsQueryResult = useAccountsQuery();
     const cards: CardsQueryResult = useCardsQuery();
@@ -58,7 +56,8 @@ export const Accounts: React.FC = () => {
         CreateCardMutationVariables
     > = useCreateCardMutation();
 
-    const [analyticsAccount, setAnalyticsAccount] = useState<string>('EUR');
+    const [currencies, setCurrencies] = useState<string[]>(['']);
+    const [analyticsAccount, setAnalyticsAccount] = useState<string>('');
     const [totalBalance, setTotalBalance] = useState<number>(0);
     const [openDialog, setOpenDialog] = useState<boolean>(false);
 
@@ -70,15 +69,23 @@ export const Accounts: React.FC = () => {
     const chartPaper = classes.paper + ' ' + classes.chart;
 
     useEffect(() => {
-        let balance = 0;
+        let currencies: string[] = [];
+        let balance: number = 0;
         if (data) {
             data.accounts.forEach((account: Account) => {
                 balance += account.balance;
+                currencies.push(account.currency);
             });
-            setAnalyticsAccount(data.accounts[0].currency);
         }
         setTotalBalance(balance);
+        setCurrencies(currencies);
     }, [loading, data]);
+
+    useEffect(() => {
+        if (currencies.length > 0) {
+            setAnalyticsAccount(currencies[0]);
+        }
+    }, [currencies]);
 
     if (!data) {
         return <Loading />;
