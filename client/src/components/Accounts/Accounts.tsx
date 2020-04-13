@@ -11,6 +11,7 @@ import {
     InputLabel,
     Select,
     MenuItem,
+    ThemeProvider,
 } from '@material-ui/core';
 import { Chart } from '../Charts/Chart';
 import { Title } from '../Typography/Title';
@@ -41,8 +42,9 @@ import { Dialog } from '../Dialog/Dialog';
 import { NoApolloCard, ApolloCard } from '../cards/ApolloCard';
 import { MutationTuple } from '@apollo/react-hooks';
 import { ExecutionResult } from 'graphql';
+import { theme } from '../../utils/theme';
 
-const currencies: string[] = ['EUR', 'USD', 'GBP', 'BTC'];
+const currencies: string[] = ['EUR', 'USD', 'GBP'];
 
 export const Accounts: React.FC = () => {
     const { data, loading }: AccountsQueryResult = useAccountsQuery();
@@ -231,29 +233,31 @@ export const Accounts: React.FC = () => {
                             <Title title="Analytics" fontSize={24} />
                         </div>
                     </div>
-                    <FormControl>
-                        <InputLabel id="select-filled-label">Account</InputLabel>
-                        <Select
-                            labelId="select-filled-label"
-                            id="select-filled"
-                            value={analyticsAccount}
-                            onChange={(event: ChangeEvent<{ value: unknown }>) =>
-                                setAnalyticsAccount(event.target.value as string)
-                            }
-                            label="Account"
-                        >
-                            <MenuItem value="">
-                                <em>None</em>
-                            </MenuItem>
-                            {currencies.map(currency => {
-                                return (
-                                    <MenuItem key={currency} value={currency}>
-                                        {currency}
-                                    </MenuItem>
-                                );
-                            })}
-                        </Select>
-                    </FormControl>
+                    <ThemeProvider theme={theme}>
+                        <FormControl>
+                            <InputLabel id="select-filled-label">Account</InputLabel>
+                            <Select
+                                labelId="select-filled-label"
+                                id="select-filled"
+                                value={analyticsAccount}
+                                onChange={(event: ChangeEvent<{ value: unknown }>) =>
+                                    setAnalyticsAccount(event.target.value as string)
+                                }
+                                label="Account"
+                            >
+                                <MenuItem value="">
+                                    <em>None</em>
+                                </MenuItem>
+                                {currencies.map(currency => {
+                                    return (
+                                        <MenuItem key={currency} value={currency}>
+                                            {currency}
+                                        </MenuItem>
+                                    );
+                                })}
+                            </Select>
+                        </FormControl>
+                    </ThemeProvider>
                     <Grid container spacing={3}>
                         <Grid item xs={12} md={12} lg={12}>
                             <Paper className={chartPaper}>
