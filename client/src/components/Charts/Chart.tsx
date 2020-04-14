@@ -9,7 +9,11 @@ import {
     Tooltip,
     Legend,
 } from 'recharts';
-import { useTransactionsQuery, TransactionsQueryResult } from '../../generated/graphql';
+import {
+    useTransactionsQuery,
+    TransactionsQueryResult,
+    Transaction,
+} from '../../generated/graphql';
 
 interface ChartProps {
     currency: string;
@@ -30,7 +34,7 @@ export const Chart: React.FC<ChartProps> = ({ currency }) => {
                     <AreaChart
                         data={
                             !!data
-                                ? data.transactions.map(transaction => {
+                                ? data.transactions.map((transaction: Transaction) => {
                                       return {
                                           date: new Date(
                                               Date.parse(transaction.date),

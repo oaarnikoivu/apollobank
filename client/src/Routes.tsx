@@ -4,13 +4,14 @@ import { Helmet } from 'react-helmet';
 import { Home } from './pages/Home';
 import { Register } from './components/Register/Register';
 import { Login } from './components/Login/Login';
-import { Accounts } from './components/Accounts/Accounts';
 import { getAccessToken } from './utils/accessToken';
 import { Account } from './components/Accounts/Account';
 import { Toolbar } from './components/Toolbar/Toolbar';
 import { SideDrawer } from './components/SideDrawer/SideDrawer';
 import { Backdrop } from './components/Backdrop/Backdrop';
 import { ColorScheme } from './utils/theme';
+import { Settings } from './components/Settings/Settings';
+import { Dashboard } from './components/Dashboard/Dashboard';
 
 interface AuthenticatedRouteProps {
     exact?: boolean;
@@ -72,8 +73,9 @@ export const Routes: React.FC = () => {
                             <Route exact path="/" component={Home} />
                             <LoggedInRoute exact path="/register" component={Register} />
                             <LoggedInRoute exact path="/login" component={Login} />
-                            <AuthenticatedRoute exact path="/accounts" component={Accounts} />
+                            <AuthenticatedRoute exact path="/dashboard" component={Dashboard} />
                             <AuthenticatedRoute exact path="/accounts/:id" component={Account} />
+                            <AuthenticatedRoute exact path="/settings" component={Settings} />
                             <Route
                                 path="/"
                                 render={() => (

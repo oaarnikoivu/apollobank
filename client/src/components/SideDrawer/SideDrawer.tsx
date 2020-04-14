@@ -11,7 +11,7 @@ import { useHistory } from 'react-router-dom';
 import { setAccessToken } from '../../utils/accessToken';
 import { MutationTuple } from '@apollo/react-hooks';
 
-const authUserNavigationItems: string[] = ['Accounts', 'Insights', 'Logout'];
+const authUserNavigationItems: string[] = ['Dashboard', 'Settings', 'Logout'];
 const nonAuthUserNavigationItems: string[] = ['Login', 'Sign Up'];
 
 interface SideDrawerProps {
@@ -51,11 +51,11 @@ export const SideDrawer: React.FC<SideDrawerProps> = (props: SideDrawerProps) =>
                     let logOutClicked: boolean = false;
 
                     switch (item) {
-                        case 'Accounts':
-                            routeTo = '/accounts';
+                        case 'Dashboard':
+                            routeTo = '/Dashboard';
                             break;
-                        case 'Insights':
-                            routeTo = '/';
+                        case 'Settings':
+                            routeTo = '/settings';
                             break;
                         case 'Logout':
                             logOutClicked = true;

@@ -34,6 +34,8 @@ import {
     ExchangeMutationVariables,
     useExchangeMutation,
     AccountQueryResult,
+    CardsQueryResult,
+    useCardsQuery,
 } from '../../generated/graphql';
 import { Dialog } from '../Dialog/Dialog';
 import { FormTextField } from '../Forms/FormTextField';
@@ -55,6 +57,7 @@ export const Account: React.FC = () => {
     const [openAddDialog, setOpenAddDialog] = useState<boolean>(false);
     const [openExchangeDialog, setOpenExchangeDialog] = useState<boolean>(false);
     const [openDetailsDialog, setOpenDetailsDialog] = useState<boolean>(false);
+    const [hasCard, setHasCard] = useState<boolean>(false);
     const [successMessage, setSuccessMessage] = useState<string>('');
     const [errorMessage, setErrorMessage] = useState<string>('');
 
@@ -77,6 +80,7 @@ export const Account: React.FC = () => {
     const account: AccountQueryResult = useAccountQuery({
         variables: { currency: location.state.currency },
     });
+    const cards: CardsQueryResult = useCardsQuery();
     const { data }: TransactionsQueryResult = useTransactionsQuery({
         variables: { currency: location.state.currency },
     });
@@ -87,7 +91,7 @@ export const Account: React.FC = () => {
     let currencyFullText: string = '';
     let svg: any | string;
 
-    // On component mounts fetch the account balance
+    // When the component mounts, fetch the account balance
     useEffect(() => {
         if (account.data) {
             setAccountBalance(account.data.account.balance);
@@ -95,6 +99,13 @@ export const Account: React.FC = () => {
             setAccountBalance(location.state.balance);
         }
     }, [account, location]);
+
+    // When the component mounts, check if a card exists for the account
+    useEffect(() => {
+        if (cards.data) {
+            setHasCard(true);
+        }
+    }, [cards]);
 
     switch (location.state.currency) {
         case 'EUR':
@@ -344,7 +355,13 @@ export const Account: React.FC = () => {
                             letterSpacing: 1,
                             textTransform: 'none',
                         }}
-                        onClick={() => simulate()}
+                        onClick={() => {
+                            if (hasCard) {
+                                simulate();
+                            } else {
+                                setErrorMessage('You have no card!');
+                            }
+                        }}
                     >
                         Simulate
                     </Button>
@@ -414,7 +431,11 @@ export const Account: React.FC = () => {
                 </ThemeProvider>
             </div>
             <hr style={{ width: 480, marginTop: 24, color: '#fcfcfc' }} />
-            <Transactions account={data} currencyIcon={currencyIcon} />
+            <Transactions
+                account={data}
+                cardNumber={cards.data && cards.data.cards[0].cardNumber}
+                currencyIcon={currencyIcon}
+            />
         </div>
     );
 };

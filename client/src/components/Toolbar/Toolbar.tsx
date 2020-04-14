@@ -16,7 +16,7 @@ interface ToolbarProps {
     drawerClickHandler(): void;
 }
 
-const navigationItems: string[] = ['Accounts', 'Insights'];
+const navigationItems: string[] = ['Dashboard', 'Settings'];
 
 export const Toolbar: React.FC<ToolbarProps> = (props: ToolbarProps) => {
     const { data, loading }: MeQueryResult = useMeQuery();
@@ -44,11 +44,11 @@ export const Toolbar: React.FC<ToolbarProps> = (props: ToolbarProps) => {
                     let routeTo: string = '/';
 
                     switch (item) {
-                        case 'Accounts':
-                            routeTo = '/accounts';
+                        case 'Dashboard':
+                            routeTo = '/dashboard';
                             break;
-                        case 'Insights':
-                            routeTo = '/';
+                        case 'Settings':
+                            routeTo = '/settings';
                             break;
                     }
                     return (

@@ -35,7 +35,6 @@ import {
 } from '../../generated/graphql';
 import { Loading } from '../Loading/Loading';
 import { useHistory } from 'react-router-dom';
-import { useAccountsStyles } from './styles/Accounts.style';
 import { AccountsCard, NoAccountsCard } from '../cards/AccountsCard';
 import { Currency } from '../../utils/currencies';
 import { Dialog } from '../Dialog/Dialog';
@@ -43,10 +42,11 @@ import { NoApolloCard, ApolloCard } from '../cards/ApolloCard';
 import { MutationTuple } from '@apollo/react-hooks';
 import { ExecutionResult } from 'graphql';
 import { theme } from '../../utils/theme';
+import { useDashboardStyles } from './styles/Dashboard.style';
 
 const GLOBAL_CURRENCIES: string[] = ['EUR', 'USD', 'GBP'];
 
-export const Accounts: React.FC = () => {
+export const Dashboard: React.FC = () => {
     const { data, loading }: AccountsQueryResult = useAccountsQuery();
     const cards: CardsQueryResult = useCardsQuery();
     const [createAccount]: MutationTuple<
@@ -65,7 +65,7 @@ export const Accounts: React.FC = () => {
 
     const history = useHistory();
 
-    const classes = useAccountsStyles();
+    const classes = useDashboardStyles();
 
     const accountCardHeightPaper = classes.paper + ' ' + classes.accountCardHeight;
     const chartPaper = classes.paper + ' ' + classes.chart;
