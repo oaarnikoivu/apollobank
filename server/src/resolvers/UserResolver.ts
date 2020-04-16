@@ -8,7 +8,7 @@ import {
 	ObjectType,
 	Ctx,
 	UseMiddleware,
-	Int
+	Int,
 } from "type-graphql";
 import { hash, compare } from "bcryptjs";
 import { User } from "../entity/User";
@@ -72,9 +72,7 @@ export class UserResolver {
 
 	@Mutation(() => Boolean)
 	async revokeRefreshTokensForUser(@Arg("userId", () => Int) userId: number) {
-		await getConnection()
-			.getRepository(User)
-			.increment({ id: userId }, "tokenVersion", 1);
+		await getConnection().getRepository(User).increment({ id: userId }, "tokenVersion", 1);
 
 		return true;
 	}
@@ -103,7 +101,7 @@ export class UserResolver {
 
 		return {
 			accessToken: createAccessToken(user),
-			user
+			user,
 		};
 	}
 
@@ -131,13 +129,54 @@ export class UserResolver {
 				streetAddress,
 				postCode,
 				city,
-				country
+				country,
 			});
 		} catch (err) {
 			console.log(err);
 			return false;
 		}
 
+		return true;
+	}
+
+	@Mutation(() => Boolean)
+	@UseMiddleware(isAuth)
+	async updatePassword(
+		@Arg("oldPassword") oldPassword: string,
+		@Arg("newPassword") newPassword: string,
+		@Ctx() { payload }: MyContext
+	) {
+		if (!payload) {
+			return false;
+		}
+
+		const owner: User | undefined = await User.findOne({ where: { id: payload.userId } });
+
+		if (owner) {
+			const valid = await compare(oldPassword, owner.password);
+
+			if (valid) {
+				const updatedPassword: string = await hash(newPassword, 12);
+
+				try {
+					await User.update(
+						{
+							id: owner.id,
+						},
+						{
+							password: updatedPassword,
+						}
+					);
+				} catch (err) {
+					console.log(err);
+					return false;
+				}
+			} else {
+				throw new Error(
+					"Could not change your password, are you sure you entered the correct password?"
+				);
+			}
+		}
 		return true;
 	}
 }

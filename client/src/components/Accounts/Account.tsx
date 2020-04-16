@@ -155,7 +155,7 @@ export const Account: React.FC = () => {
         }
     };
 
-    const renderAddDialog = () => {
+    const renderAddDialog = (): JSX.Element => {
         return (
             <Dialog isOpen={openAddDialog} onClose={() => setOpenAddDialog(false)}>
                 <Title title="Add money" fontSize={18} />
@@ -177,7 +177,6 @@ export const Account: React.FC = () => {
                                 if (response && response.data) {
                                     setSubmitting(false);
                                     setSuccessMessage('Successfully topped up your account');
-                                    setOpenAddDialog(false);
                                     resetForm();
                                 }
                             } catch (error) {
@@ -241,14 +240,12 @@ export const Account: React.FC = () => {
                                     if (response.data.exchange.success) {
                                         setSubmitting(false);
                                         setSuccessMessage('The exchange was successfully executed');
-                                        setOpenExchangeDialog(false);
                                         resetForm();
                                     }
                                 }
                             } catch (error) {
                                 const errorMessage = error.message.split('')[1];
                                 setErrorMessage(errorMessage);
-
                                 setSubmitting(false);
                             }
                         }}
@@ -281,7 +278,7 @@ export const Account: React.FC = () => {
                                                 })
                                                 .map(currency => {
                                                     return (
-                                                        <MenuItem value={currency}>
+                                                        <MenuItem key={currency} value={currency}>
                                                             {currency}
                                                         </MenuItem>
                                                     );

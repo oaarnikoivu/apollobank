@@ -24,25 +24,27 @@ export class User extends BaseEntity {
 	@Column()
 	lastName: string;
 
+	@Field()
 	@Column()
 	dateOfBirth: string;
 
+	@Field()
 	@Column()
 	streetAddress: string;
 
+	@Field()
 	@Column()
 	postCode: string;
 
+	@Field()
 	@Column()
 	city: string;
 
+	@Field()
 	@Column()
 	country: string;
 
-	@OneToMany(
-		() => Account,
-		account => account.owner
-	)
+	@OneToMany(() => Account, (account) => account.owner)
 	accounts: Account[];
 
 	@Column("int", { default: 0 })
