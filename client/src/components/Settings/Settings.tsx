@@ -8,6 +8,12 @@ import {
     useUpdatePasswordMutation,
     UpdatePasswordMutation,
     UpdatePasswordMutationVariables,
+    DeleteAccountMutation,
+    DeleteAccountMutationVariables,
+    useDeleteAccountMutation,
+    LogoutMutationVariables,
+    useLogoutMutation,
+    LogoutMutation,
 } from '../../generated/graphql';
 import {
     List,
@@ -19,7 +25,6 @@ import {
 } from '@material-ui/core';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
-import DescriptionIcon from '@material-ui/icons/Description';
 import VpnKeyIcon from '@material-ui/icons/VpnKey';
 import InfoIcon from '@material-ui/icons/Info';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
@@ -35,24 +40,40 @@ import { FormTextField } from '../Forms/FormTextField';
 import { theme } from '../../utils/theme';
 import { SuccessMessage, ErrorMessage } from '../Alerts/AlertMessage';
 import { changePasswordValidationSchema } from '../../schemas /changePasswordValidationSchema';
+import { ExecutionResultDataDefault, ExecutionResult } from 'graphql/execution/execute';
+import { setAccessToken } from '../../utils/accessToken';
+import { Loading } from '../Loading/Loading';
 
 export const Settings: React.FC = () => {
+    // GraphQL Queries
     const { data }: MeQueryResult = useMeQuery();
     const accounts: AccountsQueryResult = useAccountsQuery();
 
+    // GraphQL Mutations
     const [updatePassword]: MutationTuple<
         UpdatePasswordMutation,
         UpdatePasswordMutationVariables
     > = useUpdatePasswordMutation();
+    const [deleteAccount]: MutationTuple<
+        DeleteAccountMutation,
+        DeleteAccountMutationVariables
+    > = useDeleteAccountMutation();
+    const [logout, { client }]: MutationTuple<
+        LogoutMutation,
+        LogoutMutationVariables
+    > = useLogoutMutation();
 
-    const history = useHistory();
-
+    // State
+    const [showLoadingIcon, setShowLoadingIcon] = useState<boolean>(false);
     const [openPersonalDetailsDialog, setOpenPersonalDetailsDialog] = useState<boolean>(false);
     const [openAccountDetailsDialog, setOpenAccountDetailsDialog] = useState<boolean>(false);
     const [openChangePasswordDialog, setOpenChangePasswordDialog] = useState<boolean>(false);
+    const [openAboutDialog, setOpenAboutDialog] = useState<boolean>(false);
     const [successMessage, setSuccessMessage] = useState<string>('');
     const [errorMessage, setErrorMessage] = useState<string>('');
     const [userBirthDate, setUserBirthDate] = useState<string>('');
+
+    const history = useHistory();
 
     // When the component mounts, format the logged in users date of birth
     useEffect(() => {
@@ -225,6 +246,16 @@ export const Settings: React.FC = () => {
         );
     };
 
+    const renderAboutDialog = (): JSX.Element => {
+        return (
+            <Dialog isOpen={openAboutDialog} onClose={() => setOpenAboutDialog(false)}>
+                <Title title="About this website" fontSize={18}>
+                    <div style={{ marginTop: 12 }}>content</div>
+                </Title>
+            </Dialog>
+        );
+    };
+
     const renderAlertMessage = (): JSX.Element | undefined => {
         if (successMessage.length > 0) {
             return (
@@ -241,80 +272,100 @@ export const Settings: React.FC = () => {
         }
     };
 
-    return (
-        <>
-            <div>
-                {renderPersonalDetailsDialog()}
-                {renderAccountDetailsDialog()}
-                {renderChangePasswordDialog()}
-                {renderAlertMessage()}
-                <div style={{ textAlign: 'center' }}>
-                    <AccountCircleIcon fontSize={'large'} />
-                    <Title
-                        title={!!data && data.me ? data.me.firstName + ' ' + data.me.lastName : ''}
-                        fontSize={18}
-                    />
+    if (!showLoadingIcon) {
+        return (
+            <>
+                <div>
+                    {renderPersonalDetailsDialog()}
+                    {renderAccountDetailsDialog()}
+                    {renderChangePasswordDialog()}
+                    {renderAboutDialog()}
+                    {renderAlertMessage()}
+                    <div style={{ textAlign: 'center' }}>
+                        <AccountCircleIcon fontSize={'large'} />
+                        <Title
+                            title={
+                                !!data && data.me ? data.me.firstName + ' ' + data.me.lastName : ''
+                            }
+                            fontSize={18}
+                        />
+                    </div>
+                    <hr style={{ width: '424px' }} />
+                    <div style={{ width: '424px', margin: '0 auto' }}>
+                        <Title title="Profile" fontSize={14} />
+                        <List component="nav" aria-label="profile">
+                            <ListItem button onClick={() => setOpenPersonalDetailsDialog(true)}>
+                                <ListItemIcon>
+                                    <AccountCircleIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="Personal details" />
+                            </ListItem>
+                            <ListItem button onClick={() => setOpenAccountDetailsDialog(true)}>
+                                <ListItemIcon>
+                                    <AccountBalanceIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="Account details" />
+                            </ListItem>
+                        </List>
+                    </div>
+                    <hr style={{ width: '424px' }} />
+                    <div style={{ width: '424px', margin: '0 auto' }}>
+                        <Title title="Security" fontSize={14} />
+                        <List component="nav" aria-label="profile">
+                            <ListItem button onClick={() => setOpenChangePasswordDialog(true)}>
+                                <ListItemIcon>
+                                    <VpnKeyIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="Change password" />
+                            </ListItem>
+                        </List>
+                    </div>
+                    <hr style={{ width: '424px' }} />
+                    <div style={{ width: '424px', margin: '0 auto' }}>
+                        <Title title="About us" fontSize={14} />
+                        <List component="nav" aria-label="profile">
+                            <ListItem button onClick={() => setOpenAboutDialog(true)}>
+                                <ListItemIcon>
+                                    <InfoIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="About this website" />
+                            </ListItem>
+                        </List>
+                    </div>
+                    <hr style={{ width: '424px' }} />
+                    <div style={{ width: '424px', margin: '0 auto' }}>
+                        <List component="nav" aria-label="profile">
+                            <ListItem
+                                button
+                                onClick={async () => {
+                                    try {
+                                        const response: ExecutionResult<ExecutionResultDataDefault> = await deleteAccount();
+
+                                        if (response && response.data) {
+                                            setShowLoadingIcon(true);
+                                            setTimeout(async () => {
+                                                await logout().then(() => history.push('/'));
+                                                setAccessToken('');
+                                                client!.resetStore();
+                                            }, 3000);
+                                        }
+                                    } catch (error) {
+                                        const errorMessage: string = error.message.split(':')[1];
+                                        console.log(errorMessage);
+                                    }
+                                }}
+                            >
+                                <ListItemIcon>
+                                    <DeleteForeverIcon />
+                                </ListItemIcon>
+                                <ListItemText primary="Destroy account" />
+                            </ListItem>
+                        </List>
+                    </div>
                 </div>
-                <hr style={{ width: '424px' }} />
-                <div style={{ width: '424px', margin: '0 auto' }}>
-                    <Title title="Profile" fontSize={14} />
-                    <List component="nav" aria-label="profile">
-                        <ListItem button onClick={() => setOpenPersonalDetailsDialog(true)}>
-                            <ListItemIcon>
-                                <AccountCircleIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="Personal details" />
-                        </ListItem>
-                        <ListItem button onClick={() => setOpenAccountDetailsDialog(true)}>
-                            <ListItemIcon>
-                                <AccountBalanceIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="Account details" />
-                        </ListItem>
-                        <ListItem button>
-                            <ListItemIcon>
-                                <DescriptionIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="Documents" />
-                        </ListItem>
-                    </List>
-                </div>
-                <hr style={{ width: '424px' }} />
-                <div style={{ width: '424px', margin: '0 auto' }}>
-                    <Title title="Security" fontSize={14} />
-                    <List component="nav" aria-label="profile">
-                        <ListItem button onClick={() => setOpenChangePasswordDialog(true)}>
-                            <ListItemIcon>
-                                <VpnKeyIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="Change password" />
-                        </ListItem>
-                    </List>
-                </div>
-                <hr style={{ width: '424px' }} />
-                <div style={{ width: '424px', margin: '0 auto' }}>
-                    <Title title="About us" fontSize={14} />
-                    <List component="nav" aria-label="profile">
-                        <ListItem button>
-                            <ListItemIcon>
-                                <InfoIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="About this website" />
-                        </ListItem>
-                    </List>
-                </div>
-                <hr style={{ width: '424px' }} />
-                <div style={{ width: '424px', margin: '0 auto' }}>
-                    <List component="nav" aria-label="profile">
-                        <ListItem button>
-                            <ListItemIcon>
-                                <DeleteForeverIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="Destroy account" />
-                        </ListItem>
-                    </List>
-                </div>
-            </div>
-        </>
-    );
+            </>
+        );
+    } else {
+        return <Loading />;
+    }
 };

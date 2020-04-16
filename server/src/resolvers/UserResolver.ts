@@ -1,3 +1,4 @@
+import { Transaction } from "./../entity/Transaction";
 import { createRefreshToken, createAccessToken } from "../utils/auth";
 import {
 	Resolver,
@@ -17,6 +18,8 @@ import { isAuth } from "../middleware";
 import { sendRefreshToken } from "../utils/sendRefreshToken";
 import { getConnection } from "typeorm";
 import { verify } from "jsonwebtoken";
+import { Account } from "../entity/Account";
+import { Card } from "../entity/Card";
 
 @ObjectType()
 class LoginResponse {
@@ -175,6 +178,45 @@ export class UserResolver {
 				throw new Error(
 					"Could not change your password, are you sure you entered the correct password?"
 				);
+			}
+		}
+		return true;
+	}
+
+	@Mutation(() => Boolean)
+	@UseMiddleware(isAuth)
+	async deleteAccount(@Ctx() { payload }: MyContext) {
+		if (!payload) {
+			return false;
+		}
+
+		const owner: User | undefined = await User.findOne({ where: { id: payload.userId } });
+
+		if (owner) {
+			try {
+				const accounts: Account[] | undefined = await Account.find({ where: { owner: owner } });
+
+				if (accounts.length > 0) {
+					accounts.forEach(async (account) => {
+						await Card.delete({
+							account: account,
+						}).then(async () => {
+							await Transaction.delete({
+								account: account,
+							});
+						});
+					});
+					await Account.delete({
+						owner: owner,
+					}).then(async () => {
+						await User.delete({
+							id: owner.id,
+						});
+					});
+				}
+			} catch (error) {
+				console.log(error);
+				return false;
 			}
 		}
 		return true;

@@ -36,6 +36,8 @@ import {
     AccountQueryResult,
     CardsQueryResult,
     useCardsQuery,
+    AccountsQueryResult,
+    useAccountsQuery,
 } from '../../generated/graphql';
 import { Dialog } from '../Dialog/Dialog';
 import { FormTextField } from '../Forms/FormTextField';
@@ -47,8 +49,6 @@ import { ExecutionResultDataDefault } from 'graphql/execution/execute';
 import { Transactions } from '../Transactions/Transactions';
 import { ErrorMessage, SuccessMessage } from '../Alerts/AlertMessage';
 import { addMoneyValidationSchema } from '../../schemas /addMoneyValidationSchema';
-
-const currencies: string[] = ['EUR', 'USD', 'GBP'];
 
 export const Account: React.FC = () => {
     const location = useLocation<any>();
@@ -80,6 +80,7 @@ export const Account: React.FC = () => {
     const account: AccountQueryResult = useAccountQuery({
         variables: { currency: location.state.currency },
     });
+    const accounts: AccountsQueryResult = useAccountsQuery();
     const cards: CardsQueryResult = useCardsQuery();
     const { data }: TransactionsQueryResult = useTransactionsQuery({
         variables: { currency: location.state.currency },
@@ -272,17 +273,24 @@ export const Account: React.FC = () => {
                                             <MenuItem value="">
                                                 <em>None</em>
                                             </MenuItem>
-                                            {currencies
-                                                .filter(currency => {
-                                                    return currency !== location.state.currency;
-                                                })
-                                                .map(currency => {
-                                                    return (
-                                                        <MenuItem key={currency} value={currency}>
-                                                            {currency}
-                                                        </MenuItem>
-                                                    );
-                                                })}
+                                            {accounts.data &&
+                                                accounts.data.accounts
+                                                    .filter(account => {
+                                                        return (
+                                                            account.currency !==
+                                                            location.state.currency
+                                                        );
+                                                    })
+                                                    .map(account => {
+                                                        return (
+                                                            <MenuItem
+                                                                key={account.id}
+                                                                value={account.currency}
+                                                            >
+                                                                {account.currency}
+                                                            </MenuItem>
+                                                        );
+                                                    })}
                                         </Select>
                                     </FormControl>
                                     <div>
