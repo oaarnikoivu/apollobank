@@ -19,16 +19,24 @@ interface SideDrawerProps {
 }
 
 export const SideDrawer: React.FC<SideDrawerProps> = (props: SideDrawerProps) => {
-    const { data, loading }: MeQueryResult = useMeQuery();
+    // GraphQL Mutations
     const [logout, { client }]: MutationTuple<
         LogoutMutation,
         LogoutMutationVariables
     > = useLogoutMutation();
+
+    // GraphQL Queries
+    const { data, loading }: MeQueryResult = useMeQuery();
+
+    // State
     const [showAuthUserNavigationItems, setShowAuthUserNavigationItems] = useState<boolean>(false);
 
     const history = useHistory();
     const classes = useSideDrawerStyles();
 
+    // When the component mounts, if the user exists render the authenticated buttons, otherwise the non-authenticated buttons
+    // Authenticated user buttons -> Dashboard, Settings, Logout
+    // Non-authenticated user buttons -> Login, Sign Up
     useEffect(() => {
         if (!loading && data && data.me) {
             setShowAuthUserNavigationItems(true);

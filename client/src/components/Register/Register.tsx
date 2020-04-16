@@ -15,11 +15,15 @@ import { useRegisterStyles } from './Register.style';
 import { MutationTuple } from '@apollo/react-hooks';
 
 export const Register: React.FC<RouteComponentProps> = ({ history }) => {
+    // GraphQL Mutations
     const [register]: MutationTuple<
         RegisterMutation,
         RegisterMutationVariables
     > = useRegisterMutation();
+
+    // State
     const [errorMessage, setErrorMessage] = useState<string>('');
+
     const classes = useRegisterStyles();
 
     return (

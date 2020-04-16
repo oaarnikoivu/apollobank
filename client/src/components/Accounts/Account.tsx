@@ -51,7 +51,7 @@ import { ErrorMessage, SuccessMessage } from '../Alerts/AlertMessage';
 import { addMoneyValidationSchema } from '../../schemas /addMoneyValidationSchema';
 
 export const Account: React.FC = () => {
-    const location = useLocation<any>();
+    // State
     const [toAccountCurrency, setToAccountCurrency] = useState<string>('');
     const [accountBalance, setAccountBalance] = useState<number>(0);
     const [openAddDialog, setOpenAddDialog] = useState<boolean>(false);
@@ -60,6 +60,8 @@ export const Account: React.FC = () => {
     const [hasCard, setHasCard] = useState<boolean>(false);
     const [successMessage, setSuccessMessage] = useState<string>('');
     const [errorMessage, setErrorMessage] = useState<string>('');
+
+    const location = useLocation<any>();
 
     // GraphQL Mutations
     const [createTransaction]: MutationTuple<

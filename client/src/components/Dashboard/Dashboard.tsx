@@ -47,8 +47,7 @@ import { useDashboardStyles } from './styles/Dashboard.style';
 const GLOBAL_CURRENCIES: string[] = ['EUR', 'USD', 'GBP'];
 
 export const Dashboard: React.FC = () => {
-    const { data, loading }: AccountsQueryResult = useAccountsQuery();
-    const cards: CardsQueryResult = useCardsQuery();
+    // GraphQL Mutations
     const [createAccount]: MutationTuple<
         CreateAccountMutation,
         CreateAccountMutationVariables
@@ -58,6 +57,11 @@ export const Dashboard: React.FC = () => {
         CreateCardMutationVariables
     > = useCreateCardMutation();
 
+    // GraphQL Queries
+    const { data, loading }: AccountsQueryResult = useAccountsQuery();
+    const cards: CardsQueryResult = useCardsQuery();
+
+    // State
     const [currencies, setCurrencies] = useState<string[]>(['']);
     const [analyticsAccount, setAnalyticsAccount] = useState<string>('');
     const [totalBalance, setTotalBalance] = useState<number>(0);
@@ -70,6 +74,8 @@ export const Dashboard: React.FC = () => {
     const accountCardHeightPaper = classes.paper + ' ' + classes.accountCardHeight;
     const chartPaper = classes.paper + ' ' + classes.chart;
 
+    // When the component mounts, update the total balance for the current user
+    // and store the currency accounts in the state array
     useEffect(() => {
         let currencies: string[] = [];
         let balance: number = 0;
@@ -83,6 +89,7 @@ export const Dashboard: React.FC = () => {
         setCurrencies(currencies);
     }, [loading, data]);
 
+    // When the component mounts, if an exists, set the analytics to display data for the first account
     useEffect(() => {
         if (currencies.length > 0) {
             setAnalyticsAccount(currencies[0]);
@@ -117,7 +124,7 @@ export const Dashboard: React.FC = () => {
         return (
             <Dialog isOpen={openDialog} onClose={() => setOpenDialog(false)}>
                 <List>
-                    {GLOBAL_CURRENCIES.map((currency: string, index: number) => (
+                    {GLOBAL_CURRENCIES.map((currency: string) => (
                         <ListItem
                             button
                             key={currency}
@@ -257,7 +264,7 @@ export const Dashboard: React.FC = () => {
                                 <MenuItem value="">
                                     <em>None</em>
                                 </MenuItem>
-                                {currencies.map(currency => {
+                                {currencies.map((currency: string) => {
                                     return (
                                         <MenuItem key={currency} value={currency}>
                                             {currency}
@@ -299,7 +306,7 @@ export const Dashboard: React.FC = () => {
                     </div>
                     <Grid container spacing={3}>
                         {data.accounts.length > 0 &&
-                            data.accounts.map(account => {
+                            data.accounts.map((account: Account) => {
                                 let svg: any | string;
                                 let currencyIcon: string = '';
                                 let fullCurrencyText: string = '';

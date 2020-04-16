@@ -19,8 +19,12 @@ import { MutationTuple } from '@apollo/react-hooks';
 import { ExecutionResult } from 'graphql';
 
 export const Login: React.FC<RouteComponentProps> = ({ history }) => {
+    // GraphQL Mutations
     const [login]: MutationTuple<LoginMutation, LoginMutationVariables> = useLoginMutation();
+
+    // State
     const [errorMessage, setErrorMessage] = useState<string>('');
+
     const classes = useLoginStyles();
 
     return (

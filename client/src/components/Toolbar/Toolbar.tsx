@@ -19,16 +19,25 @@ interface ToolbarProps {
 const navigationItems: string[] = ['Dashboard', 'Settings'];
 
 export const Toolbar: React.FC<ToolbarProps> = (props: ToolbarProps) => {
-    const { data, loading }: MeQueryResult = useMeQuery();
+    // GraphQL Mutations
     const [logout, { client }]: MutationTuple<
         LogoutMutation,
         LogoutMutationVariables
     > = useLogoutMutation();
+
+    // GraphQL Queries
+    const { data, loading }: MeQueryResult = useMeQuery();
+
+    // State
     const [showAuthUserButtons, setShowAuthUserButtons] = useState<boolean>(false);
 
     const history = useHistory();
+
     const classes = useToolbarStyles();
 
+    // When the component mounts, if the user exists render the authenticated buttons, otherwise the non-authenticated buttons
+    // Authenticated user buttons -> Dashboard, Settings, Logout
+    // Non-authenticated user buttons -> Login, Sign Up
     useEffect(() => {
         if (!loading && data && data.me) {
             setShowAuthUserButtons(true);
