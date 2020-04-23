@@ -1,4 +1,3 @@
-import { Transaction } from "./../entity/Transaction";
 import { createRefreshToken, createAccessToken } from "../utils/auth";
 import {
 	Resolver,
@@ -18,8 +17,6 @@ import { isAuth } from "../middleware";
 import { sendRefreshToken } from "../utils/sendRefreshToken";
 import { getConnection } from "typeorm";
 import { verify } from "jsonwebtoken";
-import { Account } from "../entity/Account";
-import { Card } from "../entity/Card";
 
 @ObjectType()
 class LoginResponse {
@@ -194,26 +191,9 @@ export class UserResolver {
 
 		if (owner) {
 			try {
-				const accounts: Account[] | undefined = await Account.find({ where: { owner: owner } });
-
-				if (accounts.length > 0) {
-					accounts.forEach(async (account) => {
-						await Card.delete({
-							account: account,
-						}).then(async () => {
-							await Transaction.delete({
-								account: account,
-							});
-						});
-					});
-					await Account.delete({
-						owner: owner,
-					}).then(async () => {
-						await User.delete({
-							id: owner.id,
-						});
-					});
-				}
+				await User.delete({
+					id: owner.id,
+				});
 			} catch (error) {
 				console.log(error);
 				return false;

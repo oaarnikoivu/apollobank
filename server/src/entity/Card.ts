@@ -10,16 +10,10 @@ export class Card extends BaseEntity {
 	@PrimaryGeneratedColumn()
 	id: number;
 
-	@ManyToOne(
-		() => Account,
-		account => account.cards
-	)
+	@ManyToOne(() => Account, (account) => account.cards, { onDelete: "CASCADE" })
 	account: Account;
 
-	@OneToMany(
-		() => Transaction,
-		transaction => transaction.card
-	)
+	@OneToMany(() => Transaction, (transaction) => transaction.card, { onDelete: "CASCADE" })
 	transactions: Transaction[];
 
 	@Field()

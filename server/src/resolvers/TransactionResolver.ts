@@ -19,7 +19,7 @@ export class TransactionResolver {
 
 		if (owner) {
 			const account: Account | undefined = await Account.findOne({
-				where: { owner: owner, currency: currency }
+				where: { owner: owner, currency: currency },
 			});
 
 			if (account) {
@@ -41,7 +41,7 @@ export class TransactionResolver {
 
 		if (owner) {
 			const account: Account | undefined = await Account.findOne({
-				where: { owner: owner, currency: currency }
+				where: { owner: owner, currency: currency },
 			});
 
 			if (account) {
@@ -65,7 +65,7 @@ export class TransactionResolver {
 						balance -= amount;
 						break;
 					case "invoice":
-						balance += amount;
+						balance -= amount;
 						break;
 				}
 
@@ -74,11 +74,11 @@ export class TransactionResolver {
 						account,
 						transactionType: transactionType,
 						date: date,
-						amount: amount.toString()
+						amount: amount.toString(),
 					});
 					await Account.update(
 						{
-							id: account.id
+							id: account.id,
 						},
 						{ balance: balance }
 					);

@@ -44,7 +44,7 @@ export class User extends BaseEntity {
 	@Column()
 	country: string;
 
-	@OneToMany(() => Account, (account) => account.owner)
+	@OneToMany(() => Account, (account) => account.owner, { onDelete: "CASCADE" })
 	accounts: Account[];
 
 	@Column("int", { default: 0 })

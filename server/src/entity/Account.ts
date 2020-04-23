@@ -11,10 +11,7 @@ export class Account extends BaseEntity {
 	@PrimaryGeneratedColumn()
 	id: number;
 
-	@ManyToOne(
-		() => User,
-		owner => owner.accounts
-	)
+	@ManyToOne(() => User, (owner) => owner.accounts, { onDelete: "CASCADE" })
 	owner: User;
 
 	@Field()
@@ -37,15 +34,9 @@ export class Account extends BaseEntity {
 	@Column({ default: 1000 })
 	balance: number;
 
-	@OneToMany(
-		() => Transaction,
-		transaction => transaction.account
-	)
+	@OneToMany(() => Transaction, (transaction) => transaction.account, { onDelete: "CASCADE" })
 	transactions: Transaction[];
 
-	@OneToMany(
-		() => Card,
-		card => card.account
-	)
+	@OneToMany(() => Card, (card) => card.account, { onDelete: "CASCADE" })
 	cards: Card[];
 }

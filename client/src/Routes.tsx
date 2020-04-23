@@ -2,6 +2,7 @@ import React, { ComponentType, useState } from 'react';
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import { Home } from './pages/Home';
+import { Bye } from './pages/Bye';
 import { Register } from './components/Register/Register';
 import { Login } from './components/Login/Login';
 import { getAccessToken } from './utils/accessToken';
@@ -76,6 +77,7 @@ export const Routes: React.FC = () => {
                             <AuthenticatedRoute exact path="/dashboard" component={Dashboard} />
                             <AuthenticatedRoute exact path="/accounts/:id" component={Account} />
                             <AuthenticatedRoute exact path="/settings" component={Settings} />
+                            <Route exact path="/bye" component={Bye} />
                             <Route
                                 path="/"
                                 render={() => (

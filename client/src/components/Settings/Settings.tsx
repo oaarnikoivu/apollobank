@@ -249,9 +249,74 @@ export const Settings: React.FC = () => {
     const renderAboutDialog = (): JSX.Element => {
         return (
             <Dialog isOpen={openAboutDialog} onClose={() => setOpenAboutDialog(false)}>
-                <Title title="About this website" fontSize={18}>
-                    <div style={{ marginTop: 12 }}>content</div>
-                </Title>
+                <Title title="About this website" fontSize={18} />
+                <div style={{ marginTop: 12 }}>Libraries used:</div>
+                <div style={{ marginTop: 12 }}>
+                    Server side technologies
+                    <ul>
+                        <li>
+                            <a href="https://www.apollographql.com/docs/apollo-server/">
+                                Apollo Server
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://www.npmjs.com/package/bcryptjs">bcryptjs</a> for
+                            password hashing
+                        </li>
+                        <li>
+                            <a href="https://www.npmjs.com/package/cors">cors</a>for cross origin
+                            resource sharing.
+                        </li>
+                        <li>
+                            <a href="https://expressjs.com/">Express</a>
+                        </li>
+                        <li>
+                            <a href="https://graphql.org/">GraphQL</a>
+                        </li>
+                        <li>
+                            <a href="https://www.npmjs.com/package/jsonwebtoken">jsonwebtoken</a>
+                        </li>
+                        <li>
+                            <a href="https://typegraphql.com/">TypeGraphQL</a> for GraphQLI API
+                            TypeScript integration
+                        </li>
+                        <li>
+                            <a href="https://typeorm.io/#/">TypeORM</a> - Typescript ORM to use with
+                            databases (PostgreSQL in my case)
+                        </li>
+                        <li>
+                            <a href="https://www.typescriptlang.org/">TypeScript</a>
+                        </li>
+                    </ul>
+                    Client side technologies
+                    <ul>
+                        <li>
+                            <a href="https://www.apollographql.com/docs/react/api/react-hooks/">
+                                Apollo React Hooks
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://fontawesome.com/how-to-use/on-the-web/using-with/react">
+                                FontAwesome Icons
+                            </a>
+                        </li>
+                        <li>
+                            <a href="https://material-ui.com/">Material UI</a>
+                        </li>
+                        <li>
+                            <a href="https://recharts.org/en-US/">Recharts</a> - For data
+                            visualization
+                        </li>
+                        <li>
+                            <a href="https://jaredpalmer.com/formik/">Formik</a> - For building
+                            Forms
+                        </li>
+                        <li>
+                            <a href="https://github.com/jquense/yup">Yup</a> - For client side
+                            validation
+                        </li>
+                    </ul>
+                </div>
             </Dialog>
         );
     };
@@ -344,7 +409,7 @@ export const Settings: React.FC = () => {
                                         if (response && response.data) {
                                             setShowLoadingIcon(true);
                                             setTimeout(async () => {
-                                                await logout().then(() => history.push('/'));
+                                                await logout().then(() => history.push('/bye'));
                                                 setAccessToken('');
                                                 client!.resetStore();
                                             }, 3000);
