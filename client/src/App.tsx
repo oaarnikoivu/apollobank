@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Routes } from './Routes';
 import { setAccessToken } from './utils/accessToken';
 import { Loading } from './components/Loading/Loading';
+import Helmet from 'react-helmet';
+import { ColorScheme } from './utils/theme';
 
 export const App: React.FC = () => {
     const [loading, setLoading] = useState<boolean>(true);
@@ -18,8 +20,19 @@ export const App: React.FC = () => {
     }, []);
 
     if (loading) {
-        return <Loading />;
+        return (
+            <div style={{ position: 'fixed', top: '50%', left: '50%' }}>
+                <Loading />
+            </div>
+        );
     }
 
-    return <Routes />;
+    return (
+        <>
+            <Helmet>
+                <style>{`body { background-color: ${ColorScheme.WHITE}; }`}</style>
+            </Helmet>
+            <Routes />
+        </>
+    );
 };

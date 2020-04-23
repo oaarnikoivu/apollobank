@@ -8,9 +8,12 @@ export const Home: React.FC<Props> = () => {
     const { data } = useUsersQuery({ fetchPolicy: 'network-only' });
 
     if (!data) {
-        return <Loading />;
+        return (
+            <div style={{ position: 'fixed', top: '50%', left: '50%' }}>
+                <Loading />
+            </div>
+        );
     }
-
     return (
         <div>
             <div>users: </div>

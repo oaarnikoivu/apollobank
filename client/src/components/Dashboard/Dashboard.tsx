@@ -97,7 +97,11 @@ export const Dashboard: React.FC = () => {
     }, [currencies]);
 
     if (!data) {
-        return <Loading />;
+        return (
+            <div style={{ position: 'fixed', top: '50%', left: '50%' }}>
+                <Loading />
+            </div>
+        );
     }
 
     const determineCurrencyIcon = (c: string): JSX.Element | undefined => {
