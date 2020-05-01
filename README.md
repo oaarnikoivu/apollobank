@@ -2,6 +2,6 @@
 
 # expressbank 💸
 
-A fullstack GraphQL banking application using React & Node
+A fullstack GraphQL banking application built using React, Node & TypeScript.
 
 Flag icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>
