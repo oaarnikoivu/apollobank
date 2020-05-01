@@ -24,9 +24,9 @@ import { CardResolver } from "./resolvers/CardResolver";
 		cors({
 			origin:
 				process.env.NODE_ENV === "production"
-					? "https://vigilant-goldwasser-9ac664.netlify.com"
+					? "https://vigilant-goldwasser-9ac664.netlify.app"
 					: "http://localhost:3000",
-			credentials: true
+			credentials: true,
 		})
 	);
 
@@ -71,11 +71,11 @@ import { CardResolver } from "./resolvers/CardResolver";
 
 	const appolloServer: ApolloServer = new ApolloServer({
 		schema: await buildSchema({
-			resolvers: [UserResolver, AccountResolver, TransactionResolver, CardResolver]
+			resolvers: [UserResolver, AccountResolver, TransactionResolver, CardResolver],
 		}),
 		introspection: true,
 		playground: true,
-		context: ({ req, res }) => ({ req, res })
+		context: ({ req, res }) => ({ req, res }),
 	});
 
 	appolloServer.applyMiddleware({ app, cors: false });
