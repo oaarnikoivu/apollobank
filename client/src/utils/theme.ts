@@ -7,7 +7,7 @@ export enum ColorScheme {
     MAROON = '#432D32',
     WHITE = '#FFFEF9',
     HOVER = '#148C9C',
-    PRIMARY_HOVER = '#364547',
+    PRIMARY_HOVER = '#090c0c',
 }
 
 // For Material UI

@@ -1,4 +1,5 @@
 import { createUseStyles } from 'react-jss';
+import { ColorScheme } from '../../utils/theme';
 
 export const useDialogStyles = createUseStyles({
     dialog: {
@@ -10,13 +11,17 @@ export const useDialogStyles = createUseStyles({
         top: '50%',
         transform: 'translate(-50%, -50%)',
         zIndex: 999,
-        backgroundColor: '#eee',
+        backgroundColor: 'white',
         padding: '10px 20px 40px',
         borderRadius: '8px',
         display: 'flex',
         flexDirection: 'column',
+        boxShadow: '3px 7px 18px 0px rgba(148,148,148,1)',
     },
     closeButton: {
+        backgroundColor: ColorScheme.PRIMARY,
+        color: ColorScheme.WHITE,
+        fontSize: 16,
         marginBottom: '15px',
         padding: '3px 8px',
         cursor: 'pointer',
@@ -26,5 +31,8 @@ export const useDialogStyles = createUseStyles({
         height: '30px',
         fontWeight: 'bold',
         alignSelf: 'flex-end',
+        '&:hover': {
+            backgroundColor: ColorScheme.PRIMARY_HOVER,
+        },
     },
 });

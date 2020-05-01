@@ -264,37 +264,43 @@ export const Account: React.FC = () => {
                                         placeholder="amount"
                                         type="number"
                                     />
-                                    <FormControl style={{ marginLeft: 8 }} variant="outlined">
-                                        <InputLabel id="select-filled-label">To</InputLabel>
-                                        <Select
-                                            labelId="select-filled-label"
-                                            id="select-filled"
-                                            value={toAccountCurrency}
-                                            onChange={(event: ChangeEvent<{ value: unknown }>) => {
-                                                setToAccountCurrency(event.target.value as string);
-                                            }}
-                                            label="To"
-                                        >
-                                            {accounts.data &&
-                                                accounts.data.accounts
-                                                    .filter(account => {
-                                                        return (
-                                                            account.currency !==
-                                                            location.state.currency
-                                                        );
-                                                    })
-                                                    .map(account => {
-                                                        return (
-                                                            <MenuItem
-                                                                key={account.id}
-                                                                value={account.currency}
-                                                            >
-                                                                {account.currency}
-                                                            </MenuItem>
-                                                        );
-                                                    })}
-                                        </Select>
-                                    </FormControl>
+                                    <ThemeProvider theme={theme}>
+                                        <FormControl style={{ marginLeft: 8 }} variant="outlined">
+                                            <InputLabel id="select-filled-label">To</InputLabel>
+                                            <Select
+                                                labelId="select-filled-label"
+                                                id="select-filled"
+                                                value={toAccountCurrency}
+                                                onChange={(
+                                                    event: ChangeEvent<{ value: unknown }>,
+                                                ) => {
+                                                    setToAccountCurrency(
+                                                        event.target.value as string,
+                                                    );
+                                                }}
+                                                label="To"
+                                            >
+                                                {accounts.data &&
+                                                    accounts.data.accounts
+                                                        .filter(account => {
+                                                            return (
+                                                                account.currency !==
+                                                                location.state.currency
+                                                            );
+                                                        })
+                                                        .map(account => {
+                                                            return (
+                                                                <MenuItem
+                                                                    key={account.id}
+                                                                    value={account.currency}
+                                                                >
+                                                                    {account.currency}
+                                                                </MenuItem>
+                                                            );
+                                                        })}
+                                            </Select>
+                                        </FormControl>
+                                    </ThemeProvider>
                                     <div>
                                         <ThemeProvider theme={theme}>
                                             <Button
@@ -388,17 +394,7 @@ export const Account: React.FC = () => {
             </div>
             <div className={classes.accountInfo}>
                 <div>{currencyFullText}</div>
-                <div style={{ width: 32 }}>
-                    {!!svg ? (
-                        svg
-                    ) : (
-                        <img
-                            src="https://upload.wikimedia.org/wikipedia/commons/4/46/Bitcoin.svg"
-                            alt="..."
-                            style={{ width: 32 }}
-                        />
-                    )}
-                </div>
+                <div style={{ width: 32 }}>{svg}</div>
                 <div>{location.state.currency}</div>
             </div>
 

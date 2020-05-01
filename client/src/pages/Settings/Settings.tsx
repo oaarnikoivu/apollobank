@@ -37,7 +37,7 @@ import { useHistory } from 'react-router-dom';
 import { MutationTuple } from '@apollo/react-hooks';
 import { Formik, Form } from 'formik';
 import { FormTextField } from '../../components/Forms/FormTextField';
-import { theme } from '../../utils/theme';
+import { theme, ColorScheme } from '../../utils/theme';
 import { SuccessMessage, ErrorMessage } from '../../components/Alerts/AlertMessage';
 import { changePasswordValidationSchema } from '../../schemas /changePasswordValidationSchema';
 import { ExecutionResultDataDefault, ExecutionResult } from 'graphql/execution/execute';
@@ -264,7 +264,7 @@ export const Settings: React.FC = () => {
                             password hashing
                         </li>
                         <li>
-                            <a href="https://www.npmjs.com/package/cors">cors</a>for cross origin
+                            <a href="https://www.npmjs.com/package/cors">cors</a> for cross origin
                             resource sharing.
                         </li>
                         <li>
@@ -360,13 +360,13 @@ export const Settings: React.FC = () => {
                         <Title title="Profile" fontSize={14} />
                         <List component="nav" aria-label="profile">
                             <ListItem button onClick={() => setOpenPersonalDetailsDialog(true)}>
-                                <ListItemIcon>
+                                <ListItemIcon style={{ color: ColorScheme.PRIMARY }}>
                                     <AccountCircleIcon />
                                 </ListItemIcon>
                                 <ListItemText primary="Personal details" />
                             </ListItem>
                             <ListItem button onClick={() => setOpenAccountDetailsDialog(true)}>
-                                <ListItemIcon>
+                                <ListItemIcon style={{ color: ColorScheme.PRIMARY }}>
                                     <AccountBalanceIcon />
                                 </ListItemIcon>
                                 <ListItemText primary="Account details" />
@@ -378,7 +378,7 @@ export const Settings: React.FC = () => {
                         <Title title="Security" fontSize={14} />
                         <List component="nav" aria-label="profile">
                             <ListItem button onClick={() => setOpenChangePasswordDialog(true)}>
-                                <ListItemIcon>
+                                <ListItemIcon style={{ color: ColorScheme.PRIMARY }}>
                                     <VpnKeyIcon />
                                 </ListItemIcon>
                                 <ListItemText primary="Change password" />
@@ -390,7 +390,7 @@ export const Settings: React.FC = () => {
                         <Title title="About us" fontSize={14} />
                         <List component="nav" aria-label="profile">
                             <ListItem button onClick={() => setOpenAboutDialog(true)}>
-                                <ListItemIcon>
+                                <ListItemIcon style={{ color: ColorScheme.PRIMARY }}>
                                     <InfoIcon />
                                 </ListItemIcon>
                                 <ListItemText primary="About this website" />
@@ -420,7 +420,7 @@ export const Settings: React.FC = () => {
                                     }
                                 }}
                             >
-                                <ListItemIcon>
+                                <ListItemIcon style={{ color: ColorScheme.PRIMARY }}>
                                     <DeleteForeverIcon />
                                 </ListItemIcon>
                                 <ListItemText primary="Destroy account" />
