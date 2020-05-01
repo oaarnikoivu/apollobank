@@ -39,15 +39,15 @@ import {
     AccountsQueryResult,
     useAccountsQuery,
 } from '../../generated/graphql';
-import { Dialog } from '../Dialog/Dialog';
-import { FormTextField } from '../Forms/FormTextField';
+import { Dialog } from '../../components/Dialog/Dialog';
+import { FormTextField } from '../../components/Forms/FormTextField';
 import { Form, Formik } from 'formik';
-import { Title } from '../Typography/Title';
+import { Title } from '../../components/Typography/Title';
 import { MutationTuple } from '@apollo/react-hooks';
 import { ExecutionResult } from 'graphql';
 import { ExecutionResultDataDefault } from 'graphql/execution/execute';
-import { Transactions } from '../Transactions/Transactions';
-import { ErrorMessage, SuccessMessage } from '../Alerts/AlertMessage';
+import { Transactions } from './Transactions/Transactions';
+import { ErrorMessage, SuccessMessage } from '../../components/Alerts/AlertMessage';
 import { addMoneyValidationSchema } from '../../schemas /addMoneyValidationSchema';
 
 export const Account: React.FC = () => {
@@ -58,6 +58,7 @@ export const Account: React.FC = () => {
     const [openExchangeDialog, setOpenExchangeDialog] = useState<boolean>(false);
     const [openDetailsDialog, setOpenDetailsDialog] = useState<boolean>(false);
     const [hasCard, setHasCard] = useState<boolean>(false);
+    const [cardNumber, setCardNumber] = useState<string>('');
     const [successMessage, setSuccessMessage] = useState<string>('');
     const [errorMessage, setErrorMessage] = useState<string>('');
 
@@ -107,6 +108,7 @@ export const Account: React.FC = () => {
     useEffect(() => {
         if (cards.data) {
             setHasCard(true);
+            setCardNumber(cards.data.cards[0].cardNumber);
         }
     }, [cards]);
 
@@ -247,8 +249,9 @@ export const Account: React.FC = () => {
                                     }
                                 }
                             } catch (error) {
-                                const errorMessage = error.message.split('')[1];
-                                setErrorMessage(errorMessage);
+                                setErrorMessage(
+                                    'You do not have the sufficient funds. Please top up your account.',
+                                );
                                 setSubmitting(false);
                             }
                         }}
@@ -272,9 +275,6 @@ export const Account: React.FC = () => {
                                             }}
                                             label="To"
                                         >
-                                            <MenuItem value="">
-                                                <em>None</em>
-                                            </MenuItem>
                                             {accounts.data &&
                                                 accounts.data.accounts
                                                     .filter(account => {
@@ -338,7 +338,7 @@ export const Account: React.FC = () => {
             );
         } else if (errorMessage.length > 0) {
             return (
-                <div>
+                <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 12 }}>
                     <ErrorMessage message={errorMessage} />
                 </div>
             );
@@ -366,7 +366,15 @@ export const Account: React.FC = () => {
                             if (hasCard) {
                                 simulate();
                             } else {
-                                setErrorMessage('You have no card!');
+                                setErrorMessage(
+                                    "Can't make this transaction. Please register a card first.",
+                                );
+                            }
+
+                            if (accountBalance < 0) {
+                                setErrorMessage(
+                                    'You do not have the sufficient funds. Please top up your account.',
+                                );
                             }
                         }}
                     >
@@ -440,7 +448,7 @@ export const Account: React.FC = () => {
             <hr style={{ width: 480, marginTop: 24, color: '#fcfcfc' }} />
             <Transactions
                 account={data}
-                cardNumber={cards.data && cards.data.cards[0].cardNumber}
+                cardNumber={hasCard ? cardNumber : undefined}
                 currencyIcon={currencyIcon}
             />
         </div>

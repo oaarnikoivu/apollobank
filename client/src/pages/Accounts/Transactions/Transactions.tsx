@@ -1,8 +1,12 @@
 import React from 'react';
-import { TransactionsQuery, Transaction } from '../../generated/graphql';
-import { useAccountStyles } from '../Accounts/styles/Account.style';
-import { Loading } from '../Loading/Loading';
-import { TransactionCard } from '../cards/TransactionCard';
+import { TransactionsQuery, Transaction } from '../../../generated/graphql';
+import { useAccountStyles } from '../styles/Account.style';
+import { Loading } from '../../../components/Loading/Loading';
+import { TransactionCard } from '../../../components/cards/TransactionCard';
+import PaymentIcon from '@material-ui/icons/Payment';
+import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
+import LocalAtmIcon from '@material-ui/icons/LocalAtm';
+import ReceiptIcon from '@material-ui/icons/Receipt';
 
 interface TransactionProps {
     account: TransactionsQuery | undefined;
@@ -24,6 +28,23 @@ export const Transactions: React.FC<TransactionProps> = ({ account, cardNumber, 
                 <div className={classes.transactionCards}>
                     {account.transactions.length > 0 &&
                         account.transactions.map((transaction: Transaction) => {
+                            let transactionIcon: any;
+
+                            switch (transaction.transactionType) {
+                                case 'payment':
+                                    transactionIcon = <PaymentIcon />;
+                                    break;
+                                case 'deposit':
+                                    transactionIcon = <AccountBalanceIcon />;
+                                    break;
+                                case 'withdrawal':
+                                    transactionIcon = <LocalAtmIcon />;
+                                    break;
+                                case 'invoice':
+                                    transactionIcon = <ReceiptIcon />;
+                                    break;
+                            }
+
                             return (
                                 <TransactionCard
                                     key={transaction.id}
@@ -32,9 +53,9 @@ export const Transactions: React.FC<TransactionProps> = ({ account, cardNumber, 
                                         Date.parse(transaction.date),
                                     ).toLocaleDateString()}
                                     card={cardNumber}
-                                    fee={0}
                                     amount={transaction.amount}
                                     currencyIcon={currencyIcon}
+                                    transactionIcon={transactionIcon}
                                 />
                             );
                         })}

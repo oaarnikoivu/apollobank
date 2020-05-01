@@ -9,8 +9,8 @@ import { RouteComponentProps } from 'react-router-dom';
 import { Button, ThemeProvider } from '@material-ui/core';
 import { theme } from '../../utils/theme';
 import { registerValidationSchema } from '../../schemas /registerValidationSchema';
-import { FormTextField } from '../Forms/FormTextField';
-import { ErrorMessage } from '../Alerts/AlertMessage';
+import { FormTextField } from '../../components/Forms/FormTextField';
+import { ErrorMessage } from '../../components/Alerts/AlertMessage';
 import { useRegisterStyles } from './Register.style';
 import { MutationTuple } from '@apollo/react-hooks';
 

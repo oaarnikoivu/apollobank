@@ -120,9 +120,6 @@ export type MutationCreateTransactionArgs = {
 
 export type Query = {
    __typename?: 'Query',
-  hello: Scalars['String'],
-  bye: Scalars['String'],
-  users: Array<User>,
   me?: Maybe<User>,
   accounts: Array<Account>,
   account: Account,
@@ -202,14 +199,6 @@ export type AddMoneyMutation = (
   ) }
 );
 
-export type ByeQueryVariables = {};
-
-
-export type ByeQuery = (
-  { __typename?: 'Query' }
-  & Pick<Query, 'bye'>
-);
-
 export type CardsQueryVariables = {};
 
 
@@ -274,14 +263,6 @@ export type ExchangeMutation = (
       & Pick<Account, 'id' | 'balance'>
     ) }
   ) }
-);
-
-export type HelloQueryVariables = {};
-
-
-export type HelloQuery = (
-  { __typename?: 'Query' }
-  & Pick<Query, 'hello'>
 );
 
 export type LoginMutationVariables = {
@@ -361,17 +342,6 @@ export type UpdatePasswordMutationVariables = {
 export type UpdatePasswordMutation = (
   { __typename?: 'Mutation' }
   & Pick<Mutation, 'updatePassword'>
-);
-
-export type UsersQueryVariables = {};
-
-
-export type UsersQuery = (
-  { __typename?: 'Query' }
-  & { users: Array<(
-    { __typename?: 'User' }
-    & Pick<User, 'id' | 'email' | 'firstName' | 'lastName'>
-  )> }
 );
 
 
@@ -482,36 +452,6 @@ export function useAddMoneyMutation(baseOptions?: ApolloReactHooks.MutationHookO
 export type AddMoneyMutationHookResult = ReturnType<typeof useAddMoneyMutation>;
 export type AddMoneyMutationResult = ApolloReactCommon.MutationResult<AddMoneyMutation>;
 export type AddMoneyMutationOptions = ApolloReactCommon.BaseMutationOptions<AddMoneyMutation, AddMoneyMutationVariables>;
-export const ByeDocument = gql`
-    query Bye {
-  bye
-}
-    `;
-
-/**
- * __useByeQuery__
- *
- * To run a query within a React component, call `useByeQuery` and pass it any options that fit your needs.
- * When your component renders, `useByeQuery` returns an object from Apollo Client that contains loading, error, and data properties 
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useByeQuery({
- *   variables: {
- *   },
- * });
- */
-export function useByeQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<ByeQuery, ByeQueryVariables>) {
-        return ApolloReactHooks.useQuery<ByeQuery, ByeQueryVariables>(ByeDocument, baseOptions);
-      }
-export function useByeLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<ByeQuery, ByeQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<ByeQuery, ByeQueryVariables>(ByeDocument, baseOptions);
-        }
-export type ByeQueryHookResult = ReturnType<typeof useByeQuery>;
-export type ByeLazyQueryHookResult = ReturnType<typeof useByeLazyQuery>;
-export type ByeQueryResult = ApolloReactCommon.QueryResult<ByeQuery, ByeQueryVariables>;
 export const CardsDocument = gql`
     query Cards {
   cards {
@@ -705,36 +645,6 @@ export function useExchangeMutation(baseOptions?: ApolloReactHooks.MutationHookO
 export type ExchangeMutationHookResult = ReturnType<typeof useExchangeMutation>;
 export type ExchangeMutationResult = ApolloReactCommon.MutationResult<ExchangeMutation>;
 export type ExchangeMutationOptions = ApolloReactCommon.BaseMutationOptions<ExchangeMutation, ExchangeMutationVariables>;
-export const HelloDocument = gql`
-    query Hello {
-  hello
-}
-    `;
-
-/**
- * __useHelloQuery__
- *
- * To run a query within a React component, call `useHelloQuery` and pass it any options that fit your needs.
- * When your component renders, `useHelloQuery` returns an object from Apollo Client that contains loading, error, and data properties 
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useHelloQuery({
- *   variables: {
- *   },
- * });
- */
-export function useHelloQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<HelloQuery, HelloQueryVariables>) {
-        return ApolloReactHooks.useQuery<HelloQuery, HelloQueryVariables>(HelloDocument, baseOptions);
-      }
-export function useHelloLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<HelloQuery, HelloQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<HelloQuery, HelloQueryVariables>(HelloDocument, baseOptions);
-        }
-export type HelloQueryHookResult = ReturnType<typeof useHelloQuery>;
-export type HelloLazyQueryHookResult = ReturnType<typeof useHelloLazyQuery>;
-export type HelloQueryResult = ApolloReactCommon.QueryResult<HelloQuery, HelloQueryVariables>;
 export const LoginDocument = gql`
     mutation Login($email: String!, $password: String!) {
   login(email: $email, password: $password) {
@@ -953,38 +863,3 @@ export function useUpdatePasswordMutation(baseOptions?: ApolloReactHooks.Mutatio
 export type UpdatePasswordMutationHookResult = ReturnType<typeof useUpdatePasswordMutation>;
 export type UpdatePasswordMutationResult = ApolloReactCommon.MutationResult<UpdatePasswordMutation>;
 export type UpdatePasswordMutationOptions = ApolloReactCommon.BaseMutationOptions<UpdatePasswordMutation, UpdatePasswordMutationVariables>;
-export const UsersDocument = gql`
-    query Users {
-  users {
-    id
-    email
-    firstName
-    lastName
-  }
-}
-    `;
-
-/**
- * __useUsersQuery__
- *
- * To run a query within a React component, call `useUsersQuery` and pass it any options that fit your needs.
- * When your component renders, `useUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties 
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useUsersQuery({
- *   variables: {
- *   },
- * });
- */
-export function useUsersQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<UsersQuery, UsersQueryVariables>) {
-        return ApolloReactHooks.useQuery<UsersQuery, UsersQueryVariables>(UsersDocument, baseOptions);
-      }
-export function useUsersLazyQuery(baseOptions?: ApolloReactHooks.LazyQueryHookOptions<UsersQuery, UsersQueryVariables>) {
-          return ApolloReactHooks.useLazyQuery<UsersQuery, UsersQueryVariables>(UsersDocument, baseOptions);
-        }
-export type UsersQueryHookResult = ReturnType<typeof useUsersQuery>;
-export type UsersLazyQueryHookResult = ReturnType<typeof useUsersLazyQuery>;
-export type UsersQueryResult = ApolloReactCommon.QueryResult<UsersQuery, UsersQueryVariables>;

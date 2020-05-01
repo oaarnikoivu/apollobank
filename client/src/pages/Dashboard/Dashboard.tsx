@@ -13,8 +13,8 @@ import {
     MenuItem,
     ThemeProvider,
 } from '@material-ui/core';
-import { Chart } from '../Charts/Chart';
-import { Title } from '../Typography/Title';
+import { Chart } from '../../components/Charts/Chart';
+import { Title } from '../../components/Typography/Title';
 import { ReactComponent as Euro } from '../../assets/world.svg';
 import { ReactComponent as Dollar } from '../../assets/flag.svg';
 import { ReactComponent as Pound } from '../../assets/uk.svg';
@@ -33,12 +33,12 @@ import {
     CreateCardMutationVariables,
     Account,
 } from '../../generated/graphql';
-import { Loading } from '../Loading/Loading';
+import { Loading } from '../../components/Loading/Loading';
 import { useHistory } from 'react-router-dom';
-import { AccountsCard, NoAccountsCard } from '../cards/AccountsCard';
+import { AccountsCard, NoAccountsCard } from '../../components/cards/AccountsCard';
 import { Currency } from '../../utils/currencies';
-import { Dialog } from '../Dialog/Dialog';
-import { NoApolloCard, ApolloCard } from '../cards/ApolloCard';
+import { Dialog } from '../../components/Dialog/Dialog';
+import { NoApolloCard, ApolloCard } from '../../components/cards/ApolloCard';
 import { MutationTuple } from '@apollo/react-hooks';
 import { ExecutionResult } from 'graphql';
 import { theme } from '../../utils/theme';
@@ -72,6 +72,8 @@ export const Dashboard: React.FC = () => {
     const classes = useDashboardStyles();
 
     const accountCardHeightPaper = classes.paper + ' ' + classes.accountCardHeight;
+    const apolloCardPaper =
+        classes.paper + ' ' + classes.accountCardHeight + ' ' + classes.apolloCard;
     const chartPaper = classes.paper + ' ' + classes.chart;
 
     // When the component mounts, update the total balance for the current user
@@ -112,14 +114,6 @@ export const Dashboard: React.FC = () => {
                 return <Dollar />;
             case 'GBP':
                 return <Pound />;
-            case 'BTC':
-                return (
-                    <img
-                        src="https://upload.wikimedia.org/wikipedia/commons/4/46/Bitcoin.svg"
-                        alt="..."
-                        style={{ width: 32 }}
-                    />
-                );
         }
         return undefined;
     };
@@ -237,6 +231,35 @@ export const Dashboard: React.FC = () => {
         );
     };
 
+    const renderChartOptions = (): JSX.Element => {
+        return (
+            <>
+                <ThemeProvider theme={theme}>
+                    <FormControl>
+                        <InputLabel id="select-filled-label">Account</InputLabel>
+                        <Select
+                            labelId="select-filled-label"
+                            id="select-filled"
+                            value={analyticsAccount}
+                            onChange={(event: ChangeEvent<{ value: unknown }>) =>
+                                setAnalyticsAccount(event.target.value as string)
+                            }
+                            label="Account"
+                        >
+                            {currencies.map((currency: string) => {
+                                return (
+                                    <MenuItem key={currency} value={currency}>
+                                        {currency}
+                                    </MenuItem>
+                                );
+                            })}
+                        </Select>
+                    </FormControl>
+                </ThemeProvider>
+            </>
+        );
+    };
+
     return (
         <div className={classes.root}>
             {renderDialog()}
@@ -253,31 +276,7 @@ export const Dashboard: React.FC = () => {
                             <Title title="Analytics" fontSize={24} />
                         </div>
                     </div>
-                    <ThemeProvider theme={theme}>
-                        <FormControl>
-                            <InputLabel id="select-filled-label">Account</InputLabel>
-                            <Select
-                                labelId="select-filled-label"
-                                id="select-filled"
-                                value={analyticsAccount}
-                                onChange={(event: ChangeEvent<{ value: unknown }>) =>
-                                    setAnalyticsAccount(event.target.value as string)
-                                }
-                                label="Account"
-                            >
-                                <MenuItem value="">
-                                    <em>None</em>
-                                </MenuItem>
-                                {currencies.map((currency: string) => {
-                                    return (
-                                        <MenuItem key={currency} value={currency}>
-                                            {currency}
-                                        </MenuItem>
-                                    );
-                                })}
-                            </Select>
-                        </FormControl>
-                    </ThemeProvider>
+                    {data && data.accounts.length > 0 ? renderChartOptions() : undefined}
                     <Grid container spacing={3}>
                         <Grid item xs={12} md={12} lg={12}>
                             <Paper className={chartPaper}>
@@ -331,11 +330,6 @@ export const Dashboard: React.FC = () => {
                                         currencyIcon = '£';
                                         fullCurrencyText = 'British Pound';
                                         break;
-                                    case Currency.BITCOIN:
-                                        svg = '';
-                                        currencyIcon = '฿';
-                                        fullCurrencyText = 'Bitcoin';
-                                        break;
                                 }
                                 return (
                                     <Grid key={account.id} item xs={12} md={4} lg={4}>
@@ -368,7 +362,7 @@ export const Dashboard: React.FC = () => {
                             cards.data.cards.map(card => {
                                 return (
                                     <Grid key={card.id} item xs={12} md={4} lg={4}>
-                                        <Paper className={accountCardHeightPaper}>
+                                        <Paper className={apolloCardPaper}>
                                             <ApolloCard
                                                 cardNumber={card.cardNumber}
                                                 validThru={

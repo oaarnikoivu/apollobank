@@ -21,7 +21,8 @@ export class CardResolver {
 			const account: Account | undefined = await Account.findOne({ where: { owner: owner } });
 
 			if (account) {
-				return Card.find({ where: { account: account } });
+				const cards = await Card.find({ where: { account: account } });
+				return cards;
 			}
 		}
 		return null;
@@ -38,7 +39,7 @@ export class CardResolver {
 
 		if (owner) {
 			const account: Account | undefined = await Account.findOne({
-				where: { owner: owner }
+				where: { owner: owner },
 			});
 
 			if (account) {
@@ -49,7 +50,7 @@ export class CardResolver {
 						expiresIn: new Date(2023, 9),
 						pin: parseInt(createRandomNumber(4)),
 						cvv: parseInt(createRandomNumber(3)),
-						monthlySpendingLimit: 500
+						monthlySpendingLimit: 500,
 					});
 				} catch (err) {
 					console.log(err);

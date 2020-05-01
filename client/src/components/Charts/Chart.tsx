@@ -14,6 +14,7 @@ import {
     TransactionsQueryResult,
     Transaction,
 } from '../../generated/graphql';
+import { useChartStyles } from './Chart.style';
 
 interface ChartProps {
     currency: string;
@@ -24,12 +25,12 @@ export const Chart: React.FC<ChartProps> = ({ currency }) => {
         variables: { currency: currency },
     });
 
+    const classes = useChartStyles();
+
     return (
         <>
-            <div style={{ width: '100%', height: '320px' }}>
-                <div style={{ display: 'flex', justifyContent: 'center' }}>
-                    Spending (this month)
-                </div>
+            <div className={classes.root}>
+                <div className={classes.spending}>Spending (this month)</div>
                 <ResponsiveContainer width="100%">
                     <AreaChart
                         data={

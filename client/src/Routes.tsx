@@ -3,16 +3,16 @@ import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import { Home } from './pages/Home';
 import { Bye } from './pages/Bye';
-import { Register } from './components/Register/Register';
-import { Login } from './components/Login/Login';
+import { Register } from './pages/Register/Register';
+import { Login } from './pages/Login/Login';
 import { getAccessToken } from './utils/accessToken';
-import { Account } from './components/Accounts/Account';
+import { Account } from './pages/Accounts/Account';
 import { Toolbar } from './components/Toolbar/Toolbar';
 import { SideDrawer } from './components/SideDrawer/SideDrawer';
 import { Backdrop } from './components/Backdrop/Backdrop';
 import { ColorScheme } from './utils/theme';
-import { Settings } from './components/Settings/Settings';
-import { Dashboard } from './components/Dashboard/Dashboard';
+import { Settings } from './pages/Settings/Settings';
+import { Dashboard } from './pages/Dashboard/Dashboard';
 
 interface AuthenticatedRouteProps {
     exact?: boolean;

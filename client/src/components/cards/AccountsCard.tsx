@@ -4,6 +4,7 @@ import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 import AddIcon from '@material-ui/icons/Add';
 import { Title } from '../Typography/Title';
 import { ColorScheme, theme } from '../../utils/theme';
+import { useAccountsCardStyles, useNoAccountsCardStyles } from './styles/AccountsCard.style';
 
 interface AccountsCardProps {
     svg: any | string;
@@ -26,26 +27,12 @@ export const AccountsCard: React.FC<AccountsCardProps> = ({
     iban,
     onAccountClicked,
 }) => {
+    const classes = useAccountsCardStyles();
+
     return (
         <>
-            <div
-                style={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                }}
-            >
-                <div style={{ width: 32 }}>
-                    {!!svg ? (
-                        svg
-                    ) : (
-                        <img
-                            src="https://upload.wikimedia.org/wikipedia/commons/4/46/Bitcoin.svg"
-                            alt="..."
-                            style={{ width: 32 }}
-                        />
-                    )}
-                </div>
+            <div className={classes.root}>
+                <div className={classes.svg}>{svg}</div>
                 <Title title={fullCurrencyText} fontSize={18} />
                 <div>
                     <IconButton style={{ color: ColorScheme.PRIMARY }} onClick={onAccountClicked}>
@@ -73,14 +60,9 @@ export const AccountsCard: React.FC<AccountsCardProps> = ({
 };
 
 export const NoAccountsCard: React.FC<NoAccountCardProps> = ({ onCreateNewAccountClicked }) => {
+    const classes = useNoAccountsCardStyles();
     return (
-        <div
-            style={{
-                display: 'flex',
-                marginTop: '62px',
-                justifyContent: 'center',
-            }}
-        >
+        <div className={classes.root}>
             <ThemeProvider theme={theme}>
                 <Button
                     style={{ fontWeight: 'bold', textTransform: 'none', letterSpacing: 1 }}

@@ -3,6 +3,7 @@ import { ThemeProvider, Button } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
 import { theme } from '../../utils/theme';
 import { ReactComponent as MasterCard } from '../../assets/mc_symbol.svg';
+import { useApolloCardStyles } from './styles/ApolloCard.style';
 
 interface ApolloCardProps {
     cardNumber?: string;
@@ -12,26 +13,30 @@ interface ApolloCardProps {
 }
 
 export const ApolloCard: React.FC<ApolloCardProps> = ({ cardNumber, validThru, cvv }) => {
+    const classes = useApolloCardStyles();
+
     return (
         <>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div className={classes.cardTop}>
                 <div>
                     <span role="img" aria-label="logo">
                         🚀
                     </span>
                 </div>
-                <div style={{ fontSize: 18, letterSpacing: 2 }}>{cardNumber}</div>
-                <div style={{ width: 64 }}>
+                <div className={classes.cardTypeIcon}>
                     <MasterCard />
                 </div>
             </div>
-            <div>
-                <div style={{ textTransform: 'uppercase', letterSpacing: 0.5 }}>valid thru: </div>
-                <div>{validThru}</div>
-            </div>
-            <div>
-                <div style={{ textTransform: 'uppercase', letterSpacing: 0.5 }}>cvv</div>
-                <div>{cvv}</div>
+            <div className={classes.cardNumber}>{cardNumber}</div>
+            <div style={{ display: 'flex' }}>
+                <div>
+                    <div className={classes.cardValidThruLabel}>valid thru</div>
+                    <div>{validThru}</div>
+                </div>
+                <div>
+                    <div className={classes.cardCvvLabel}>cvv</div>
+                    <div style={{ marginLeft: 12 }}>{cvv}</div>
+                </div>
             </div>
         </>
     );

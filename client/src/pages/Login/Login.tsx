@@ -9,11 +9,11 @@ import {
 } from '../../generated/graphql';
 import { setAccessToken } from '../../utils/accessToken';
 import { Formik, Form } from 'formik';
-import { FormTextField } from '../Forms/FormTextField';
+import { FormTextField } from '../../components/Forms/FormTextField';
 import { Button, ThemeProvider } from '@material-ui/core';
 import { theme } from '../../utils/theme';
 import { loginValidationSchema } from '../../schemas /loginValidationSchema';
-import { ErrorMessage } from '../Alerts/AlertMessage';
+import { ErrorMessage } from '../../components/Alerts/AlertMessage';
 import { useLoginStyles } from './Login.style';
 import { MutationTuple } from '@apollo/react-hooks';
 import { ExecutionResult } from 'graphql';

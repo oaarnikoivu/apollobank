@@ -28,23 +28,6 @@ class LoginResponse {
 
 @Resolver()
 export class UserResolver {
-	@Query(() => String)
-	hello() {
-		return "hi!";
-	}
-
-	@Query(() => String)
-	@UseMiddleware(isAuth)
-	bye(@Ctx() { payload }: MyContext) {
-		console.log(payload);
-		return `Your user id is: ${payload!.userId}`;
-	}
-
-	@Query(() => [User])
-	users() {
-		return User.find();
-	}
-
 	@Query(() => User, { nullable: true })
 	me(@Ctx() context: MyContext) {
 		const authorization: string | undefined = context.req.headers["authorization"];

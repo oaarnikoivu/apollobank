@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core';
+import { ColorScheme } from '../../../utils/theme';
 
 export const useDashboardStyles = makeStyles(theme => ({
     root: {
@@ -29,5 +30,9 @@ export const useDashboardStyles = makeStyles(theme => ({
     },
     chart: {
         height: '100%',
+    },
+    apolloCard: {
+        backgroundColor: ColorScheme.ORANGE,
+        color: ColorScheme.WHITE,
     },
 }));

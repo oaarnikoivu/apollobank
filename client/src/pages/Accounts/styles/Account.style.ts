@@ -30,8 +30,9 @@ export const useAccountStyles = makeStyles({
     accountButton: {
         backgroundColor: ColorScheme.PRIMARY,
         color: ColorScheme.WHITE,
-        width: 32,
-        height: 32,
+        '&:hover': {
+            background: ColorScheme.PRIMARY_HOVER,
+        },
     },
     accountButtonSection: {
         display: 'flex',

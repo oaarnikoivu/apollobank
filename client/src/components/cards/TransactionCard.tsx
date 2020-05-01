@@ -18,7 +18,7 @@ interface TransactionCardProps {
     amount: string;
     time: string;
     card?: string;
-    fee?: number;
+    transactionIcon?: any;
     currencyIcon?: string;
 }
 
@@ -27,7 +27,7 @@ export const TransactionCard: React.FC<TransactionCardProps> = ({
     time,
     amount,
     card,
-    fee,
+    transactionIcon,
     currencyIcon,
 }) => {
     const classes = useTransactionCardStyles();
@@ -41,7 +41,11 @@ export const TransactionCard: React.FC<TransactionCardProps> = ({
         <div style={{ marginTop: 12 }}>
             <Card className={classes.root}>
                 <CardHeader
-                    avatar={<Avatar aria-label="whatever">R</Avatar>}
+                    avatar={
+                        <Avatar className={classes.avatar} aria-label="whatever">
+                            {transactionIcon}
+                        </Avatar>
+                    }
                     title={title}
                     subheader={time}
                     style={{ textAlign: 'left' }}
@@ -76,9 +80,6 @@ export const TransactionCard: React.FC<TransactionCardProps> = ({
                                 {currencyIcon}
                                 {amount}
                             </span>
-                        </div>
-                        <div className={classes.expandedText}>
-                            Fee: <span style={{ color: 'black' }}>{fee}</span>
                         </div>
                     </CardContent>
                 </Collapse>

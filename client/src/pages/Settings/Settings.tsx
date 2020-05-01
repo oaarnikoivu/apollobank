@@ -28,21 +28,21 @@ import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import VpnKeyIcon from '@material-ui/icons/VpnKey';
 import InfoIcon from '@material-ui/icons/Info';
 import DeleteForeverIcon from '@material-ui/icons/DeleteForever';
-import { Title } from '../Typography/Title';
-import { Dialog } from '../Dialog/Dialog';
+import { Title } from '../../components/Typography/Title';
+import { Dialog } from '../../components/Dialog/Dialog';
 import { ReactComponent as Euro } from '../../assets/world.svg';
 import { ReactComponent as Dollar } from '../../assets/flag.svg';
 import { ReactComponent as Pound } from '../../assets/uk.svg';
 import { useHistory } from 'react-router-dom';
 import { MutationTuple } from '@apollo/react-hooks';
 import { Formik, Form } from 'formik';
-import { FormTextField } from '../Forms/FormTextField';
+import { FormTextField } from '../../components/Forms/FormTextField';
 import { theme } from '../../utils/theme';
-import { SuccessMessage, ErrorMessage } from '../Alerts/AlertMessage';
+import { SuccessMessage, ErrorMessage } from '../../components/Alerts/AlertMessage';
 import { changePasswordValidationSchema } from '../../schemas /changePasswordValidationSchema';
 import { ExecutionResultDataDefault, ExecutionResult } from 'graphql/execution/execute';
 import { setAccessToken } from '../../utils/accessToken';
-import { Loading } from '../Loading/Loading';
+import { Loading } from '../../components/Loading/Loading';
 
 export const Settings: React.FC = () => {
     // GraphQL Queries
