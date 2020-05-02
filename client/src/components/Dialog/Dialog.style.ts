@@ -22,6 +22,7 @@ export const useDialogStyles = createUseStyles({
         backgroundColor: ColorScheme.PRIMARY,
         color: ColorScheme.WHITE,
         fontSize: 16,
+        outline: 'none',
         marginBottom: '15px',
         padding: '3px 8px',
         cursor: 'pointer',
