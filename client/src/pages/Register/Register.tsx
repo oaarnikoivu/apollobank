@@ -9,7 +9,7 @@ import { RouteComponentProps } from 'react-router-dom';
 import { Button, ThemeProvider } from '@material-ui/core';
 import { theme } from '../../utils/theme';
 import { registerValidationSchema } from '../../schemas /registerValidationSchema';
-import { FormTextField } from '../../components/Forms/FormTextField';
+import { FormTextField, FormDatePicker } from '../../components/Forms/FormTextField';
 import { ErrorMessage } from '../../components/Alerts/AlertMessage';
 import { useRegisterStyles } from './Register.style';
 import { MutationTuple } from '@apollo/react-hooks';
@@ -144,11 +144,7 @@ export const Register: React.FC<RouteComponentProps> = ({ history }) => {
                                     placeholder="Confirm password"
                                     type="password"
                                 />
-                                <FormTextField
-                                    className={classes.formField}
-                                    name="dateOfBirth"
-                                    type="date"
-                                />
+                                <FormDatePicker className={classes.formField} name="dateOfBirth" />
                             </div>
                             <div className={classes.formButton}>
                                 <ThemeProvider theme={theme}>
