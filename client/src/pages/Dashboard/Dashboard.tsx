@@ -85,15 +85,15 @@ export const Dashboard: React.FC = () => {
             data.accounts.forEach((account: Account) => {
                 // apply conversion rates
                 if (account.currency === 'EUR') {
-                    balance += account.balance / 1.13;
+                    balance += Math.round(account.balance / 1.13);
                 }
 
                 if (account.currency === 'USD') {
-                    balance += account.balance / 1.25;
+                    balance += Math.round(account.balance / 1.25);
                 }
 
                 if (account.currency === 'GBP') {
-                    balance += account.balance * 1;
+                    balance += Math.round(account.balance * 1);
                 }
                 currencies.push(account.currency);
             });
