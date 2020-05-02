@@ -1,3 +1,4 @@
+import { ErrorMessages } from "./../utils/messages";
 import { createRandomBicCode } from "./../utils/createRandom";
 import { isAuth } from "../middleware";
 import {
@@ -14,20 +15,15 @@ import { MyContext } from "../MyContext";
 import { User } from "../entity/User";
 import { Account } from "../entity/Account";
 import { createRandomSortCode, createRandomIbanCode } from "../utils/createRandom";
+import { SuccessMessages } from "../utils/messages";
 
 @ObjectType()
 class AccountResponse {
 	@Field(() => Account)
 	account: Account;
-}
 
-@ObjectType()
-class ExchangeResponse {
-	@Field(() => Account)
-	account: Account | undefined;
-
-	@Field(() => Boolean)
-	success: boolean;
+	@Field(() => String)
+	message: String;
 }
 
 @Resolver()
@@ -93,33 +89,36 @@ export class AccountResolver {
 				try {
 					await Account.update({ id: account.id }, { balance: account.balance + amount });
 				} catch (err) {
-					console.log(err);
-					throw new Error("Something went wrong");
+					throw new Error(ErrorMessages.ADD_MONEY);
 				}
 			}
 		}
 
-		const updatedAccount: Account | undefined = await Account.findOne({
-			where: { owner: owner, currency: currency },
-		});
+		try {
+			const updatedAccount: Account | undefined = await Account.findOne({
+				where: { owner: owner, currency: currency },
+			});
 
-		if (updatedAccount) {
-			return {
-				account: updatedAccount,
-			};
+			if (updatedAccount) {
+				return {
+					account: updatedAccount,
+					message: SuccessMessages.ADD_MONEY,
+				};
+			}
+		} catch (error) {
+			throw new Error(ErrorMessages.ADD_MONEY);
 		}
-
 		return null;
 	}
 
-	@Mutation(() => ExchangeResponse)
+	@Mutation(() => AccountResponse)
 	@UseMiddleware(isAuth)
 	async exchange(
 		@Arg("selectedAccountCurrency") selectedAccountCurrency: string,
 		@Arg("toAccountCurrency") toAccountCurrency: string,
 		@Arg("amount") amount: number,
 		@Ctx() { payload }: MyContext
-	): Promise<ExchangeResponse | null> {
+	): Promise<AccountResponse | null> {
 		if (!payload) {
 			return null;
 		}
@@ -143,10 +142,30 @@ export class AccountResolver {
 
 					if (toAccount) {
 						try {
-							await Account.update({ id: toAccount.id }, { balance: toAccount.balance + amount });
+							let amountWithConversion: number = 0;
+
+							// Apply conversion rates for each currency
+							if (selectedAccountCurrency === "EUR" && toAccountCurrency === "USD") {
+								amountWithConversion = amount * 1.11;
+							} else if (selectedAccountCurrency === "EUR" && toAccountCurrency === "GBP") {
+								amountWithConversion = amount * 0.89;
+							} else if (selectedAccountCurrency === "USD" && toAccountCurrency === "EUR") {
+								amountWithConversion = amount * 0.9;
+							} else if (selectedAccountCurrency === "USD" && toAccountCurrency === "GBP") {
+								amountWithConversion = amount * 0.8;
+							} else if (selectedAccountCurrency === "GBP" && toAccountCurrency === "USD") {
+								amountWithConversion = amount * 1.25;
+							} else if (selectedAccountCurrency === "GBP" && toAccountCurrency === "EUR") {
+								amountWithConversion = amount * 1.13;
+							}
+
+							await Account.update(
+								{ id: toAccount.id },
+								{ balance: toAccount.balance + Math.round(amountWithConversion) }
+							);
 							await Account.update(
 								{ id: currentAccount.id },
-								{ balance: currentAccount.balance - amount }
+								{ balance: currentAccount.balance - Math.round(amountWithConversion) }
 							);
 						} catch (err) {
 							console.log(err);
@@ -154,26 +173,27 @@ export class AccountResolver {
 						}
 					}
 				} else {
-					throw new Error("You do not have the sufficient funds to make this exchange!");
+					throw new Error(ErrorMessages.EXCHANGE);
 				}
 			}
 		}
 
-		const updatedAccount = await Account.findOne({
-			where: { owner: owner, currency: selectedAccountCurrency },
-		});
+		try {
+			const updatedAccount = await Account.findOne({
+				where: { owner: owner, currency: selectedAccountCurrency },
+			});
 
-		if (updatedAccount) {
-			return {
-				account: updatedAccount,
-				success: true,
-			};
+			if (updatedAccount) {
+				return {
+					account: updatedAccount,
+					message: SuccessMessages.EXCHANGE,
+				};
+			}
+		} catch (error) {
+			throw new Error(ErrorMessages.EXCHANGE);
 		}
 
-		return {
-			account: undefined,
-			success: false,
-		};
+		return null;
 	}
 
 	@Mutation(() => Boolean)
@@ -204,6 +224,44 @@ export class AccountResolver {
 				} catch (err) {
 					console.log(err);
 					return false;
+				}
+			}
+		}
+		return true;
+	}
+
+	@Mutation(() => Boolean)
+	@UseMiddleware(isAuth)
+	async deleteAccount(@Arg("currency") currency: string, @Ctx() { payload }: MyContext) {
+		if (!payload) {
+			return false;
+		}
+
+		const owner: User | undefined = await User.findOne({ where: { id: payload.userId } });
+
+		if (owner) {
+			const account: Account | undefined = await Account.findOne({
+				where: { owner: owner, currency: currency },
+			});
+
+			if (account) {
+				if (account.balance == 0) {
+					try {
+						await Account.delete({
+							id: account.id,
+						});
+					} catch (error) {
+						console.log(error);
+						return false;
+					}
+				} else if (account.balance < 0) {
+					throw new Error(
+						"Your account balance has fallen below 0. Please top up before deleting."
+					);
+				} else if (account.balance > 0) {
+					throw new Error(
+						"Your account balance is greater than 0. Please exchange your funds before deleting."
+					);
 				}
 			}
 		}

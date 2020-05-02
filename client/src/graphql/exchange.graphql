@@ -8,6 +8,6 @@ mutation Exchange($selectedAccountCurrency: String!, $toAccountCurrency: String!
             id
             balance
         }
-        success
+        message
     }
 }

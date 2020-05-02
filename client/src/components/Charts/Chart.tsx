@@ -21,6 +21,7 @@ interface ChartProps {
 }
 
 export const Chart: React.FC<ChartProps> = ({ currency }) => {
+    // GraphQL queries
     const { data }: TransactionsQueryResult = useTransactionsQuery({
         variables: { currency: currency },
     });

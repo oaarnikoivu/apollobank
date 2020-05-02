@@ -8,12 +8,12 @@ import {
     useUpdatePasswordMutation,
     UpdatePasswordMutation,
     UpdatePasswordMutationVariables,
-    DeleteAccountMutation,
-    DeleteAccountMutationVariables,
-    useDeleteAccountMutation,
+    DestroyAccountMutation,
+    DestroyAccountMutationVariables,
     LogoutMutationVariables,
     useLogoutMutation,
     LogoutMutation,
+    useDestroyAccountMutation,
 } from '../../generated/graphql';
 import {
     List,
@@ -54,10 +54,10 @@ export const Settings: React.FC = () => {
         UpdatePasswordMutation,
         UpdatePasswordMutationVariables
     > = useUpdatePasswordMutation();
-    const [deleteAccount]: MutationTuple<
-        DeleteAccountMutation,
-        DeleteAccountMutationVariables
-    > = useDeleteAccountMutation();
+    const [destroyAccount]: MutationTuple<
+        DestroyAccountMutation,
+        DestroyAccountMutationVariables
+    > = useDestroyAccountMutation();
     const [logout, { client }]: MutationTuple<
         LogoutMutation,
         LogoutMutationVariables
@@ -404,7 +404,7 @@ export const Settings: React.FC = () => {
                                 button
                                 onClick={async () => {
                                     try {
-                                        const response: ExecutionResult<ExecutionResultDataDefault> = await deleteAccount();
+                                        const response: ExecutionResult<ExecutionResultDataDefault> = await destroyAccount();
 
                                         if (response && response.data) {
                                             setShowLoadingIcon(true);

@@ -4,5 +4,6 @@ mutation AddMoney($amount: Float!, $currency: String!) {
             id
             balance
         }
+        message
     }
 }

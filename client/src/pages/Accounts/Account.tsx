@@ -1,5 +1,5 @@
 import React, { useState, MouseEvent, useEffect, ChangeEvent } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useHistory } from 'react-router-dom';
 import {
     ThemeProvider,
     IconButton,
@@ -38,6 +38,9 @@ import {
     useCardsQuery,
     AccountsQueryResult,
     useAccountsQuery,
+    DeleteAccountMutationVariables,
+    DeleteAccountMutation,
+    useDeleteAccountMutation,
 } from '../../generated/graphql';
 import { Dialog } from '../../components/Dialog/Dialog';
 import { FormTextField } from '../../components/Forms/FormTextField';
@@ -47,8 +50,9 @@ import { MutationTuple } from '@apollo/react-hooks';
 import { ExecutionResult } from 'graphql';
 import { ExecutionResultDataDefault } from 'graphql/execution/execute';
 import { Transactions } from './Transactions/Transactions';
-import { ErrorMessage, SuccessMessage } from '../../components/Alerts/AlertMessage';
+import { ErrorMessage, SuccessMessage, WarningMessage } from '../../components/Alerts/AlertMessage';
 import { addMoneyValidationSchema } from '../../schemas /addMoneyValidationSchema';
+import { Loading } from '../../components/Loading/Loading';
 
 export const Account: React.FC = () => {
     // State
@@ -61,8 +65,11 @@ export const Account: React.FC = () => {
     const [cardNumber, setCardNumber] = useState<string>('');
     const [successMessage, setSuccessMessage] = useState<string>('');
     const [errorMessage, setErrorMessage] = useState<string>('');
+    const [warningMessage, setWarningMessage] = useState<string>('');
+    const [showLoadingIcon, setShowLoadingIcon] = useState<boolean>(false);
 
     const location = useLocation<any>();
+    const history = useHistory();
 
     // GraphQL Mutations
     const [createTransaction]: MutationTuple<
@@ -77,6 +84,10 @@ export const Account: React.FC = () => {
         ExchangeMutation,
         ExchangeMutationVariables
     > = useExchangeMutation();
+    const [deleteAccount]: MutationTuple<
+        DeleteAccountMutation,
+        DeleteAccountMutationVariables
+    > = useDeleteAccountMutation();
 
     // GraphQL Queries
     const user: MeQueryResult = useMeQuery();
@@ -106,7 +117,7 @@ export const Account: React.FC = () => {
 
     // When the component mounts, check if a card exists for the account
     useEffect(() => {
-        if (cards.data) {
+        if (cards.data && cards.data.cards.length > 0) {
             setHasCard(true);
             setCardNumber(cards.data.cards[0].cardNumber);
         }
@@ -181,7 +192,7 @@ export const Account: React.FC = () => {
 
                                 if (response && response.data) {
                                     setSubmitting(false);
-                                    setSuccessMessage('Successfully topped up your account');
+                                    setSuccessMessage(response.data.addMoney.message);
                                     resetForm();
                                 }
                             } catch (error) {
@@ -242,16 +253,13 @@ export const Account: React.FC = () => {
 
                                 if (response && response.data) {
                                     // if the exchange was a success update the account balance and render a success message
-                                    if (response.data.exchange.success) {
-                                        setSubmitting(false);
-                                        setSuccessMessage('The exchange was successfully executed');
-                                        resetForm();
-                                    }
+                                    setSubmitting(false);
+                                    setSuccessMessage(response.data.exchange.message);
+                                    resetForm();
                                 }
                             } catch (error) {
-                                setErrorMessage(
-                                    'You do not have the sufficient funds. Please top up your account.',
-                                );
+                                const errorMessage: string = error.message.split(':')[1];
+                                setErrorMessage(errorMessage);
                                 setSubmitting(false);
                             }
                         }}
@@ -330,6 +338,39 @@ export const Account: React.FC = () => {
                     Beneficiary: {user.data.me.firstName} {user.data.me.lastName} <br />
                     IBAN: {location.state.iban} <br />
                     BIC: {location.state.bic}
+                    <div style={{ marginTop: 12 }}>
+                        <ThemeProvider theme={theme}>
+                            <Button
+                                className={classes.dialogButton}
+                                variant="contained"
+                                color="secondary"
+                                onClick={async () => {
+                                    try {
+                                        const response: ExecutionResult<ExecutionResultDataDefault> = await deleteAccount(
+                                            {
+                                                variables: {
+                                                    currency: location.state.currency,
+                                                },
+                                            },
+                                        );
+
+                                        if (response && response.data) {
+                                            setShowLoadingIcon(true);
+                                            setTimeout(async () => {
+                                                history.push('/dashboard');
+                                                history.go(0);
+                                            }, 3000);
+                                        }
+                                    } catch (error) {
+                                        const warning: string = error.message.split(':')[1];
+                                        setWarningMessage(warning);
+                                    }
+                                }}
+                            >
+                                Delete account
+                            </Button>
+                        </ThemeProvider>
+                    </div>
                 </Dialog>
             );
         }
@@ -348,105 +389,115 @@ export const Account: React.FC = () => {
                     <ErrorMessage message={errorMessage} />
                 </div>
             );
+        } else if (warningMessage.length > 0) {
+            return (
+                <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 12 }}>
+                    <WarningMessage message={warningMessage} />
+                </div>
+            );
         }
     };
 
-    return (
-        <div className={classes.root}>
-            {renderAddDialog()}
-            {renderExchangeDialog()}
-            {renderDetailsDialog()}
-            {renderAlertMessage()}
+    if (!showLoadingIcon) {
+        return (
+            <div className={classes.root}>
+                {renderAddDialog()}
+                {renderExchangeDialog()}
+                {renderDetailsDialog()}
+                {renderAlertMessage()}
 
-            <div style={{ position: 'absolute', right: 20 }}>
-                <ThemeProvider theme={theme}>
-                    <Button
-                        color="secondary"
-                        variant="contained"
-                        style={{
-                            fontWeight: 'bold',
-                            letterSpacing: 1,
-                            textTransform: 'none',
-                        }}
-                        onClick={() => {
-                            if (hasCard) {
-                                simulate();
-                            } else {
-                                setErrorMessage(
-                                    "Can't make this transaction. Please register a card first.",
-                                );
-                            }
+                <div style={{ position: 'absolute', right: 20 }}>
+                    <ThemeProvider theme={theme}>
+                        <Button
+                            color="secondary"
+                            variant="contained"
+                            style={{
+                                fontWeight: 'bold',
+                                letterSpacing: 1,
+                                textTransform: 'none',
+                            }}
+                            onClick={() => {
+                                if (hasCard) {
+                                    simulate();
+                                } else {
+                                    setErrorMessage(
+                                        "Can't make this transaction. Please register a card first.",
+                                    );
+                                }
 
-                            if (accountBalance < 0) {
-                                setErrorMessage(
-                                    'You do not have the sufficient funds. Please top up your account.',
-                                );
-                            }
-                        }}
-                    >
-                        Simulate
-                    </Button>
-                </ThemeProvider>
-            </div>
-            <div className={classes.accountBalance}>
-                {currencyIcon}
-                {accountBalance}
-            </div>
-            <div className={classes.accountInfo}>
-                <div>{currencyFullText}</div>
-                <div style={{ width: 32 }}>{svg}</div>
-                <div>{location.state.currency}</div>
-            </div>
-
-            <div className={classes.accountButtonsSection}>
-                <ThemeProvider theme={theme}>
-                    <div>
-                        <IconButton
-                            className={classes.accountButton}
-                            aria-label="Add"
-                            onClick={e => {
-                                e.preventDefault();
-                                setOpenAddDialog(true);
+                                if (accountBalance < 0) {
+                                    setErrorMessage(
+                                        'You do not have the sufficient funds. Please top up your account.',
+                                    );
+                                }
                             }}
                         >
-                            <AddIcon />
-                        </IconButton>
-                        <div className={classes.accountButtonText}>Add money</div>
-                    </div>
-                    <div>
-                        <IconButton
-                            className={classes.accountButton}
-                            aria-label="Exchange"
-                            onClick={(e: MouseEvent<HTMLButtonElement>) => {
-                                e.preventDefault();
-                                setOpenExchangeDialog(true);
-                            }}
-                        >
-                            <SwapVert />
-                        </IconButton>
-                        <div className={classes.accountButtonText}>Exchange</div>
-                    </div>
-                    <div>
-                        <IconButton
-                            className={classes.accountButton}
-                            aria-label="Details"
-                            onClick={(e: MouseEvent<HTMLButtonElement>) => {
-                                e.preventDefault();
-                                setOpenDetailsDialog(true);
-                            }}
-                        >
-                            <InfoOutlinedIcon />
-                        </IconButton>
-                        <div className={classes.accountButtonText}>Details</div>
-                    </div>
-                </ThemeProvider>
+                            Simulate
+                        </Button>
+                    </ThemeProvider>
+                </div>
+                <div className={classes.accountBalance}>
+                    {currencyIcon}
+                    {accountBalance}
+                </div>
+                <div className={classes.accountInfo}>
+                    <div>{currencyFullText}</div>
+                    <div style={{ width: 32 }}>{svg}</div>
+                    <div>{location.state.currency}</div>
+                </div>
+
+                <div className={classes.accountButtonsSection}>
+                    <ThemeProvider theme={theme}>
+                        <div>
+                            <IconButton
+                                className={classes.accountButton}
+                                aria-label="Add"
+                                onClick={e => {
+                                    e.preventDefault();
+                                    setOpenAddDialog(true);
+                                }}
+                            >
+                                <AddIcon />
+                            </IconButton>
+                            <div className={classes.accountButtonText}>Add money</div>
+                        </div>
+                        <div>
+                            <IconButton
+                                className={classes.accountButton}
+                                aria-label="Exchange"
+                                onClick={(e: MouseEvent<HTMLButtonElement>) => {
+                                    e.preventDefault();
+                                    setOpenExchangeDialog(true);
+                                }}
+                            >
+                                <SwapVert />
+                            </IconButton>
+                            <div className={classes.accountButtonText}>Exchange</div>
+                        </div>
+                        <div>
+                            <IconButton
+                                className={classes.accountButton}
+                                aria-label="Details"
+                                onClick={(e: MouseEvent<HTMLButtonElement>) => {
+                                    e.preventDefault();
+                                    setOpenDetailsDialog(true);
+                                }}
+                            >
+                                <InfoOutlinedIcon />
+                            </IconButton>
+                            <div className={classes.accountButtonText}>Details</div>
+                        </div>
+                    </ThemeProvider>
+                </div>
+                <hr style={{ width: 480, marginTop: 24, color: '#fcfcfc' }} />
+                <Transactions
+                    account={data}
+                    cardNumber={hasCard ? cardNumber : undefined}
+                    currencyIcon={currencyIcon}
+                />
             </div>
-            <hr style={{ width: 480, marginTop: 24, color: '#fcfcfc' }} />
-            <Transactions
-                account={data}
-                cardNumber={hasCard ? cardNumber : undefined}
-                currencyIcon={currencyIcon}
-            />
-        </div>
-    );
+        );
+    } else {
+        return <Loading />;
+    }
 };

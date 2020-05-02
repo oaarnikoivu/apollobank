@@ -15,6 +15,7 @@ import { User } from "../entity/User";
 import { MyContext } from "../MyContext";
 import { isAuth } from "../middleware";
 import { sendRefreshToken } from "../utils/sendRefreshToken";
+import { ErrorMessages } from "../utils/messages";
 import { getConnection } from "typeorm";
 import { verify } from "jsonwebtoken";
 
@@ -22,6 +23,7 @@ import { verify } from "jsonwebtoken";
 class LoginResponse {
 	@Field()
 	accessToken: string;
+
 	@Field(() => User)
 	user: User;
 }
@@ -69,13 +71,13 @@ export class UserResolver {
 		const user: User | undefined = await User.findOne({ where: { email } });
 
 		if (!user) {
-			throw new Error("Invalid login");
+			throw new Error(ErrorMessages.LOGIN);
 		}
 
 		const valid: boolean = await compare(password, user.password);
 
 		if (!valid) {
-			throw new Error("Invalid password");
+			throw new Error(ErrorMessages.PASSWORD);
 		}
 
 		// login successful
@@ -155,9 +157,7 @@ export class UserResolver {
 					return false;
 				}
 			} else {
-				throw new Error(
-					"Could not change your password, are you sure you entered the correct password?"
-				);
+				throw new Error(ErrorMessages.UPDATE_PASSWORD);
 			}
 		}
 		return true;
@@ -165,7 +165,7 @@ export class UserResolver {
 
 	@Mutation(() => Boolean)
 	@UseMiddleware(isAuth)
-	async deleteAccount(@Ctx() { payload }: MyContext) {
+	async destroyAccount(@Ctx() { payload }: MyContext) {
 		if (!payload) {
 			return false;
 		}
@@ -178,8 +178,7 @@ export class UserResolver {
 					id: owner.id,
 				});
 			} catch (error) {
-				console.log(error);
-				return false;
+				throw new Error(ErrorMessages.DELETE_ACCOUNT);
 			}
 		}
 		return true;
