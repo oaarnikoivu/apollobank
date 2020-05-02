@@ -111,7 +111,14 @@ export const Dashboard: React.FC = () => {
 
     if (!data) {
         return (
-            <div style={{ position: 'fixed', top: '50%', left: '50%' }}>
+            <div
+                style={{
+                    position: 'fixed',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                }}
+            >
                 <Loading />
             </div>
         );

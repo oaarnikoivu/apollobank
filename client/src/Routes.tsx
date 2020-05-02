@@ -34,7 +34,7 @@ const LoggedInRoute = ({ component: Component, ...rest }: AuthenticatedRouteProp
         {...rest}
         render={props =>
             getAccessToken() ? (
-                <Redirect to={{ pathname: '/accounts' }} />
+                <Redirect to={{ pathname: '/dashboard' }} />
             ) : (
                 <Component {...props} />
             )

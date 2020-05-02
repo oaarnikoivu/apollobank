@@ -21,9 +21,21 @@ export const App: React.FC = () => {
 
     if (loading) {
         return (
-            <div style={{ position: 'fixed', top: '50%', left: '50%' }}>
-                <Loading />
-            </div>
+            <>
+                <Helmet>
+                    <style>{`body { background-color: ${ColorScheme.WHITE}; }`}</style>
+                </Helmet>
+                <div
+                    style={{
+                        position: 'absolute',
+                        top: '50%',
+                        left: '50%',
+                        transform: 'translate(-50%, -50%)',
+                    }}
+                >
+                    <Loading />
+                </div>
+            </>
         );
     }
 
