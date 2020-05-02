@@ -43,6 +43,7 @@ A fullstack GraphQL banking application built using React, Node & TypeScript.
 ## Todo 
 - [ ] When deleting and destroying an account, alert the user with another dialog to check if they would like to proceed with this action.
 - [ ] Update the chart on the dashboard to show spending such that the y axis is the users account balance.
+- [ ] Sort transactions by date & sort chart data by date.
 - [ ] Fetch exchange rates from an API. 
 
 ## Bugs
