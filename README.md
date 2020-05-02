@@ -39,11 +39,11 @@ A fullstack GraphQL banking application built using React, Node & TypeScript.
 * Formik
 * Yup
 
-### Todo 
-[] When deleting and destroying an account, alert the user with another dialog to check if they would to proceed with this action.
-[] Update the chart on the dashboard to show spending such that the y axis is the users account balance.
+## Todo 
+- [ ] When deleting and destroying an account, alert the user with another dialog to check if they would to proceed with this action.
+- [ ] Update the chart on the dashboard to show spending such that the y axis is the users account balance.
 
-### Bugs
+## Bugs
 * Occasionally the users credit card gets randomly deleted when creating a new account.
 * Users credit card gets deleted (sometimes) when the user adds or exchanges money.
 * Users credit card gets deleted (sometimes) when the user deletes an account.
