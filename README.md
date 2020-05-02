@@ -25,6 +25,7 @@ A fullstack GraphQL banking application built using React, Node & TypeScript.
 * cors
 * Express
 * GraphQL
+* faker
 * jsonwebtoken
 * TypeGraphQL
 * TypeORM
@@ -40,8 +41,9 @@ A fullstack GraphQL banking application built using React, Node & TypeScript.
 * Yup
 
 ## Todo 
-- [ ] When deleting and destroying an account, alert the user with another dialog to check if they would to proceed with this action.
+- [ ] When deleting and destroying an account, alert the user with another dialog to check if they would like to proceed with this action.
 - [ ] Update the chart on the dashboard to show spending such that the y axis is the users account balance.
+- [ ] Fetch exchange rates from an API. 
 
 ## Bugs
 * Occasionally the users credit card gets randomly deleted when creating a new account.
