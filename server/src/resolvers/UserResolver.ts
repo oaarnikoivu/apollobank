@@ -1,3 +1,4 @@
+import { registerSchema, loginSchema, changePasswordSchema } from "./../utils/validation";
 import { createRefreshToken, createAccessToken } from "../utils/auth";
 import {
 	Resolver,
@@ -92,6 +93,13 @@ export class UserResolver {
 		@Arg("password") password: string,
 		@Ctx() { res }: MyContext
 	): Promise<LoginResponse> {
+		// Server side validation for login using Joi
+		try {
+			await loginSchema.validateAsync({ email: email, password: password });
+		} catch (error) {
+			throw new Error("Something went wrong.");
+		}
+
 		const user: User | undefined = await User.findOne({ where: { email } });
 
 		if (!user) {
@@ -105,7 +113,6 @@ export class UserResolver {
 		}
 
 		// login successful
-
 		sendRefreshToken(res, createRefreshToken(user));
 
 		return {
@@ -139,6 +146,18 @@ export class UserResolver {
 		@Arg("city") city: string,
 		@Arg("country") country: string
 	) {
+		// Server side validation for registering using Joi
+		try {
+			await registerSchema.validateAsync({
+				email: email,
+				password: password,
+				dateOfBirth: dateOfBirth,
+			});
+		} catch (error) {
+			console.log(error);
+			return false;
+		}
+
 		const hashedPassword: string = await hash(password, 12);
 
 		try {
@@ -177,6 +196,17 @@ export class UserResolver {
 		@Ctx() { payload }: MyContext
 	) {
 		if (!payload) {
+			return false;
+		}
+
+		// Server side validation for changing password
+		try {
+			await changePasswordSchema.validateAsync({
+				oldPassword: oldPassword,
+				newPassword: newPassword,
+			});
+		} catch (error) {
+			console.log(error);
 			return false;
 		}
 

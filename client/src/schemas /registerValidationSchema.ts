@@ -20,5 +20,9 @@ export const registerValidationSchema = yup.object({
                   .required('Password is required'),
     ),
     confirmPassword: yup.string().oneOf([yup.ref('password')], 'Passwords do not match'),
-    dateOfBirth: yup.date().required('Date of birth is required'),
+    dateOfBirth: yup
+        .date()
+        .max(new Date(), 'Date of birth cannot be in the future')
+        .typeError('Date of birth has to be a valid date')
+        .required('Date of birth is required'),
 });

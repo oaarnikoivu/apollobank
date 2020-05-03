@@ -21,34 +21,27 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const messages_1 = require("./../utils/messages");
 const createRandom_1 = require("./../utils/createRandom");
 const middleware_1 = require("../middleware");
 const type_graphql_1 = require("type-graphql");
 const User_1 = require("../entity/User");
 const Account_1 = require("../entity/Account");
 const createRandom_2 = require("../utils/createRandom");
+const messages_2 = require("../utils/messages");
 let AccountResponse = class AccountResponse {
 };
 __decorate([
     type_graphql_1.Field(() => Account_1.Account),
     __metadata("design:type", Account_1.Account)
 ], AccountResponse.prototype, "account", void 0);
+__decorate([
+    type_graphql_1.Field(() => String),
+    __metadata("design:type", String)
+], AccountResponse.prototype, "message", void 0);
 AccountResponse = __decorate([
     type_graphql_1.ObjectType()
 ], AccountResponse);
-let ExchangeResponse = class ExchangeResponse {
-};
-__decorate([
-    type_graphql_1.Field(() => Account_1.Account),
-    __metadata("design:type", Object)
-], ExchangeResponse.prototype, "account", void 0);
-__decorate([
-    type_graphql_1.Field(() => Boolean),
-    __metadata("design:type", Boolean)
-], ExchangeResponse.prototype, "success", void 0);
-ExchangeResponse = __decorate([
-    type_graphql_1.ObjectType()
-], ExchangeResponse);
 let AccountResolver = class AccountResolver {
     accounts({ payload }) {
         return __awaiter(this, void 0, void 0, function* () {
@@ -92,18 +85,23 @@ let AccountResolver = class AccountResolver {
                         yield Account_1.Account.update({ id: account.id }, { balance: account.balance + amount });
                     }
                     catch (err) {
-                        console.log(err);
-                        throw new Error("Something went wrong");
+                        throw new Error(messages_1.ErrorMessages.ADD_MONEY);
                     }
                 }
             }
-            const updatedAccount = yield Account_1.Account.findOne({
-                where: { owner: owner, currency: currency },
-            });
-            if (updatedAccount) {
-                return {
-                    account: updatedAccount,
-                };
+            try {
+                const updatedAccount = yield Account_1.Account.findOne({
+                    where: { owner: owner, currency: currency },
+                });
+                if (updatedAccount) {
+                    return {
+                        account: updatedAccount,
+                        message: messages_2.SuccessMessages.ADD_MONEY,
+                    };
+                }
+            }
+            catch (error) {
+                throw new Error(messages_1.ErrorMessages.ADD_MONEY);
             }
             return null;
         });
@@ -128,8 +126,27 @@ let AccountResolver = class AccountResolver {
                         });
                         if (toAccount) {
                             try {
-                                yield Account_1.Account.update({ id: toAccount.id }, { balance: toAccount.balance + amount });
-                                yield Account_1.Account.update({ id: currentAccount.id }, { balance: currentAccount.balance - amount });
+                                let amountWithConversion = 0;
+                                if (selectedAccountCurrency === "EUR" && toAccountCurrency === "USD") {
+                                    amountWithConversion = amount * 1.11;
+                                }
+                                else if (selectedAccountCurrency === "EUR" && toAccountCurrency === "GBP") {
+                                    amountWithConversion = amount * 0.89;
+                                }
+                                else if (selectedAccountCurrency === "USD" && toAccountCurrency === "EUR") {
+                                    amountWithConversion = amount * 0.9;
+                                }
+                                else if (selectedAccountCurrency === "USD" && toAccountCurrency === "GBP") {
+                                    amountWithConversion = amount * 0.8;
+                                }
+                                else if (selectedAccountCurrency === "GBP" && toAccountCurrency === "USD") {
+                                    amountWithConversion = amount * 1.25;
+                                }
+                                else if (selectedAccountCurrency === "GBP" && toAccountCurrency === "EUR") {
+                                    amountWithConversion = amount * 1.13;
+                                }
+                                yield Account_1.Account.update({ id: toAccount.id }, { balance: toAccount.balance + Math.round(amountWithConversion) });
+                                yield Account_1.Account.update({ id: currentAccount.id }, { balance: currentAccount.balance - Math.round(amountWithConversion) });
                             }
                             catch (err) {
                                 console.log(err);
@@ -138,23 +155,25 @@ let AccountResolver = class AccountResolver {
                         }
                     }
                     else {
-                        throw new Error("You do not have the sufficient funds to make this exchange!");
+                        throw new Error(messages_1.ErrorMessages.EXCHANGE);
                     }
                 }
             }
-            const updatedAccount = yield Account_1.Account.findOne({
-                where: { owner: owner, currency: selectedAccountCurrency },
-            });
-            if (updatedAccount) {
-                return {
-                    account: updatedAccount,
-                    success: true,
-                };
+            try {
+                const updatedAccount = yield Account_1.Account.findOne({
+                    where: { owner: owner, currency: selectedAccountCurrency },
+                });
+                if (updatedAccount) {
+                    return {
+                        account: updatedAccount,
+                        message: messages_2.SuccessMessages.EXCHANGE,
+                    };
+                }
             }
-            return {
-                account: undefined,
-                success: false,
-            };
+            catch (error) {
+                throw new Error(messages_1.ErrorMessages.EXCHANGE);
+            }
+            return null;
         });
     }
     createAccount(currency, { payload }) {
@@ -183,6 +202,39 @@ let AccountResolver = class AccountResolver {
                     catch (err) {
                         console.log(err);
                         return false;
+                    }
+                }
+            }
+            return true;
+        });
+    }
+    deleteAccount(currency, { payload }) {
+        return __awaiter(this, void 0, void 0, function* () {
+            if (!payload) {
+                return false;
+            }
+            const owner = yield User_1.User.findOne({ where: { id: payload.userId } });
+            if (owner) {
+                const account = yield Account_1.Account.findOne({
+                    where: { owner: owner, currency: currency },
+                });
+                if (account) {
+                    if (account.balance == 0) {
+                        try {
+                            yield Account_1.Account.delete({
+                                id: account.id,
+                            });
+                        }
+                        catch (error) {
+                            console.log(error);
+                            return false;
+                        }
+                    }
+                    else if (account.balance < 0) {
+                        throw new Error(messages_1.ErrorMessages.BALANCE_LESS_THAN);
+                    }
+                    else if (account.balance > 0) {
+                        throw new Error(messages_1.ErrorMessages.BALANCE_GREATER_THAN);
                     }
                 }
             }
@@ -218,7 +270,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], AccountResolver.prototype, "addMoney", null);
 __decorate([
-    type_graphql_1.Mutation(() => ExchangeResponse),
+    type_graphql_1.Mutation(() => AccountResponse),
     type_graphql_1.UseMiddleware(middleware_1.isAuth),
     __param(0, type_graphql_1.Arg("selectedAccountCurrency")),
     __param(1, type_graphql_1.Arg("toAccountCurrency")),
@@ -236,6 +288,14 @@ __decorate([
     __metadata("design:paramtypes", [String, Object]),
     __metadata("design:returntype", Promise)
 ], AccountResolver.prototype, "createAccount", null);
+__decorate([
+    type_graphql_1.Mutation(() => Boolean),
+    type_graphql_1.UseMiddleware(middleware_1.isAuth),
+    __param(0, type_graphql_1.Arg("currency")), __param(1, type_graphql_1.Ctx()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:returntype", Promise)
+], AccountResolver.prototype, "deleteAccount", null);
 AccountResolver = __decorate([
     type_graphql_1.Resolver()
 ], AccountResolver);

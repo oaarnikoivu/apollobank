@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const typeorm_1 = require("typeorm");
 const type_graphql_1 = require("type-graphql");
 const Account_1 = require("./Account");
+const Card_1 = require("./Card");
 let User = class User extends typeorm_1.BaseEntity {
 };
 __decorate([
@@ -39,29 +40,38 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "lastName", void 0);
 __decorate([
+    type_graphql_1.Field(),
     typeorm_1.Column(),
     __metadata("design:type", String)
 ], User.prototype, "dateOfBirth", void 0);
 __decorate([
+    type_graphql_1.Field(),
     typeorm_1.Column(),
     __metadata("design:type", String)
 ], User.prototype, "streetAddress", void 0);
 __decorate([
+    type_graphql_1.Field(),
     typeorm_1.Column(),
     __metadata("design:type", String)
 ], User.prototype, "postCode", void 0);
 __decorate([
+    type_graphql_1.Field(),
     typeorm_1.Column(),
     __metadata("design:type", String)
 ], User.prototype, "city", void 0);
 __decorate([
+    type_graphql_1.Field(),
     typeorm_1.Column(),
     __metadata("design:type", String)
 ], User.prototype, "country", void 0);
 __decorate([
-    typeorm_1.OneToMany(() => Account_1.Account, account => account.owner),
+    typeorm_1.OneToMany(() => Account_1.Account, (account) => account.owner, { onDelete: "CASCADE" }),
     __metadata("design:type", Array)
 ], User.prototype, "accounts", void 0);
+__decorate([
+    typeorm_1.OneToMany(() => Card_1.Card, (card) => card.owner, { onDelete: "CASCADE" }),
+    __metadata("design:type", Array)
+], User.prototype, "cards", void 0);
 __decorate([
     typeorm_1.Column("int", { default: 0 }),
     __metadata("design:type", Number)

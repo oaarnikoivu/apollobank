@@ -26,17 +26,17 @@ const auth_1 = require("./utils/auth");
 const sendRefreshToken_1 = require("./utils/sendRefreshToken");
 const createTypeOrmConnection_1 = require("./utils/createTypeOrmConnection");
 const typeorm_1 = require("typeorm");
+const CardResolver_1 = require("./resolvers/CardResolver");
 require("dotenv/config");
 require("reflect-metadata");
-const CardResolver_1 = require("./resolvers/CardResolver");
 (() => __awaiter(void 0, void 0, void 0, function* () {
     const app = express_1.default();
     app.use(cookie_parser_1.default());
     app.use(cors_1.default({
         origin: process.env.NODE_ENV === "production"
-            ? "https://vigilant-goldwasser-9ac664.netlify.com"
+            ? "https://vigilant-goldwasser-9ac664.netlify.app"
             : "http://localhost:3000",
-        credentials: true
+        credentials: true,
     }));
     app.get("/", (_req, res) => {
         res.send("🚀 Server is running");
@@ -69,11 +69,11 @@ const CardResolver_1 = require("./resolvers/CardResolver");
         : yield typeorm_1.createConnection();
     const appolloServer = new apollo_server_express_1.ApolloServer({
         schema: yield type_graphql_1.buildSchema({
-            resolvers: [UserResolver_1.UserResolver, AccountResolver_1.AccountResolver, TransactionResolver_1.TransactionResolver, CardResolver_1.CardResolver]
+            resolvers: [UserResolver_1.UserResolver, AccountResolver_1.AccountResolver, TransactionResolver_1.TransactionResolver, CardResolver_1.CardResolver],
         }),
         introspection: true,
         playground: true,
-        context: ({ req, res }) => ({ req, res })
+        context: ({ req, res }) => ({ req, res }),
     });
     appolloServer.applyMiddleware({ app, cors: false });
     app.listen(process.env.PORT || 4000, () => {
