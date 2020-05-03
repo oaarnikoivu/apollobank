@@ -36,7 +36,6 @@ import {
 import { Loading } from '../../components/Loading/Loading';
 import { useHistory } from 'react-router-dom';
 import { AccountsCard, NoAccountsCard } from '../../components/Cards/AccountsCard';
-import { Currency } from '../../utils/currencies';
 import { Dialog } from '../../components/Dialog/Dialog';
 import { NoApolloCard, ApolloCard } from '../../components/Cards/ApolloCard';
 import { MutationTuple } from '@apollo/react-hooks';
@@ -333,17 +332,17 @@ export const Dashboard: React.FC = () => {
                                 let fullCurrencyText: string = '';
 
                                 switch (account.currency) {
-                                    case Currency.EURO:
+                                    case GLOBAL_CURRENCIES[0]:
                                         svg = <Euro />;
                                         currencyIcon = '€';
                                         fullCurrencyText = 'Euro';
                                         break;
-                                    case Currency.DOLLAR:
+                                    case GLOBAL_CURRENCIES[1]:
                                         svg = <Dollar />;
                                         currencyIcon = '$';
                                         fullCurrencyText = 'US Dollar';
                                         break;
-                                    case Currency.POUND:
+                                    case GLOBAL_CURRENCIES[2]:
                                         svg = <Pound />;
                                         currencyIcon = '£';
                                         fullCurrencyText = 'British Pound';

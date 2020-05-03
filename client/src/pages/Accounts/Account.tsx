@@ -139,11 +139,6 @@ export const Account: React.FC = () => {
             currencyFullText = 'British Pound';
             svg = <Pound />;
             break;
-        case 'BTC':
-            currencyIcon = '฿';
-            currencyFullText = 'Bitcoin';
-            svg = undefined;
-            break;
     }
 
     const simulate = async (): Promise<void> => {
