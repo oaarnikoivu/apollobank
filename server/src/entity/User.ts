@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, BaseEntity, OneToMany } from "typeorm";
 import { ObjectType, Field, Int } from "type-graphql";
 import { Account } from "./Account";
+import { Card } from "./Card";
 
 @ObjectType()
 @Entity("users")
@@ -46,6 +47,9 @@ export class User extends BaseEntity {
 
 	@OneToMany(() => Account, (account) => account.owner, { onDelete: "CASCADE" })
 	accounts: Account[];
+
+	@OneToMany(() => Card, (card) => card.owner, { onDelete: "CASCADE" })
+	cards: Card[];
 
 	@Column("int", { default: 0 })
 	tokenVersion: number;

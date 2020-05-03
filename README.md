@@ -46,9 +46,4 @@ A fullstack GraphQL banking application built using React, Node & TypeScript.
 - [ ] Sort transactions by date & sort chart data by date.
 - [ ] Fetch exchange rates from an API. 
 
-## Bugs
-* Occasionally the users credit card gets randomly deleted when creating a new account.
-* Users credit card gets deleted (sometimes) when the user adds or exchanges money.
-* Users credit card gets deleted (sometimes) when the user deletes an account.
-
 Flag icons made by <a href="https://www.flaticon.com/authors/freepik" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon"> www.flaticon.com</a>

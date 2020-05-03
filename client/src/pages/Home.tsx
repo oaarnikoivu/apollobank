@@ -5,7 +5,7 @@ interface Props {}
 
 export const Home: React.FC<Props> = () => {
     return (
-        <div style={{ height: '1400px', backgroundColor: ColorScheme.PRIMARY, marginTop: '-48px' }}>
+        <div style={{ height: '100vh', backgroundColor: ColorScheme.PRIMARY, marginTop: '-48px' }}>
             <div
                 style={{
                     position: 'absolute',

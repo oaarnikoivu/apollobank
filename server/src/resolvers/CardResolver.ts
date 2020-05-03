@@ -38,26 +38,21 @@ export class CardResolver {
 		const owner: User | undefined = await User.findOne({ where: { id: payload.userId } });
 
 		if (owner) {
-			const account: Account | undefined = await Account.findOne({
-				where: { owner: owner },
-			});
-
-			if (account) {
-				try {
-					await Card.insert({
-						account,
-						cardNumber: createRandomCardNumber(),
-						expiresIn: new Date(2023, 9),
-						pin: parseInt(createRandomNumber(4)),
-						cvv: parseInt(createRandomNumber(3)),
-						monthlySpendingLimit: 500,
-					});
-				} catch (err) {
-					console.log(err);
-					return false;
-				}
+			try {
+				await Card.insert({
+					owner,
+					cardNumber: createRandomCardNumber(),
+					expiresIn: new Date(2023, 9),
+					pin: parseInt(createRandomNumber(4)),
+					cvv: parseInt(createRandomNumber(3)),
+					monthlySpendingLimit: 500,
+				});
+			} catch (err) {
+				console.log(err);
+				return false;
 			}
 		}
+
 		return true;
 	}
 }

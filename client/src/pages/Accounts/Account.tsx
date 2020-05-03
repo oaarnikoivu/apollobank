@@ -242,25 +242,27 @@ export const Account: React.FC = () => {
                         onSubmit={async (data, { setSubmitting, resetForm }) => {
                             setSubmitting(true);
 
-                            try {
-                                const response = await exchange({
-                                    variables: {
-                                        selectedAccountCurrency: location.state.currency,
-                                        toAccountCurrency: toAccountCurrency,
-                                        amount: data.amount,
-                                    },
-                                });
+                            if (toAccountCurrency !== '') {
+                                try {
+                                    const response = await exchange({
+                                        variables: {
+                                            selectedAccountCurrency: location.state.currency,
+                                            toAccountCurrency: toAccountCurrency,
+                                            amount: data.amount,
+                                        },
+                                    });
 
-                                if (response && response.data) {
-                                    // if the exchange was a success update the account balance and render a success message
+                                    if (response && response.data) {
+                                        // if the exchange was a success update the account balance and render a success message
+                                        setSubmitting(false);
+                                        setSuccessMessage(response.data.exchange.message);
+                                        resetForm();
+                                    }
+                                } catch (error) {
+                                    const errorMessage: string = error.message.split(':')[1];
+                                    setErrorMessage(errorMessage);
                                     setSubmitting(false);
-                                    setSuccessMessage(response.data.exchange.message);
-                                    resetForm();
                                 }
-                            } catch (error) {
-                                const errorMessage: string = error.message.split(':')[1];
-                                setErrorMessage(errorMessage);
-                                setSubmitting(false);
                             }
                         }}
                     >
@@ -498,6 +500,17 @@ export const Account: React.FC = () => {
             </div>
         );
     } else {
-        return <Loading />;
+        return (
+            <div
+                style={{
+                    position: 'fixed',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                }}
+            >
+                <Loading />
+            </div>
+        );
     }
 };

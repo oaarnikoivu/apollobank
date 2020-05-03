@@ -11,7 +11,7 @@ import { setAccessToken } from '../../utils/accessToken';
 import { Formik, Form } from 'formik';
 import { FormTextField } from '../../components/Forms/FormTextField';
 import { Button, ThemeProvider } from '@material-ui/core';
-import { theme } from '../../utils/theme';
+import { theme, ColorScheme } from '../../utils/theme';
 import { loginValidationSchema } from '../../schemas /loginValidationSchema';
 import { ErrorMessage } from '../../components/Alerts/AlertMessage';
 import { useLoginStyles } from './Login.style';
@@ -107,7 +107,16 @@ export const Login: React.FC<RouteComponentProps> = ({ history }) => {
                             </div>
                             <div className={classes.registerText}>
                                 <p>
-                                    Don't have an account? <a href="/register">Sign up here.</a>
+                                    Don't have an account?{' '}
+                                    <a
+                                        href="/register"
+                                        style={{
+                                            textDecoration: 'none',
+                                            color: ColorScheme.SECONDARY,
+                                        }}
+                                    >
+                                        Sign up here.
+                                    </a>
                                 </p>
                             </div>
                         </Form>

@@ -1,4 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles';
+import { ColorScheme } from '../../utils/theme';
 
 export const useRegisterStyles = makeStyles({
     root: {
@@ -29,6 +30,10 @@ export const useRegisterStyles = makeStyles({
         fontWeight: 'bold',
         letterSpacing: 1,
         textAlign: 'center',
+        '&:disabled': {
+            backgroundColor: ColorScheme.ORANGE,
+            color: ColorScheme.WHITE,
+        },
     },
     loginText: {
         margintop: 12,

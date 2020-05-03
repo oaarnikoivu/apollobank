@@ -255,65 +255,164 @@ export const Settings: React.FC = () => {
                     Server side technologies
                     <ul>
                         <li>
-                            <a href="https://www.apollographql.com/docs/apollo-server/">
+                            <a
+                                href="https://www.apollographql.com/docs/apollo-server/"
+                                style={{ textDecoration: 'none', color: ColorScheme.SECONDARY }}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
                                 Apollo Server
                             </a>
                         </li>
                         <li>
-                            <a href="https://www.npmjs.com/package/bcryptjs">bcryptjs</a> for
-                            password hashing
+                            <a
+                                href="https://www.npmjs.com/package/bcryptjs"
+                                style={{ textDecoration: 'none', color: ColorScheme.SECONDARY }}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                bcryptjs
+                            </a>{' '}
+                            for password hashing
                         </li>
                         <li>
-                            <a href="https://www.npmjs.com/package/cors">cors</a> for cross origin
-                            resource sharing.
+                            <a
+                                href="https://www.npmjs.com/package/cors"
+                                style={{ textDecoration: 'none', color: ColorScheme.SECONDARY }}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                cors
+                            </a>{' '}
+                            for cross origin resource sharing
                         </li>
                         <li>
-                            <a href="https://expressjs.com/">Express</a>
+                            <a
+                                href="https://expressjs.com/"
+                                style={{ textDecoration: 'none', color: ColorScheme.SECONDARY }}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                Express
+                            </a>
                         </li>
                         <li>
-                            <a href="https://graphql.org/">GraphQL</a>
+                            <a
+                                href="https://graphql.org/"
+                                style={{ textDecoration: 'none', color: ColorScheme.SECONDARY }}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                GraphQL
+                            </a>
                         </li>
                         <li>
-                            <a href="https://www.npmjs.com/package/jsonwebtoken">jsonwebtoken</a>
+                            <a
+                                href="https://www.npmjs.com/package/jsonwebtoken"
+                                style={{ textDecoration: 'none', color: ColorScheme.SECONDARY }}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                jsonwebtoken
+                            </a>
                         </li>
                         <li>
-                            <a href="https://typegraphql.com/">TypeGraphQL</a> for GraphQLI API
-                            TypeScript integration
+                            <a
+                                href="https://typegraphql.com/"
+                                style={{ textDecoration: 'none', color: ColorScheme.SECONDARY }}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                TypeGraphQL
+                            </a>{' '}
+                            for GraphQLI API TypeScript integration
                         </li>
                         <li>
-                            <a href="https://typeorm.io/#/">TypeORM</a> - Typescript ORM to use with
-                            databases (PostgreSQL in my case)
+                            <a
+                                href="https://typeorm.io/#/"
+                                style={{ textDecoration: 'none', color: ColorScheme.SECONDARY }}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                TypeORM
+                            </a>{' '}
+                            - Typescript ORM to use with databases (PostgreSQL in my case)
                         </li>
                         <li>
-                            <a href="https://www.typescriptlang.org/">TypeScript</a>
+                            <a
+                                href="https://www.typescriptlang.org/"
+                                style={{ textDecoration: 'none', color: ColorScheme.SECONDARY }}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                TypeScript
+                            </a>
                         </li>
                     </ul>
                     Client side technologies
                     <ul>
                         <li>
-                            <a href="https://www.apollographql.com/docs/react/api/react-hooks/">
+                            <a
+                                href="https://www.apollographql.com/docs/react/api/react-hooks/"
+                                style={{ textDecoration: 'none', color: ColorScheme.SECONDARY }}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
                                 Apollo React Hooks
                             </a>
                         </li>
                         <li>
-                            <a href="https://fontawesome.com/how-to-use/on-the-web/using-with/react">
+                            <a
+                                href="https://fontawesome.com/how-to-use/on-the-web/using-with/react"
+                                style={{ textDecoration: 'none', color: ColorScheme.SECONDARY }}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
                                 FontAwesome Icons
                             </a>
                         </li>
                         <li>
-                            <a href="https://material-ui.com/">Material UI</a>
+                            <a
+                                href="https://material-ui.com/"
+                                style={{ textDecoration: 'none', color: ColorScheme.SECONDARY }}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                Material UI
+                            </a>
                         </li>
                         <li>
-                            <a href="https://recharts.org/en-US/">Recharts</a> - For data
-                            visualization
+                            <a
+                                href="https://recharts.org/en-US/"
+                                style={{ textDecoration: 'none', color: ColorScheme.SECONDARY }}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                Recharts
+                            </a>{' '}
+                            - For data visualization
                         </li>
                         <li>
-                            <a href="https://jaredpalmer.com/formik/">Formik</a> - For building
-                            Forms
+                            <a
+                                href="https://jaredpalmer.com/formik/"
+                                style={{ textDecoration: 'none', color: ColorScheme.SECONDARY }}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                Formik
+                            </a>{' '}
+                            - For building Forms
                         </li>
                         <li>
-                            <a href="https://github.com/jquense/yup">Yup</a> - For client side
-                            validation
+                            <a
+                                href="https://github.com/jquense/yup"
+                                style={{ textDecoration: 'none', color: ColorScheme.SECONDARY }}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                            >
+                                Yup
+                            </a>{' '}
+                            - For client sid form validation
                         </li>
                     </ul>
                 </div>
@@ -431,6 +530,17 @@ export const Settings: React.FC = () => {
             </>
         );
     } else {
-        return <Loading />;
+        return (
+            <div
+                style={{
+                    position: 'fixed',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                }}
+            >
+                <Loading />
+            </div>
+        );
     }
 };

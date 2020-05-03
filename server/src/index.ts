@@ -12,9 +12,9 @@ import { createAccessToken, createRefreshToken } from "./utils/auth";
 import { sendRefreshToken } from "./utils/sendRefreshToken";
 import { createTypeOrmConnection } from "./utils/createTypeOrmConnection";
 import { createConnection } from "typeorm";
+import { CardResolver } from "./resolvers/CardResolver";
 import "dotenv/config";
 import "reflect-metadata";
-import { CardResolver } from "./resolvers/CardResolver";
 
 (async () => {
 	const app = express();
