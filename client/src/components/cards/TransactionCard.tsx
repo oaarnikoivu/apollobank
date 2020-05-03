@@ -11,7 +11,7 @@ import {
 } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { theme } from '../../utils/theme';
-import { useTransactionCardStyles } from '../styles/cards/TransactionCard.style';
+import { useTransactionCardStyles } from './styles/TransactionCard.style';
 
 interface TransactionCardProps {
     title: string;

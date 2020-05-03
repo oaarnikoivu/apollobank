@@ -30,6 +30,13 @@ class LoginResponse {
 
 @Resolver()
 export class UserResolver {
+	/**
+	 * Query to return the current user
+	 * Must first check that the user contains the secret token in the authorization header
+	 * If the token is found, use jwt to verify the token
+	 * If verified, return the user
+	 * @param context
+	 */
 	@Query(() => User, { nullable: true })
 	me(@Ctx() context: MyContext) {
 		const authorization: string | undefined = context.req.headers["authorization"];
@@ -49,12 +56,21 @@ export class UserResolver {
 		}
 	}
 
+	/**
+	 * Mutation to logout the user
+	 * Remove the refresh token once logged out
+	 * @param param0
+	 */
 	@Mutation(() => Boolean)
 	async logout(@Ctx() { res }: MyContext) {
 		sendRefreshToken(res, "");
 		return true;
 	}
 
+	/**
+	 * Mutation to revoke the refresh token for a user
+	 * @param userId
+	 */
 	@Mutation(() => Boolean)
 	async revokeRefreshTokensForUser(@Arg("userId", () => Int) userId: number) {
 		await getConnection().getRepository(User).increment({ id: userId }, "tokenVersion", 1);
@@ -62,6 +78,14 @@ export class UserResolver {
 		return true;
 	}
 
+	/**
+	 * Mutation to login
+	 * Must use the bcryptjs compare function to verify the users hashed password
+	 * If verified, send a refresh token, create an access token and login in the user
+	 * @param email
+	 * @param password
+	 * @param param2
+	 */
 	@Mutation(() => LoginResponse)
 	async login(
 		@Arg("email") email: string,
@@ -90,6 +114,19 @@ export class UserResolver {
 		};
 	}
 
+	/**
+	 * Mutation to register a new user
+	 * Use bcryptjs to hash the password
+	 * @param email
+	 * @param password
+	 * @param firstName
+	 * @param lastName
+	 * @param dateOfBirth
+	 * @param streetAddress
+	 * @param postCode
+	 * @param city
+	 * @param country
+	 */
 	@Mutation(() => Boolean)
 	async register(
 		@Arg("email") email: string,
@@ -124,6 +161,14 @@ export class UserResolver {
 		return true;
 	}
 
+	/**
+	 * Mutation to update a users existing password
+	 * Use the compare function provided by bcryptjs to verify that the old password typed by a user is the existing password
+	 * If this is the case, hash the new password and update the password in the database
+	 * @param oldPassword
+	 * @param newPassword
+	 * @param param2
+	 */
 	@Mutation(() => Boolean)
 	@UseMiddleware(isAuth)
 	async updatePassword(

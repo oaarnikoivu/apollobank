@@ -28,6 +28,10 @@ class AccountResponse {
 
 @Resolver()
 export class AccountResolver {
+	/**
+	 * Used to query and find all the accounts for an authenticated user
+	 * @param param0
+	 */
 	@Query(() => [Account])
 	@UseMiddleware(isAuth)
 	async accounts(@Ctx() { payload }: MyContext) {
@@ -44,6 +48,11 @@ export class AccountResolver {
 		return null;
 	}
 
+	/**
+	 * Used to query and find a single account specified by the currency (EUR account, USD account or GBP account)
+	 * @param currency
+	 * @param param1
+	 */
 	@Query(() => Account)
 	@UseMiddleware(isAuth)
 	async account(
@@ -67,6 +76,12 @@ export class AccountResolver {
 		return undefined;
 	}
 
+	/**
+	 * Mutation which allows a user to add money into their account
+	 * @param amount
+	 * @param currency
+	 * @param param2
+	 */
 	@Mutation(() => AccountResponse)
 	@UseMiddleware(isAuth)
 	async addMoney(
@@ -85,6 +100,7 @@ export class AccountResolver {
 				where: { owner: owner, currency: currency },
 			});
 
+			// If an account for the specified owner exists, add money and update the account balance
 			if (account) {
 				try {
 					await Account.update({ id: account.id }, { balance: account.balance + amount });
@@ -94,6 +110,7 @@ export class AccountResolver {
 			}
 		}
 
+		// Return the updated account
 		try {
 			const updatedAccount: Account | undefined = await Account.findOne({
 				where: { owner: owner, currency: currency },
@@ -111,6 +128,13 @@ export class AccountResolver {
 		return null;
 	}
 
+	/**
+	 * Mutation which allows a user to exchange money from one account to another
+	 * @param selectedAccountCurrency
+	 * @param toAccountCurrency
+	 * @param amount
+	 * @param param3
+	 */
 	@Mutation(() => AccountResponse)
 	@UseMiddleware(isAuth)
 	async exchange(
@@ -196,6 +220,11 @@ export class AccountResolver {
 		return null;
 	}
 
+	/**
+	 * Mutation for creating a new currency account
+	 * @param currency
+	 * @param param1
+	 */
 	@Mutation(() => Boolean)
 	@UseMiddleware(isAuth)
 	async createAccount(@Arg("currency") currency: string, @Ctx() { payload }: MyContext) {
@@ -230,6 +259,11 @@ export class AccountResolver {
 		return true;
 	}
 
+	/**
+	 * Mutation for deleting a specified currency account
+	 * @param currency
+	 * @param param1
+	 */
 	@Mutation(() => Boolean)
 	@UseMiddleware(isAuth)
 	async deleteAccount(@Arg("currency") currency: string, @Ctx() { payload }: MyContext) {
@@ -244,6 +278,7 @@ export class AccountResolver {
 				where: { owner: owner, currency: currency },
 			});
 
+			// If the account exists, only allow the removal of an account if the user has no debt or if the users account is empty
 			if (account) {
 				if (account.balance == 0) {
 					try {
@@ -255,13 +290,9 @@ export class AccountResolver {
 						return false;
 					}
 				} else if (account.balance < 0) {
-					throw new Error(
-						"Your account balance has fallen below 0. Please top up before deleting."
-					);
+					throw new Error(ErrorMessages.BALANCE_LESS_THAN);
 				} else if (account.balance > 0) {
-					throw new Error(
-						"Your account balance is greater than 0. Please exchange your funds before deleting."
-					);
+					throw new Error(ErrorMessages.BALANCE_GREATER_THAN);
 				}
 			}
 		}

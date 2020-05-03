@@ -8,6 +8,11 @@ import faker from "faker";
 
 @Resolver()
 export class TransactionResolver {
+	/**
+	 * Query for returning all transactions for an authenticated users currency account
+	 * @param currency
+	 * @param param1
+	 */
 	@Query(() => [Transaction])
 	@UseMiddleware(isAuth)
 	async transactions(@Arg("currency") currency: string, @Ctx() { payload }: MyContext) {
@@ -30,6 +35,11 @@ export class TransactionResolver {
 		return null;
 	}
 
+	/**
+	 * Mutation for creating a new transaction
+	 * @param currency
+	 * @param param1
+	 */
 	@Mutation(() => Float)
 	@UseMiddleware(isAuth)
 	async createTransaction(@Arg("currency") currency: string, @Ctx() { payload }: MyContext) {
@@ -45,6 +55,7 @@ export class TransactionResolver {
 			});
 
 			if (account) {
+				// Generate fake financial data using faker
 				let transactionType: string = faker.finance.transactionType();
 				let amount: number = parseInt(faker.finance.amount());
 				let date: Date = faker.date.recent(31);
@@ -54,6 +65,7 @@ export class TransactionResolver {
 					throw new Error("You do not have the sufficient funds.");
 				}
 
+				// Update account balance depending on the transaction type faker generates
 				switch (transactionType) {
 					case "withdrawal":
 						balance -= amount;

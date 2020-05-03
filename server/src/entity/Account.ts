@@ -3,6 +3,9 @@ import { BaseEntity, PrimaryGeneratedColumn, Entity, Column, ManyToOne, OneToMan
 import { User } from "./User";
 import { Transaction } from "./Transaction";
 
+/**
+ * Accounts table
+ */
 @ObjectType()
 @Entity("accounts")
 export class Account extends BaseEntity {

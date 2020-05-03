@@ -2,6 +2,12 @@ import { MiddlewareFn } from "type-graphql";
 import { MyContext } from "./MyContext";
 import { verify } from "jsonwebtoken";
 
+/**
+ * Authentication middleware
+ * Ensures that a user is authenticated using JSON Web Tokens
+ * @param param0
+ * @param next
+ */
 export const isAuth: MiddlewareFn<MyContext> = ({ context }, next) => {
 	const authorization: string | undefined = context.req.headers["authorization"];
 

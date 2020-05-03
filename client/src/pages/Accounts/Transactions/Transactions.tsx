@@ -2,7 +2,7 @@ import React from 'react';
 import { TransactionsQuery, Transaction } from '../../../generated/graphql';
 import { useAccountStyles } from '../styles/Account.style';
 import { Loading } from '../../../components/Loading/Loading';
-import { TransactionCard } from '../../../components/cards/TransactionCard';
+import { TransactionCard } from '../../../components/Cards/TransactionCard';
 import PaymentIcon from '@material-ui/icons/Payment';
 import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
 import LocalAtmIcon from '@material-ui/icons/LocalAtm';

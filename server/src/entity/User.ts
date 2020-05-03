@@ -3,6 +3,9 @@ import { ObjectType, Field, Int } from "type-graphql";
 import { Account } from "./Account";
 import { Card } from "./Card";
 
+/**
+ * Users table
+ */
 @ObjectType()
 @Entity("users")
 export class User extends BaseEntity {

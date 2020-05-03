@@ -8,6 +8,10 @@ import { Card } from "../entity/Card";
 
 @Resolver()
 export class CardResolver {
+	/**
+	 * Query for returning all the cards for an authenticated user
+	 * @param param0
+	 */
 	@Query(() => [Card])
 	@UseMiddleware(isAuth)
 	async cards(@Ctx() { payload }: MyContext) {
@@ -28,6 +32,10 @@ export class CardResolver {
 		return null;
 	}
 
+	/**
+	 * Mutation for creating a new card
+	 * @param param0
+	 */
 	@Mutation(() => Boolean)
 	@UseMiddleware(isAuth)
 	async createCard(@Ctx() { payload }: MyContext) {

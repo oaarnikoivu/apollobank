@@ -35,10 +35,10 @@ import {
 } from '../../generated/graphql';
 import { Loading } from '../../components/Loading/Loading';
 import { useHistory } from 'react-router-dom';
-import { AccountsCard, NoAccountsCard } from '../../components/cards/AccountsCard';
+import { AccountsCard, NoAccountsCard } from '../../components/Cards/AccountsCard';
 import { Currency } from '../../utils/currencies';
 import { Dialog } from '../../components/Dialog/Dialog';
-import { NoApolloCard, ApolloCard } from '../../components/cards/ApolloCard';
+import { NoApolloCard, ApolloCard } from '../../components/Cards/ApolloCard';
 import { MutationTuple } from '@apollo/react-hooks';
 import { ExecutionResult } from 'graphql';
 import { theme } from '../../utils/theme';

@@ -10,4 +10,6 @@ export enum ErrorMessages {
 	PASSWORD = "Invalid password.",
 	UPDATE_PASSWORD = "Could not change your password, are you sure you entered the correct password?",
 	DELETE_ACCOUNT = "Failed to destroy account.",
+	BALANCE_LESS_THAN = "Your account balance has fallen below 0. Please top up before deleting.",
+	BALANCE_GREATER_THAN = "Your account balance is greater than 0. Please exchange your funds before deleting.",
 }
