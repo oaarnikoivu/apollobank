@@ -123,6 +123,14 @@ export const Account: React.FC = () => {
         }
     }, [cards]);
 
+    useEffect(() => {
+        if (accountBalance < 0) {
+            setWarningMessage(
+                'Your account balance has fallen below 0. Please top up your account.',
+            );
+        }
+    }, [accountBalance]);
+
     switch (location.state.currency) {
         case 'EUR':
             currencyIcon = '€';

@@ -183,17 +183,22 @@ export class AccountResolver {
 								amountWithConversion = amount * 1.13;
 							}
 
-							await Account.update(
-								{ id: toAccount.id },
-								{ balance: toAccount.balance + Math.round(amountWithConversion) }
-							);
-							await Account.update(
-								{ id: currentAccount.id },
-								{ balance: currentAccount.balance - Math.round(amountWithConversion) }
-							);
-						} catch (err) {
-							console.log(err);
-							return null;
+							// Only update the account balances if the current accounts balance doesn't fall below 0 after applying conversion rates
+							if (currentAccount.balance - Math.round(amountWithConversion) >= 0) {
+								await Account.update(
+									{ id: toAccount.id },
+									{ balance: toAccount.balance + Math.round(amountWithConversion) }
+								);
+								await Account.update(
+									{ id: currentAccount.id },
+									{ balance: currentAccount.balance - Math.round(amountWithConversion) }
+								);
+							} else {
+								throw new Error(ErrorMessages.EXCHANGE);
+							}
+						} catch (error) {
+							console.log(error);
+							throw new Error(ErrorMessages.EXCHANGE);
 						}
 					}
 				} else {
