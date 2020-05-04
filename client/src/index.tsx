@@ -12,6 +12,9 @@ import { TokenRefreshLink } from 'apollo-link-token-refresh';
 import jwtDecode from 'jwt-decode';
 import { App } from './App';
 
+// Setup Apollo Client manually without Apollo Boost
+// https://www.apollographql.com/docs/react/migrating/boost-migration/
+
 const cache = new InMemoryCache({});
 
 const requestLink = new ApolloLink(

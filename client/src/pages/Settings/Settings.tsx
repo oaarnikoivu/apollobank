@@ -181,6 +181,7 @@ export const Settings: React.FC = () => {
                         onSubmit={async (data, { setSubmitting, resetForm }) => {
                             setSubmitting(true);
 
+                            // On change password clicked, call the updatePassword mutation
                             try {
                                 const response = await updatePassword({
                                     variables: {
@@ -191,7 +192,6 @@ export const Settings: React.FC = () => {
 
                                 if (response && response.data) {
                                     setSubmitting(false);
-                                    console.log(response.data);
                                     setSuccessMessage('Password successfully changed!');
                                     setOpenChangePasswordDialog(false);
                                     resetForm();

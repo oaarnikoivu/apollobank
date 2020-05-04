@@ -20,6 +20,7 @@ interface AuthenticatedRouteProps {
     component: ComponentType<any>;
 }
 
+// If an access token is identified, allow the user to access the route, otherwise route to the login page
 const AuthenticatedRoute = ({ component: Component, ...rest }: AuthenticatedRouteProps) => (
     <Route
         {...rest}
@@ -29,6 +30,7 @@ const AuthenticatedRoute = ({ component: Component, ...rest }: AuthenticatedRout
     />
 );
 
+// If an access token is identified, push the user to the dashboard, otherwise route to the specified component
 const LoggedInRoute = ({ component: Component, ...rest }: AuthenticatedRouteProps) => (
     <Route
         {...rest}

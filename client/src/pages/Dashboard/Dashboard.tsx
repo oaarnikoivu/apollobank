@@ -144,6 +144,7 @@ export const Dashboard: React.FC = () => {
                             button
                             key={currency}
                             onClick={async () => {
+                                // Call the createAccount mutation
                                 try {
                                     const response: ExecutionResult<CreateAccountMutation> = await createAccount(
                                         {
@@ -196,6 +197,7 @@ export const Dashboard: React.FC = () => {
         e.preventDefault();
 
         try {
+            // Call the createCard mutation
             const response: ExecutionResult<CreateCardMutation> = await createCard({
                 variables: {},
                 refetchQueries: [

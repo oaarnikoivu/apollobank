@@ -177,6 +177,7 @@ export const Account: React.FC = () => {
                         onSubmit={async (data, { setSubmitting, resetForm }) => {
                             setSubmitting(true);
 
+                            // Call the add money mutation
                             try {
                                 const response = await addMoney({
                                     variables: {
@@ -237,6 +238,7 @@ export const Account: React.FC = () => {
                         onSubmit={async (data, { setSubmitting, resetForm }) => {
                             setSubmitting(true);
 
+                            // If the user has selected a currency account to exchange to, call the exchange mutation
                             if (toAccountCurrency !== '') {
                                 try {
                                     const response = await exchange({
@@ -342,6 +344,7 @@ export const Account: React.FC = () => {
                                 variant="contained"
                                 color="secondary"
                                 onClick={async () => {
+                                    // On button click, call the deleteAccount mutation
                                     try {
                                         const response: ExecutionResult<ExecutionResultDataDefault> = await deleteAccount(
                                             {

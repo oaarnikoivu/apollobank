@@ -53,6 +53,7 @@ export const Register: React.FC<RouteComponentProps> = ({ history }) => {
                 onSubmit={async (data, { setSubmitting, resetForm }) => {
                     setSubmitting(true);
 
+                    // On the register button click, call the register mutation
                     const response = await register({
                         variables: {
                             firstName: data.firstName,
@@ -67,6 +68,7 @@ export const Register: React.FC<RouteComponentProps> = ({ history }) => {
                         },
                     });
 
+                    // if the register was successful, route the user to the login page
                     if (response.data?.register) {
                         history.push('/login');
                         setSubmitting(false);

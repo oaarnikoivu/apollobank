@@ -8,6 +8,7 @@ import { ColorScheme } from './utils/theme';
 export const App: React.FC = () => {
     const [loading, setLoading] = useState<boolean>(true);
 
+    // Fetch refresh token
     useEffect(() => {
         fetch((process.env.REACT_APP_SERVER_URL as string) + '/refresh_token', {
             method: 'POST',

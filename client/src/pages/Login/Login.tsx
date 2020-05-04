@@ -43,6 +43,7 @@ export const Login: React.FC<RouteComponentProps> = ({ history }) => {
                 onSubmit={async (data, { setSubmitting, resetForm }) => {
                     setSubmitting(true);
 
+                    // On login button click, call the login mutation
                     try {
                         const response: ExecutionResult<LoginMutation> = await login({
                             variables: {
@@ -62,6 +63,9 @@ export const Login: React.FC<RouteComponentProps> = ({ history }) => {
                             },
                         });
 
+                        // If the login was successful, provide the user with an access token that can be used for
+                        // routes which require authentication
+                        // Route the user to the dashboard
                         if (response && response.data) {
                             setAccessToken(response.data.login.accessToken);
                             history.push('/dashboard');
