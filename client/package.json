@@ -34,7 +34,7 @@
         "react-helmet": "^5.2.1",
         "react-jss": "^10.0.4",
         "react-router-dom": "^5.1.2",
-        "react-scripts": "3.4.0",
+        "react-scripts": "^3.4.3",
         "recharts": "^1.8.5",
         "typescript": "^3.7.5",
         "yup": "^0.28.2"
@@ -62,9 +62,9 @@
         ]
     },
     "devDependencies": {
-        "@graphql-codegen/cli": "^1.12.2",
-        "@graphql-codegen/typescript": "1.12.2",
-        "@graphql-codegen/typescript-operations": "1.12.2",
+        "@graphql-codegen/cli": "^1.17.8",
+        "@graphql-codegen/typescript": "^1.17.9",
+        "@graphql-codegen/typescript-operations": "^1.17.8",
         "@graphql-codegen/typescript-react-apollo": "1.12.2",
         "@types/graphql": "^14.5.0",
         "@types/hapi__joi": "^16.0.12",
